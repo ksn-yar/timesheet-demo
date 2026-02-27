@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(docker exec:*)",
+      "Bash(./bin/dev/phpstan:*)"
+    ],
+    "deny": [
+      "Bash(php -l:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  },
+  "language": "russian"
+}
