@@ -1,8 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(docker exec:*)",
-      "Bash(./bin/dev/phpstan:*)"
+      "Bash(docker exec:*)"
     ],
     "deny": [
       "Bash(php -l:*)"
