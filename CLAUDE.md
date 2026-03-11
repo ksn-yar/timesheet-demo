@@ -3,8 +3,8 @@
 ## File Path Convention
 Always reference files relative to project root.
 
-✅ Correct: `src/Domain/User/Entity/User.php`
-❌ Wrong:   `/home/john/projects/myapp/src/Domain/User/Entity/User.php`
+✅ Correct: `docs/technical-specification.md`
+❌ Wrong:   `/home/john/projects/myapp/docs/technical-specification.md`
 
 ## Язык
 
