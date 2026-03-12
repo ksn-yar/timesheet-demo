@@ -32,7 +32,7 @@
         "vich/uploader-bundle": "^2.9"
     },
     "require-dev": {
-        "deptrac/deptrac": "*",
+        "deptrac/deptrac": "^4.6",
         "friendsofphp/php-cs-fixer": "^3.94",
         "phpstan/extension-installer": "^1.4",
         "phpstan/phpstan": "^2.1",
