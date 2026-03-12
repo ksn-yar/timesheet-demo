@@ -3,9 +3,3 @@
 /.vscode
 
 /.claude/agent-memory/
-
-/app/.env
-/app/docker/_data/*
-!/app/docker/_data/.gitkeep
-/app/var/logNginx/*
-!/app/var/logNginx/.gitkeep
