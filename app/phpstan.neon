@@ -1,0 +1,25 @@
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    excludePaths:
+        analyse:
+            - var/*
+            - vendor/*
+            - migrations/*
+            - data/*
+    checkMissingVarTagTypehint: true
+    checkExplicitMixed: true
+    checkUninitializedProperties: true
+    inferPrivatePropertyTypeFromConstructor: true
+    reportUnmatchedIgnoredErrors: true
+    ignoreErrors:
+        # Doctrine ORM entities не используют конструкторы - Doctrine создает объекты через рефлексию
+        - '#Class App\\.*\\Infrastructure\\Entity\\.* has an uninitialized property#'
+        - '#Property App\\.*\\Infrastructure\\Entity\\.*::\$id .* is never assigned .* so it can be removed from the property type#'
+        # Doctrine Repository @method теги наследуют generic array типы
+        - '#Class App\\.*\\Infrastructure\\Repository\\Doctrine\\.* has PHPDoc tag @method for method .* with no value type specified in iterable type array#'

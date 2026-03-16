@@ -82,6 +82,10 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
+        "csFix": "vendor/bin/php-cs-fixer --show-progress=dots -v fix",
+        "phpStan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
+        "nelmioDoc": "php -d memory_limit=-1 bin/console nelmio:apidoc:dump --format=yaml > share/openapi.yaml",
+        "configTransform": "vendor/bin/config-transformer config",
         "post-install-cmd": [
             "@auto-scripts"
         ],
