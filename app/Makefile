@@ -1,4 +1,7 @@
 
+back-bash:
+	docker exec -it corpo-ts-backend bash
+
 # example: make back-exec composer i
 back-exec:
 	docker exec -it corpo-ts-backend $(filter-out $@,$(MAKECMDGOALS))

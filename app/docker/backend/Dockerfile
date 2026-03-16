@@ -12,6 +12,7 @@ RUN apk add --no-cache \
     libxml2-dev \
     rabbitmq-c-dev \
     linux-headers \
+    bash \
     $PHPIZE_DEPS
 
 # PHP расширения: основные
@@ -36,7 +37,7 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 # Пользователь www
 RUN addgroup -g 1000 www \
-    && adduser -u 1000 -G www -s /bin/sh -D www
+    && adduser -u 1000 -G www -s /bin/bash -D www
 
 WORKDIR /var/www/app
 
