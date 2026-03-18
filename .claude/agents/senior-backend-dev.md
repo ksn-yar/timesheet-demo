@@ -18,6 +18,7 @@ memory: project
 - clean-architecture.md
 - ddd.md
 - doctrine-orm-entity-repository.md
+- value-resolver.md
 
 Перед началом любой задачи проверь, существует ли подходящий навык, и прочитай его.
 
