@@ -17,7 +17,7 @@ memory: project
 ## У тебя есть доступ к следующим навыкам:
 - clean-architecture.md
 - ddd.md
-- doctrine-entity.md
+- doctrine-orm-entity-repository.md
 
 Перед началом любой задачи проверь, существует ли подходящий навык, и прочитай его.
 

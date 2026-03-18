@@ -1,5 +1,5 @@
 ---
-name: doctrine-entity
+name: doctrine-orm-entity-repository
 description: Правила создания Doctrine ORM Entity и Repository в домене Persistence — маппинг, генерация ID, миграции, тесты
 ---
 
