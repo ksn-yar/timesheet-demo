@@ -31,16 +31,15 @@ src/
 │           └── ....                            # другие специфичные базовые резолверы
 ├── {BoundedContext}/
 │   └── Infrastructure/
-│       └── Http/
-│           ├── ValueResolver/
-│           │   └── CreateWorkEntryValueResolver.php  # конкретный resolver
-│           └── Dto/
-│               └── CreateWorkEntryRequestDto.php     # DTO запроса
+│       ├── ValueResolver/
+│       │   └── CreateWorkEntryValueResolver.php  # конкретный resolver
+│       └── Dto/
+│           └── CreateWorkEntryRequestDto.php     # DTO запроса
 ```
 
 **Почему так:**
 - Resolver зависит от Symfony (`ValueResolverInterface`, `SerializerInterface`) — это инфраструктура
-- DTO запроса содержит атрибуты валидации Symfony — это инфраструктурный слой (Http)
+- DTO запроса содержит атрибуты валидации Symfony — это инфраструктурный слой
 - Абстрактные базовые классы в `Shared` доступны всем Bounded Contexts
 
 ---
@@ -71,13 +70,13 @@ src/
 ## 1. Value Resolver
 
 ```php
-// src/{BoundedContext}/Infrastructure/Http/ValueResolver/CreateWorkEntryValueResolver.php
+// src/{BoundedContext}/Infrastructure/ValueResolver/CreateWorkEntryValueResolver.php
 
 declare(strict_types=1);
 
-namespace App\{BoundedContext}\Infrastructure\Http\ValueResolver;
+namespace App\{BoundedContext}\Infrastructure\ValueResolver;
 
-use App\{BoundedContext}\Infrastructure\Http\Dto\CreateWorkEntryRequestDto;
+use App\{BoundedContext}\Infrastructure\Dto\CreateWorkEntryRequestDto;
 use App\Shared\Infrastructure\ValueResolver\AbstractJsonValueResolver;
 use Symfony\Component\HttpKernel\Attribute\AsTargetedValueResolver;
 
@@ -108,11 +107,11 @@ final class CreateWorkEntryValueResolver extends AbstractJsonValueResolver
 DTO — readonly-класс с атрибутами валидации Symfony Validator. Не реализует никаких маркерных интерфейсов.
 
 ```php
-// src/{BoundedContext}/Infrastructure/Http/Dto/CreateWorkEntryRequestDto.php
+// src/{BoundedContext}/Infrastructure/Dto/CreateWorkEntryRequestDto.php
 
 declare(strict_types=1);
 
-namespace App\{BoundedContext}\Infrastructure\Http\Dto;
+namespace App\{BoundedContext}\Infrastructure\Dto;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -146,13 +145,13 @@ final readonly class CreateWorkEntryRequestDto
 Контроллер получает готовый валидированный DTO как аргумент метода. Атрибут `#[ValueResolver(...)]` связывает аргумент с конкретным resolver.
 
 ```php
-// src/{BoundedContext}/Infrastructure/Http/Controller/CreateWorkEntryController.php
+// src/{BoundedContext}/Infrastructure/Controller/CreateWorkEntryController.php
 
 declare(strict_types=1);
 
-namespace App\{BoundedContext}\Infrastructure\Http\Controller;
+namespace App\{BoundedContext}\Infrastructure\Controller;
 
-use App\{BoundedContext}\Infrastructure\Http\Dto\CreateWorkEntryRequestDto;
+use App\{BoundedContext}\Infrastructure\Dto\CreateWorkEntryRequestDto;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -195,14 +194,14 @@ final class CreateWorkEntryController
 ## 5. Unit-тест Value Resolver
 
 ```php
-// tests/Unit/{BoundedContext}/Infrastructure/Http/ValueResolver/CreateWorkEntryValueResolverTest.php
+// tests/Unit/{BoundedContext}/Infrastructure/ValueResolver/CreateWorkEntryValueResolverTest.php
 
 declare(strict_types=1);
 
-namespace App\Tests\Unit\{BoundedContext}\Infrastructure\Http\ValueResolver;
+namespace App\Tests\Unit\{BoundedContext}\Infrastructure\ValueResolver;
 
-use App\{BoundedContext}\Infrastructure\Http\Dto\CreateWorkEntryRequestDto;
-use App\{BoundedContext}\Infrastructure\Http\ValueResolver\CreateWorkEntryValueResolver;
+use App\{BoundedContext}\Infrastructure\Dto\CreateWorkEntryRequestDto;
+use App\{BoundedContext}\Infrastructure\ValueResolver\CreateWorkEntryValueResolver;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -301,13 +300,13 @@ final class CreateWorkEntryValueResolverTest extends TestCase
 
 ## Чек-лист при создании Value Resolver
 
-- [ ] Resolver размещён в `src/{BoundedContext}/Infrastructure/Http/ValueResolver/`
+- [ ] Resolver размещён в `src/{BoundedContext}/Infrastructure/ValueResolver/`
 - [ ] Resolver наследует `AbstractJsonValueResolver` (JSON body) или `AbstractValueResolver` (иной источник данных)
 - [ ] Resolver помечен атрибутом `#[AsTargetedValueResolver(SomeDtoClass::class)]`
 - [ ] Resolver реализует метод `getDtoRequestClass(): string` — возвращает FQCN DTO
 - [ ] При наследовании `AbstractValueResolver` реализован метод `deserialize()`
 - [ ] DTO запроса — `final readonly class` с `Assert\*` атрибутами
-- [ ] DTO размещён в `src/{BoundedContext}/Infrastructure/Http/Dto/`
+- [ ] DTO размещён в `src/{BoundedContext}/Infrastructure/Dto/`
 - [ ] Контроллер принимает DTO через аргумент с атрибутом `#[ValueResolver(SomeDtoClass::class)]`
 - [ ] Дополнительная регистрация в `services.php` не требуется (autowire + autoconfigure)
 - [ ] Unit-тесты покрывают: пропуск нерелевантных типов, десериализацию, выброс `ValidationFailedException`
