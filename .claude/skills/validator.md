@@ -256,9 +256,9 @@ final class ValidWorkPeriodValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, CreateWorkEntryRequestDto::class);
         }
 
-        // Прямой доступ к публичным свойствам: DTO — final readonly class с известным типом
-        $startDate = $this->getPropertyValue($value, 'startDate');
-        $endDate   = $this->getPropertyValue($value, 'endDate');
+        // Прямой доступ к публичным свойствам: тип DTO известен после instanceof-проверки
+        $startDate = $value->startDate;
+        $endDate   = $value->endDate;
 
         if ($startDate === '' || $endDate === '') {
             return;
@@ -276,32 +276,6 @@ final class ValidWorkPeriodValidator extends ConstraintValidator
                 ->atPath('endDate')
                 ->addViolation();
         }
-    }
-
-    private function getPropertyValue(object $object, string $property): mixed
-    {
-        $getter   = 'get' . ucfirst($property);
-        $isGetter = 'is' . ucfirst($property);
-
-        if (method_exists($object, $getter)) {
-            return $object->$getter();
-        }
-
-        if (method_exists($object, $isGetter)) {
-            return $object->$isGetter();
-        }
-
-        if (property_exists($object, $property)) {
-            return $object->$property;
-        }
-
-        throw new \InvalidArgumentException(sprintf(
-            'Свойство "%s" не найдено в классе "%s": отсутствует геттер %s(), %s() и публичное свойство.',
-            $property,
-            $object::class,
-            $getter,
-            $isGetter,
-        ));
     }
 }
 ```
@@ -785,7 +759,7 @@ final class UniqueEmailValidatorTest extends TestCase
 - [ ] Для PROPERTY_CONSTRAINT: пропуск `null` и пустой строки (обязательность — через `#[Assert\NotBlank]`)
 - [ ] Ошибки добавляются через `$this->context->buildViolation()->addViolation()`
 - [ ] Для CLASS_CONSTRAINT: привязка ошибки к полю через `->atPath()`
-- [ ] Для CLASS_CONSTRAINT с доступом к полям: использовать `getPropertyValue()` — сначала геттер, затем публичное свойство
+- [ ] Для CLASS_CONSTRAINT с привязкой к конкретному типу DTO: обращаться к свойствам напрямую после `instanceof`-проверки; `getPropertyValue()` использовать только для универсальных валидаторов, работающих с несколькими типами DTO
 - [ ] Зависимости (репозитории, сервисы) — через конструктор
 - [ ] PHPDoc-комментарий на классе описывает проверяемое правило
 

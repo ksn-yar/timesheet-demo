@@ -73,9 +73,10 @@ use App\Persistence\Repository\WorkEntryRepository;
 class WorkEntry
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue(strategy: 'IDENTITY')]
-    #[ORM\Column(type: 'integer')]
-    private ?int $id = null;
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
+    #[ORM\Column(type: 'guid', unique: true)]
+    private ?string $id = null;
 
     #[ORM\Column(type: 'guid')]
     private string $employeeId;
@@ -98,7 +99,7 @@ class WorkEntry
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -175,25 +176,30 @@ class WorkEntry
 }
 ```
 
-### Вариант с UUID, генерируемым PostgreSQL
+### Альтернативный вариант: UUID через `gen_random_uuid()` (PostgreSQL)
 
-Если первичный ключ — UUID, используется генерация на стороне БД:
-
-```php
-#[ORM\Id]
-#[ORM\GeneratedValue(strategy: 'CUSTOM')]
-#[ORM\CustomIdGenerator(class: 'doctrine.uuid_generator')]
-#[ORM\Column(type: 'guid', unique: true)]
-private ?string $id = null;
-```
-
-Или через `columnDefinition` с `gen_random_uuid()`:
+Вместо `doctrine.uuid_generator` можно использовать генерацию UUID на уровне PostgreSQL:
 
 ```php
 #[ORM\Id]
 #[ORM\Column(type: 'guid', unique: true, options: ['default' => 'gen_random_uuid()'])]
 private ?string $id = null;
 ```
+
+### Альтернативный вариант: целочисленный ID
+
+Если требуется автоинкрементный integer ID (не рекомендуется при наличии доменных Value Object типа UUID):
+
+```php
+#[ORM\Id]
+#[ORM\GeneratedValue(strategy: 'IDENTITY')]
+#[ORM\Column(type: 'integer')]
+private ?int $id = null;
+
+public function getId(): ?int { return $this->id; }
+```
+
+**Важно:** при использовании целочисленного ID и доменных Value Objects типа `WorkEntryId` (валидирующих UUID) маппинг в `toDomainEntity()` потребует отдельного строкового представления ID.
 
 ---
 
@@ -352,7 +358,7 @@ final class WorkEntryRepositoryTest extends KernelTestCase
 
     public function test_find_returns_null_for_unknown_id(): void
     {
-        $result = $this->repository->find(999999);
+        $result = $this->repository->find('00000000-0000-0000-0000-000000000000');
 
         self::assertNull($result);
     }

@@ -20,7 +20,9 @@ memory: project
 - doctrine-orm-entity-repository
 - domain-repository
 - dto
+- enum
 - http-controller
+- input-transformer
 - presenter
 - use-case
 - validator

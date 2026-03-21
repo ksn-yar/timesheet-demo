@@ -14,6 +14,7 @@ description: Правила создания тонкого Symfony HTTP-кон�
 - **Не содержит бизнес-логику** — вся логика в Use Case домена (Command/Query Handler)
 - **Не делает валидацию и десериализацию** — это ответственность Value Resolver
 - **Получает DTO запроса** от кастомного Value Resolver через атрибут `#[ValueResolver(...)]`
+- **Использует Input Transformer** для маппинга Request DTO → InputDto (обязательно для всех методов с телом: POST, PUT, PATCH; для GET — если формируется InputDto из параметров)
 - **Описан атрибутами OpenAPI** (`OpenApi\Attributes`) для автодокументации через nelmio/api-doc-bundle
 - **Имеет атрибут маршрута** `#[Route()]` из Symfony
 
@@ -423,4 +424,18 @@ final class CreateWorkEntryController extends AbstractController
 public function __invoke(#[MapRequestPayload] CreateWorkEntryRequestDto $dto): JsonResponse
 // Используйте #[ValueResolver(CreateWorkEntryRequestDto::class)]
 // и парный кастомный Value Resolver (см. skill value-resolver)
+
+// ❌ Создание InputDto напрямую в контроллере — маппинг должен выполняться в Transformer
+final class CreateWorkEntryController extends AbstractController
+{
+    public function __invoke(
+        #[ValueResolver(CreateWorkEntryRequestDto::class)] CreateWorkEntryRequestDto $dto,
+    ): JsonResponse {
+        $this->useCase->execute(new CreateWorkEntryInputDto(  // ЗАПРЕЩЕНО: InputDto создаётся в контроллере
+            employeeId: $dto->employeeId,
+            startDate: $dto->startDate,
+        ));
+    }
+}
+// Всегда используйте Input Transformer: $this->useCase->execute($this->transformer->transform($dto))
 ```

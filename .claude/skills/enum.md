@@ -11,8 +11,9 @@ description: Правила создания PHP enum — доменное пе�
 - **Backed enum со `string`-значением** — значения кейсов в `snake_case` для хранения в БД и сериализации
 - **Кейсы именуются в `PascalCase`** — соответствует стандартам PHP
 - **Метод `getLabel(): string`** — возвращает человекочитаемую метку на русском языке
-- **Не содержит бизнес-логики** — enum описывает допустимые значения, не принимает решений
+- **Содержит только ограниченную бизнес-логику**: предикаты (`isEditable()`, `isFinal()`) и логику переходов (`canTransitionTo()`, `allowedTransitions()`) — не мутации внешних объектов
 - **Используется доменными сущностями и Value Objects** — не зависит от инфраструктуры
+- **Исключение — Persistence-домен**: если enum нужен только для Doctrine Entity маппинга (`enumType:`), допустимо создать его в `Persistence/Entity/Enum/` как архитектурный компромисс (не дублировать доменный enum)
 
 ---
 
@@ -40,6 +41,20 @@ src/
 - Enum описывает допустимые значения доменного понятия — это часть Ubiquitous Language
 - Enum не зависит от инфраструктуры (`Symfony`, `Doctrine`) — размещается в `Domain/Enum/`
 - Если enum используется несколькими Bounded Context — размещается в `Shared/Domain/Enum/`
+
+**Исключение: Persistence-домен**
+
+Если enum нужен исключительно для `enumType:` в Doctrine Entity и не несёт доменного смысла — допустимо создать его в `Persistence/Entity/Enum/`. Это архитектурный компромисс: один enum на два контекста (Domain + Persistence) не всегда оправдан, если модели расходятся.
+
+```
+src/
+├── Persistence/
+│   └── Entity/
+│       └── Enum/
+│           └── WorkEntryStatus.php   # только для ORM-маппинга
+```
+
+**Важно:** если enum находится в `Domain/Enum/` — именно его указывайте в `enumType:` у Doctrine Entity. Не создавайте дублирующий enum в Persistence без необходимости.
 
 ---
 
@@ -545,15 +560,16 @@ public function getLabel(): string
 }
 // Перечисляйте все кейсы явно — PHP выбросит ошибку при добавлении нового кейса без метки
 
-// -- Бизнес-логика в enum — enum описывает значения, не принимает решений
+// -- Мутации внешних объектов в enum — это запрещено
 enum WorkEntryStatus: string
 {
     public function approve(WorkEntry $entry): void
     {
-        $entry->setStatus(self::Approved); // логика принадлежит Domain Entity
+        $entry->setStatus(self::Approved); // ЗАПРЕЩЕНО: мутация внешнего объекта — это ответственность Domain Entity
     }
 }
-// Допустимы: предикаты (isEditable), переходы (canTransitionTo) — не мутации внешних объектов
+// Допустимы: предикаты (isEditable), переходы (canTransitionTo, allowedTransitions)
+// Запрещены: мутации внешних объектов, обращения к репозиториям, инфраструктурные зависимости
 
 // -- Enum в Infrastructure слое
 // src/Timesheet/Infrastructure/Enum/WorkEntryStatus.php — НЕПРАВИЛЬНО

@@ -353,54 +353,52 @@ final readonly class WorkEntryListResponseDto
 
 ---
 
-## 3. Использование в контроллере
+## 3. Использование Response DTO в Presenter
 
-### Контроллер с Request DTO и Response DTO
+Response DTO используется в Presenter — инфраструктурном компоненте, реализующем `OutputPortInterface`. Presenter получает `OutputDto` от Use Case и формирует из него `JsonResponse`, используя Response DTO для структурирования ответа.
 
 ```php
-// src/Timesheet/Infrastructure/Controller/GetWorkEntryController.php
+// src/Timesheet/Infrastructure/Presenter/HttpGetWorkEntryPresenter.php
 
 declare(strict_types=1);
 
-namespace App\Timesheet\Infrastructure\Controller;
+namespace App\Timesheet\Infrastructure\Presenter;
 
+use App\Timesheet\Application\Dto\GetWorkEntryOutputDto;
+use App\Timesheet\Application\Port\GetWorkEntryOutputPortInterface;
 use App\Timesheet\Infrastructure\Dto\WorkEntryResponseDto;
-use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 
-/** Контроллер получения записи рабочего времени по идентификатору. */
-#[OA\Tag(name: 'Timesheet')]
-#[OA\Get(summary: 'Получить запись рабочего времени по ID')]
-#[OA\Parameter(
-    name: 'id',
-    in: 'path',
-    required: true,
-    schema: new OA\Schema(type: 'string', format: 'uuid'),
-)]
-#[OA\Response(
-    response: Response::HTTP_OK,
-    description: 'Запись рабочего времени найдена.',
-    content: new OA\JsonContent(ref: WorkEntryResponseDto::class),
-)]
-#[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Запись не найдена.')]
-#[Route('/api/timesheet/work-entries/{id}', name: 'timesheet_get_work_entry', methods: ['GET'])]
-final class GetWorkEntryController extends AbstractController
+/** Presenter: формирует HTTP-ответ из OutputDto Use Case. */
+final class HttpGetWorkEntryPresenter implements GetWorkEntryOutputPortInterface
 {
-    public function __invoke(string $id): JsonResponse
+    private JsonResponse $response;
+
+    public function present(GetWorkEntryOutputDto $outputDto): void
     {
-        // $result = $this->queryBus->ask(new GetWorkEntryQuery(id: $id));
+        $responseDto = new WorkEntryResponseDto(
+            id: $outputDto->id,
+            employeeId: $outputDto->employeeId,
+            startDate: $outputDto->startDate,
+            endDate: $outputDto->endDate,
+            hours: $outputDto->hours,
+            status: $outputDto->status,
+            comment: $outputDto->description,
+            createdAt: $outputDto->createdAt,
+        );
 
-        // Пример формирования Response DTO:
-        // $responseDto = WorkEntryResponseDto::fromArray($result);
-        // return $this->json($responseDto);
+        $this->response = new JsonResponse($responseDto, Response::HTTP_OK);
+    }
 
-        return new JsonResponse(null, Response::HTTP_OK);
+    public function getResponse(): JsonResponse
+    {
+        return $this->response;
     }
 }
 ```
+
+**Важно:** Response DTO создаётся в Presenter из `OutputDto` Use Case — не в контроллере. Контроллер только вызывает `$presenter->getResponse()` (см. skill `presenter` и `use-case`).
 
 ---
 

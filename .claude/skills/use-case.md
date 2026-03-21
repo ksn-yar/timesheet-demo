@@ -354,7 +354,7 @@ HTTP Request
     |
     v
 +----------------------------+
-|  Controller::__invoke()    |  Создаёт InputDto (или через Transformer), вызывает Use Case
+|  Controller::__invoke()    |  Делегирует маппинг Transformer, вызывает Use Case
 +-------------+--------------+
               | InputDto
               v
@@ -423,6 +423,8 @@ final class CreateWorkEntryController extends AbstractController
 
 ### Контроллер с Query Use Case
 
+Маппинг параметров запроса -> InputDto выполняется через Input Transformer (см. skill `input-transformer`). Контроллер не создаёт InputDto вручную — делегирует это Transformer.
+
 ```php
 // src/Timesheet/Infrastructure/Controller/GetWorkEntryController.php
 
@@ -430,9 +432,9 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Controller;
 
-use App\Timesheet\Application\Dto\GetWorkEntryInputDto;
 use App\Timesheet\Application\UseCase\GetWorkEntryUseCase;
 use App\Timesheet\Infrastructure\Presenter\HttpGetWorkEntryPresenter;
+use App\Timesheet\Infrastructure\Transformer\GetWorkEntryInputTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
@@ -444,11 +446,12 @@ final class GetWorkEntryController extends AbstractController
     public function __construct(
         private readonly GetWorkEntryUseCase $useCase,
         private readonly HttpGetWorkEntryPresenter $presenter,
+        private readonly GetWorkEntryInputTransformer $transformer,
     ) {}
 
     public function __invoke(string $id): JsonResponse
     {
-        $this->useCase->execute(new GetWorkEntryInputDto(id: $id));
+        $this->useCase->execute($this->transformer->transform($id));
 
         return $this->presenter->getResponse();
     }
@@ -590,7 +593,7 @@ final class CreateWorkEntryUseCaseTest extends TestCase
             ->method('save')
             ->with(self::isInstanceOf(WorkEntry::class));
 
-        ($this->useCase)(new CreateWorkEntryInputDto(
+        $this->useCase->execute(new CreateWorkEntryInputDto(
             employeeId: '550e8400-e29b-41d4-a716-446655440000',
             startDate: '2026-03-01',
             endDate: '2026-03-15',
@@ -612,7 +615,7 @@ final class CreateWorkEntryUseCaseTest extends TestCase
 
         $this->expectException(EmployeeNotFoundException::class);
 
-        ($this->useCase)(new CreateWorkEntryInputDto(
+        $this->useCase->execute(new CreateWorkEntryInputDto(
             employeeId: '550e8400-e29b-41d4-a716-446655440000',
             startDate: '2026-03-01',
             endDate: '2026-03-15',
@@ -672,7 +675,7 @@ final class GetWorkEntryUseCaseTest extends TestCase
             ->method('present')
             ->with(self::isInstanceOf(GetWorkEntryOutputDto::class));
 
-        ($this->useCase)(new GetWorkEntryInputDto(
+        $this->useCase->execute(new GetWorkEntryInputDto(
             id: '550e8400-e29b-41d4-a716-446655440000',
         ));
     }
@@ -690,7 +693,7 @@ final class GetWorkEntryUseCaseTest extends TestCase
 
         $this->expectException(WorkEntryNotFoundException::class);
 
-        ($this->useCase)(new GetWorkEntryInputDto(
+        $this->useCase->execute(new GetWorkEntryInputDto(
             id: '550e8400-e29b-41d4-a716-446655440000',
         ));
     }
@@ -829,10 +832,11 @@ final readonly class CreateWorkEntryInputDto
 // src/Timesheet/Infrastructure/UseCase/CreateWorkEntryUseCase.php — НЕПРАВИЛЬНО
 // src/Timesheet/Application/UseCase/CreateWorkEntryUseCase.php — ПРАВИЛЬНО
 
-// -- Метод Use Case не execute()
+// -- Метод Use Case не execute() — всегда используйте execute()
 final class CreateWorkEntryUseCase
 {
     public function __invoke(CreateWorkEntryInputDto $input): void { ... }
-    // Используйте execute() — явный и читаемый вызов: $this->useCase->execute($input)
+    // НЕПРАВИЛЬНО: $this->useCase должен вызываться как $this->useCase->execute($input)
+    // __invoke скрывает намерение и усложняет тесты
 }
 ```

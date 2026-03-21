@@ -148,38 +148,35 @@ final class RegisterWorkEntryHandler
 
 ---
 
-### 3. Interface Adapters
+### 3. Interface Adapters (Infrastructure)
 
-Преобразует данные между форматом Use Case и форматом внешнего мира (HTTP, CLI, очереди).
+Преобразует данные между форматом Use Case и форматом внешнего мира (HTTP, CLI, очереди). В данном проекте компоненты Interface Adapters размещаются в слое `Infrastructure` конкретного Bounded Context.
 
-- **Controller** — принимает HTTP-запрос, формирует Command/Query, возвращает Response
-- **Presenter / DTO Transformer** — преобразует ответ Use Case в нужный формат
+- **Controller** — принимает HTTP-запрос (через Value Resolver), вызывает Use Case через Transformer, возвращает Response
+- **Presenter** — преобразует OutputDto Use Case в HTTP-ответ
+- **Input Transformer** — маппит Request DTO → InputDto
 - **CLI Command** — Symfony Console команда как точка входа
 
 **Правила:**
 - Не содержит бизнес-логики
 - Не работает напрямую с Domain-объектами из вьюшек/ответов — использует DTO
 - Тонкий слой: принял → трансформировал → передал
+- Десериализация и валидация — через Value Resolver, не в контроллере
 
 ```php
-// ✅ Controller: тонкий, без логики
+// ✅ Controller: тонкий, без логики, через Value Resolver и Transformer
 final class RegisterWorkEntryController extends AbstractController
 {
     public function __construct(
-        private readonly MessageBusInterface $commandBus,
+        private readonly RegisterWorkEntryUseCase $useCase,
+        private readonly RegisterWorkEntryInputTransformer $transformer,
     ) {}
 
-    #[Route('/work-entries', methods: ['POST'])]
-    public function __invoke(Request $request): JsonResponse
-    {
-        $data = $request->toArray();
-
-        $this->commandBus->dispatch(new RegisterWorkEntryCommand(
-            employeeId: $data['employee_id'],
-            startDate:  $data['start_date'],
-            endDate:    $data['end_date'],
-            hours:      (float) $data['hours'],
-        ));
+    #[Route('/api/work-entries', methods: ['POST'])]
+    public function __invoke(
+        #[ValueResolver(RegisterWorkEntryRequestDto::class)] RegisterWorkEntryRequestDto $dto,
+    ): JsonResponse {
+        $this->useCase->execute($this->transformer->transform($dto));
 
         return new JsonResponse(null, Response::HTTP_CREATED);
     }
@@ -226,39 +223,56 @@ final class DoctrineWorkEntryRepository implements WorkEntryRepository
 
 ## Структура директорий
 
+Верхний уровень — Bounded Context, внутри которого три слоя: `Domain`, `Application`, `Infrastructure`.
+
 ```
 src/
-├── Domain/
-│   ├── WorkEntry/
-│   │   ├── WorkEntry.php              # Entity / Aggregate Root
-│   │   ├── WorkEntryId.php            # Value Object
-│   │   ├── WorkEntryRepository.php    # Repository Interface
+├── Timesheet/                         ← Bounded Context
+│   ├── Domain/
+│   │   ├── Entity/
+│   │   │   └── WorkEntry.php          # Entity / Aggregate Root
+│   │   ├── ValueObject/
+│   │   │   ├── WorkEntryId.php        # Value Object
+│   │   │   ├── Hours.php
+│   │   │   └── DateRange.php
+│   │   ├── Repository/
+│   │   │   └── WorkEntryRepositoryInterface.php   # Repository Interface
 │   │   └── Event/
 │   │       └── WorkEntryRegistered.php
-│   └── Shared/
-│       ├── Hours.php
-│       └── DateRange.php
-├── Application/
-│   ├── WorkEntry/
-│   │   ├── RegisterWorkEntry/
-│   │   │   ├── RegisterWorkEntryCommand.php
-│   │   │   └── RegisterWorkEntryHandler.php
-│   │   └── GetWorkEntries/
-│   │       ├── GetWorkEntriesQuery.php
-│   │       └── GetWorkEntriesHandler.php
-│   └── Port/
-│       ├── EventBusInterface.php
-│       └── WorkEntryIdGenerator.php
-├── Infrastructure/
-│   ├── Persistence/
-│   │   └── Doctrine/
-│   │       └── DoctrineWorkEntryRepository.php
-│   └── Messaging/
-│       └── SymfonyEventBus.php
-└── UI/
-    └── Http/
-        └── WorkEntry/
-            └── RegisterWorkEntryController.php
+│   ├── Application/
+│   │   ├── UseCase/
+│   │   │   ├── RegisterWorkEntryUseCase.php
+│   │   │   └── GetWorkEntryUseCase.php
+│   │   ├── Dto/
+│   │   │   ├── RegisterWorkEntryInputDto.php
+│   │   │   ├── GetWorkEntryInputDto.php
+│   │   │   └── GetWorkEntryOutputDto.php
+│   │   └── Port/
+│   │       ├── GetWorkEntryOutputPortInterface.php
+│   │       ├── EventBusInterface.php
+│   │       └── WorkEntryIdGeneratorInterface.php
+│   └── Infrastructure/
+│       ├── Controller/
+│       │   └── RegisterWorkEntryController.php    # HTTP-контроллер
+│       ├── Presenter/
+│       │   └── HttpGetWorkEntryPresenter.php      # Presenter
+│       ├── Transformer/
+│       │   └── RegisterWorkEntryInputTransformer.php
+│       ├── ValueResolver/
+│       │   └── RegisterWorkEntryValueResolver.php
+│       ├── Dto/
+│       │   └── RegisterWorkEntryRequestDto.php
+│       └── Repository/
+│           └── DoctrineWorkEntryRepository.php
+├── Shared/                            ← Shared Kernel (минимален)
+│   └── Domain/
+│       └── ValueObject/
+│           └── Money.php
+└── Persistence/                       ← единый Doctrine-домен
+    ├── Entity/
+    │   └── WorkEntry.php
+    └── Repository/
+        └── WorkEntryRepository.php
 ```
 
 ---
@@ -267,10 +281,9 @@ src/
 
 | Слой | Знает о | Не знает о |
 |---|---|---|
-| Domain | только о себе | Application, Infrastructure, UI |
-| Application | Domain | Infrastructure, UI, фреймворках |
-| Interface Adapters | Application, Domain | Infrastructure (напрямую) |
-| Infrastructure | Domain (интерфейсы), Application | UI |
+| Domain | только о себе | Application, Infrastructure |
+| Application | Domain | Infrastructure, фреймворках |
+| Infrastructure | Domain (интерфейсы), Application | — |
 
 ---
 
@@ -315,24 +328,24 @@ interface WorkEntryRepository {
 | Domain | Unit | нет |
 | Application | Unit | Repository, EventBus и т.д. через моки |
 | Infrastructure | Integration | реальная БД, реальные сервисы |
-| UI (Controller) | Functional/E2E | весь стек или Symfony WebTestCase |
+| Infrastructure/Controller | Functional/E2E | весь стек или Symfony WebTestCase |
 
 ```php
 // ✅ Unit-тест Use Case с мок-репозиторием
-class RegisterWorkEntryHandlerTest extends TestCase
+class RegisterWorkEntryUseCaseTest extends TestCase
 {
     public function test_registers_work_entry(): void
     {
-        $repository = $this->createMock(WorkEntryRepository::class);
+        $repository = $this->createMock(WorkEntryRepositoryInterface::class);
         $repository->expects($this->once())->method('save');
 
-        $handler = new RegisterWorkEntryHandler(
+        $useCase = new RegisterWorkEntryUseCase(
             $repository,
             new UuidWorkEntryIdGenerator(),
             new InMemoryEventBus(),
         );
 
-        $handler(new RegisterWorkEntryCommand(
+        $useCase->execute(new RegisterWorkEntryInputDto(
             employeeId: 'emp-1',
             startDate:  '2026-03-01',
             endDate:    '2026-03-15',
@@ -350,10 +363,10 @@ class RegisterWorkEntryHandlerTest extends TestCase
 
 - **Aggregate Root** → Entity (Domain)
 - **Value Object** → Domain
-- **Repository** → интерфейс в Domain, реализация в Infrastructure
+- **Repository** → интерфейс `{Entity}RepositoryInterface` в Domain, реализация в Infrastructure
 - **Domain Service** → Domain или Application
-- **Application Service** → Application Use Case Handler
-- **Bounded Context** → отдельный модуль/namespace верхнего уровня
+- **Application Service** → Application Use Case Handler (метод `execute()`)
+- **Bounded Context** → отдельный модуль/namespace верхнего уровня (`src/{BoundedContext}/`)
 
 ---
 

@@ -52,6 +52,7 @@ src/
 - `Create` — создание (POST)
 - `Update` — обновление (PUT/PATCH)
 - `Delete` — удаление (DELETE)
+- `Get` — получение одного (GET с path-параметром)
 - `List` — получение списка (GET с фильтрами/пагинацией)
 
 ---
@@ -107,6 +108,33 @@ final class CreateWorkEntryInputTransformer
     }
 }
 ```
+
+### Конкретный пример: получение записи рабочего времени (GET с path-параметром)
+
+Для GET-запроса с path-параметром Transformer принимает примитивный параметр (строку) и возвращает InputDto:
+
+```php
+// src/Timesheet/Infrastructure/Transformer/GetWorkEntryInputTransformer.php
+
+declare(strict_types=1);
+
+namespace App\Timesheet\Infrastructure\Transformer;
+
+use App\Timesheet\Application\Dto\GetWorkEntryInputDto;
+
+/** Трансформирует path-параметр id в GetWorkEntryInputDto для Use Case. */
+final class GetWorkEntryInputTransformer
+{
+    public function transform(string $id): GetWorkEntryInputDto
+    {
+        return new GetWorkEntryInputDto(id: $id);
+    }
+}
+```
+
+**Обратите внимание:** метод `transform()` принимает примитив (`string $id`), а не Request DTO — это допустимо для GET-запросов, где данные приходят из path-параметра, а не из тела запроса.
+
+---
 
 ### Пример с нетривиальной трансформацией
 
@@ -183,6 +211,43 @@ final class CreateWorkEntryController extends AbstractController
 }
 ```
 
+### Query-контроллер (GET с path-параметром)
+
+```php
+// src/Timesheet/Infrastructure/Controller/GetWorkEntryController.php
+
+declare(strict_types=1);
+
+namespace App\Timesheet\Infrastructure\Controller;
+
+use App\Timesheet\Application\UseCase\GetWorkEntryUseCase;
+use App\Timesheet\Infrastructure\Presenter\HttpGetWorkEntryPresenter;
+use App\Timesheet\Infrastructure\Transformer\GetWorkEntryInputTransformer;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Routing\Attribute\Route;
+
+/** Контроллер получения записи рабочего времени по идентификатору. */
+#[Route('/api/timesheet/work-entries/{id}', name: 'timesheet_get_work_entry', methods: ['GET'])]
+final class GetWorkEntryController extends AbstractController
+{
+    public function __construct(
+        private readonly GetWorkEntryUseCase $useCase,
+        private readonly HttpGetWorkEntryPresenter $presenter,
+        private readonly GetWorkEntryInputTransformer $transformer,
+    ) {}
+
+    public function __invoke(string $id): JsonResponse
+    {
+        $this->useCase->execute($this->transformer->transform($id));
+
+        return $this->presenter->getResponse();
+    }
+}
+```
+
+---
+
 ### Command-контроллер с path-параметром (PUT/PATCH)
 
 ```php
@@ -223,19 +288,31 @@ final class UpdateWorkEntryController extends AbstractController
 
 ---
 
-## 3. Когда использовать Transformer
+## 3. Transformer обязателен всегда
 
-### Transformer нужен
+Input Transformer используется для **всех** методов, которые передают данные в Use Case: POST, PUT, PATCH, а также GET-запросы с формированием InputDto из параметров запроса.
 
-- Маппинг полей Request DTO -> InputDto нетривиален (переименование полей, преобразование типов, вычисление значений из нескольких полей)
-- Request DTO и InputDto имеют разные поля или названия полей (например, `$dto->comment` -> `$input->description`)
-- В InputDto добавляются данные из path-параметров, заголовков или контекста безопасности
-- Один и тот же InputDto формируется из разных источников (HTTP, CLI, тесты) — логика маппинга переиспользуется
+**Создание InputDto напрямую в контроллере запрещено** — даже при тривиальном маппинге 1:1. Transformer обеспечивает:
+- явное место для маппинга, которое легко найти и протестировать
+- возможность добавить логику маппинга без изменения контроллера
+- единый стиль — контроллер всегда делегирует трансформацию
 
-### Transformer НЕ нужен
+Transformer может быть минимальным при идентичных полях:
 
-- Request DTO и InputDto полностью идентичны по полям — Transformer добавляет бойлерплейт без ценности
-- Маппинг тривиален (1:1 по именам) — допустимо создать InputDto прямо в контроллере
+```php
+final class CreateWorkEntryInputTransformer
+{
+    public function transform(CreateWorkEntryRequestDto $dto): CreateWorkEntryInputDto
+    {
+        return new CreateWorkEntryInputDto(
+            employeeId: $dto->employeeId,
+            startDate: $dto->startDate,
+            endDate: $dto->endDate,
+            hours: $dto->hours,
+        );
+    }
+}
+```
 
 ---
 
@@ -455,20 +532,20 @@ final class CreateWorkEntryInputTransformer
     }
 }
 
-// -- Маппинг в контроллере при нетривиальной трансформации
+// -- Создание InputDto напрямую в контроллере — запрещено всегда
 final class CreateWorkEntryController extends AbstractController
 {
     public function __invoke(
         #[ValueResolver(CreateWorkEntryRequestDto::class)] CreateWorkEntryRequestDto $dto,
     ): JsonResponse {
-        $this->useCase->execute(new CreateWorkEntryInputDto(
+        $this->useCase->execute(new CreateWorkEntryInputDto(  // ЗАПРЕЩЕНО
             employeeId: $dto->employeeId,
             startDate: $dto->startDate,
             endDate: $dto->endDate,
             hours: $dto->hours,
-            description: $dto->comment, // переименование поля — признак нетривиального маппинга
+            description: $dto->comment,
         ));
-        // Нетривиальный маппинг загромождает контроллер — выносите в Transformer
+        // Всегда используйте Transformer: $this->useCase->execute($this->transformer->transform($dto))
     }
 }
 

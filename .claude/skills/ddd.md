@@ -340,8 +340,8 @@ final class TimesheetPeriod
 - Один репозиторий — один агрегат
 
 ```php
-// ✅ Domain: только интерфейс
-interface TimesheetPeriodRepository
+// ✅ Domain: только интерфейс — именование с суффиксом Interface
+interface TimesheetPeriodRepositoryInterface
 {
     public function save(TimesheetPeriod $timesheet): void;
 
@@ -351,14 +351,14 @@ interface TimesheetPeriodRepository
     public function findByEmployee(EmployeeId $employeeId): array;
 
     public function findByEmployeeAndMonth(EmployeeId $employeeId, Month $month): ?TimesheetPeriod;
-    
+
     public function remove(TimesheetPeriod $timesheet): void;
 }
 ```
 
 ```php
 // ✅ Infrastructure: Doctrine-реализация
-final class DoctrineTimesheetPeriodRepository implements TimesheetPeriodRepository
+final class DoctrineTimesheetPeriodRepository implements TimesheetPeriodRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
@@ -404,7 +404,7 @@ final class DoctrineTimesheetPeriodRepository implements TimesheetPeriodReposito
 final class WorkEntryOverlapChecker
 {
     public function __construct(
-        private readonly TimesheetPeriodRepository $repository,
+        private readonly TimesheetPeriodRepositoryInterface $repository,
     ) {}
 
     public function hasOverlapForEmployee(
@@ -588,7 +588,7 @@ final class OverlappingWorkEntryException extends DomainException
 |---|---|---|
 | Entity, Value Object | Domain | Нет зависимостей от фреймворков |
 | Aggregate Root | Domain | Транзакционная граница |
-| Repository Interface | Domain | Только контракт |
+| Repository Interface | Domain | Только контракт, именование `{Entity}RepositoryInterface` |
 | Domain Event | Domain | Readonly, только примитивы |
 | Domain Service | Domain | Stateless, именован по бизнесу |
 | Specification | Domain | Инкапсулирует бизнес-правило |
@@ -597,7 +597,7 @@ final class OverlappingWorkEntryException extends DomainException
 | Use Case Handler | Application | Оркестрация, без бизнес-логики |
 | Repository Impl | Infrastructure | Doctrine / PDO / Redis |
 | Anti-Corruption Layer | Infrastructure | Адаптер к внешней системе |
-| Controller | UI | Тонкий, без логики |
+| Controller | Infrastructure | Тонкий, без логики |
 
 ---
 
@@ -611,7 +611,7 @@ class TimesheetPeriod {
 // И отдельный TimesheetService::submit($timesheet) — бизнес-логика не там
 
 // ❌ "Умный" репозиторий: содержит бизнес-логику
-class TimesheetRepository {
+class DoctrineTimesheetPeriodRepository implements TimesheetPeriodRepositoryInterface {
     public function submitTimesheet(TimesheetPeriod $t): void {
         $t->status = TimesheetStatus::Submitted; // логика должна быть в агрегате
         $this->em->flush();
