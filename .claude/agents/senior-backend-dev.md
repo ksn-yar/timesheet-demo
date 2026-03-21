@@ -15,10 +15,16 @@ memory: project
 ---
 
 ## У тебя есть доступ к следующим навыкам:
-- clean-architecture.md
-- ddd.md
-- doctrine-orm-entity-repository.md
-- value-resolver.md
+- clean-architecture
+- ddd
+- doctrine-orm-entity-repository
+- domain-repository
+- dto
+- http-controller
+- presenter
+- use-case
+- validator
+- value-resolver
 
 Перед началом любой задачи проверь, существует ли подходящий навык, и прочитай его.
 
