@@ -84,19 +84,22 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/api/{bounded-context}/{entities}', name: '{bounded_context}_{action}_{entity}', methods: ['POST'])]
 final class {Action}{Entity}Controller extends AbstractController
 {
-    // Внедрение зависимостей Use Case через конструктор.
-    // Если используется Symfony Messenger — внедряем MessageBusInterface.
-    // Если Use Case вызывается напрямую — внедряем конкретный Handler.
+    // Внедрение зависимостей: Use Case и Input Transformer через конструктор.
+    // Input Transformer трансформирует Request DTO -> InputDto для Use Case (см. skill input-transformer).
+    // Если используется Symfony Messenger — внедряем MessageBusInterface вместо конкретного Use Case.
+
+    // public function __construct(
+    //     private readonly {Action}{Entity}UseCase $useCase,
+    //     private readonly {Action}{Entity}InputTransformer $transformer,
+    // ) {}
 
     public function __invoke(
         #[ValueResolver({Action}{Entity}RequestDto::class)] {Action}{Entity}RequestDto $dto,
     ): JsonResponse {
         // DTO уже десериализован и валидирован через Value Resolver.
-        // Формируем Command и отправляем в шину команд (или вызываем Handler напрямую).
+        // Transformer маппит Request DTO -> InputDto, Use Case выполняет сценарий.
 
-        // $this->commandBus->dispatch(new {Action}{Entity}Command(
-        //     ...
-        // ));
+        // $this->useCase->execute($this->transformer->transform($dto));
 
         return new JsonResponse(null, Response::HTTP_CREATED);
     }
@@ -203,20 +206,17 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CreateWorkEntryController extends AbstractController
 {
     // public function __construct(
-    //     private readonly MessageBusInterface $commandBus,
+    //     private readonly CreateWorkEntryUseCase $useCase,
+    //     private readonly CreateWorkEntryInputTransformer $transformer,
     // ) {}
 
     public function __invoke(
         #[ValueResolver(CreateWorkEntryRequestDto::class)] CreateWorkEntryRequestDto $dto,
     ): JsonResponse {
         // DTO уже десериализован и валидирован через CreateWorkEntryValueResolver.
+        // Transformer маппит Request DTO -> InputDto (см. skill input-transformer).
 
-        // $this->commandBus->dispatch(new RegisterWorkEntryCommand(
-        //     employeeId: $dto->employeeId,
-        //     startDate:  $dto->startDate,
-        //     endDate:    $dto->endDate,
-        //     hours:      $dto->hours,
-        // ));
+        // $this->useCase->execute($this->transformer->transform($dto));
 
         return new JsonResponse(null, Response::HTTP_CREATED);
     }
@@ -318,12 +318,19 @@ HTTP Request
 │  (см. skill              │  При ошибках: ValidationFailedException
 │   value-resolver)        │  или BadRequestHttpException
 └──────────┬───────────────┘
-           │ готовый DTO
+           │ готовый Request DTO
            ▼
 ┌──────────────────────────┐
-│  Controller::__invoke()  │  Тонкий: DTO -> Command/Query -> Response
+│  Controller::__invoke()  │  Тонкий: Request DTO -> Transformer -> Use Case -> Response
 └──────────┬───────────────┘
-           │ Command / Query
+           │ Request DTO
+           ▼
+┌──────────────────────────┐
+│  Input Transformer       │  Request DTO -> InputDto
+│  (см. skill              │  Маппинг полей для Application слоя
+│   input-transformer)     │
+└──────────┬───────────────┘
+           │ InputDto
            ▼
 ┌──────────────────────────┐
 │  Use Case Handler        │  Бизнес-логика (Application слой)
@@ -354,6 +361,7 @@ HTTP Request
 - [ ] `#[OA\Parameter]` описывает path/query параметры (для GET/DELETE с параметрами)
 - [ ] PHPDoc-комментарий на классе кратко описывает назначение контроллера
 - [ ] Парный Value Resolver и DTO уже созданы (см. skill `value-resolver`)
+- [ ] Для POST/PUT/PATCH: Input Transformer внедрён в конструктор и используется для маппинга Request DTO -> InputDto (см. skill `input-transformer`)
 
 ---
 

@@ -323,7 +323,12 @@ HTTP Request
     |
     v
 +----------------------------+
-|  Controller::__invoke()    |  Создаёт InputDto, вызывает Use Case
+|  Controller::__invoke()    |  Делегирует маппинг Transformer, вызывает Use Case
++-------------+--------------+
+              | Request DTO
+              v
++----------------------------+
+|  Transformer::transform()  |  Request DTO -> InputDto (см. skill input-transformer)
 +-------------+--------------+
               | InputDto
               v
@@ -349,7 +354,7 @@ HTTP Request
     |
     v
 +----------------------------+
-|  Controller::__invoke()    |  Создаёт InputDto, вызывает Use Case
+|  Controller::__invoke()    |  Создаёт InputDto (или через Transformer), вызывает Use Case
 +-------------+--------------+
               | InputDto
               v
@@ -379,6 +384,8 @@ HTTP Request
 
 ### Контроллер с Command Use Case
 
+Маппинг Request DTO -> InputDto выполняется через Input Transformer (см. skill `input-transformer`). Контроллер не создаёт InputDto вручную — делегирует это Transformer.
+
 ```php
 // src/Timesheet/Infrastructure/Controller/CreateWorkEntryController.php
 
@@ -386,9 +393,9 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Controller;
 
-use App\Timesheet\Application\Dto\CreateWorkEntryInputDto;
 use App\Timesheet\Application\UseCase\CreateWorkEntryUseCase;
 use App\Timesheet\Infrastructure\Dto\CreateWorkEntryRequestDto;
+use App\Timesheet\Infrastructure\Transformer\CreateWorkEntryInputTransformer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -401,18 +408,13 @@ final class CreateWorkEntryController extends AbstractController
 {
     public function __construct(
         private readonly CreateWorkEntryUseCase $useCase,
+        private readonly CreateWorkEntryInputTransformer $transformer,
     ) {}
 
     public function __invoke(
         #[ValueResolver(CreateWorkEntryRequestDto::class)] CreateWorkEntryRequestDto $dto,
     ): JsonResponse {
-        $this->useCase->execute(new CreateWorkEntryInputDto(
-            employeeId: $dto->employeeId,
-            startDate: $dto->startDate,
-            endDate: $dto->endDate,
-            hours: $dto->hours,
-            description: $dto->comment,
-        ));
+        $this->useCase->execute($this->transformer->transform($dto));
 
         return new JsonResponse(null, Response::HTTP_CREATED);
     }
