@@ -80,13 +80,45 @@
 | id | UUID | обязательно | Уникальный идентификатор |
 | name | string | обязательно | Наименование политики |
 | sourceSystem | string | обязательно | Идентификатор внешней системы-источника |
-| mappingRules | JSON | обязательно | Правила трансформации полей внешней системы во внутренние атрибуты Ticket |
+| mappingRules | JSON | обязательно | Правила трансформации полей внешней системы во внутренние атрибуты Ticket. Структура описана ниже. |
 | allowEdit | boolean | обязательно | Разрешает ли политика ручное редактирование Imported Ticket |
 | isActive | boolean | обязательно | Признак активности политики |
 
 **Ограничения:**
 - Для одного `sourceSystem` может быть активна (`isActive = true`) только одна Import Policy одновременно.
 - Изменение Import Policy не пересчитывает ранее импортированные Ticket.
+
+**Структура `mappingRules`:**
+
+`mappingRules` — JSON-объект с обязательными ключами:
+
+| Ключ | Тип | Описание |
+|------|-----|---------|
+| `employeeMapping.sourceField` | string | Поле внешней записи, содержащее идентификатор сотрудника |
+| `employeeMapping.matchBy` | enum | Способ сопоставления: `email` или `externalId` |
+| `taskMapping.sourceField` | string | Поле внешней записи, содержащее идентификатор задачи |
+| `taskMapping.matchBy` | enum | Способ сопоставления: `name` или `externalId` |
+| `workMapping.sourceField` | string | Поле внешней записи, содержащее идентификатор вида работ |
+| `workMapping.matchBy` | enum | Способ сопоставления: `name` или `externalId` |
+| `dateField` | string | Поле внешней записи, содержащее дату |
+| `hoursField` | string | Поле внешней записи, содержащее количество часов |
+| `commentField` | string \| null | Поле внешней записи, содержащее комментарий (null — не маппится) |
+| `externalIdField` | string | Поле внешней записи, используемое как уникальный внешний идентификатор для дедупликации |
+
+Пример:
+```json
+{
+  "employeeMapping": { "sourceField": "user_email", "matchBy": "email" },
+  "taskMapping":     { "sourceField": "task_code",  "matchBy": "externalId" },
+  "workMapping":     { "sourceField": "work_type",  "matchBy": "name" },
+  "dateField":       "worked_date",
+  "hoursField":      "duration_hours",
+  "commentField":    "notes",
+  "externalIdField": "entry_id"
+}
+```
+
+> **Примечание по реализации:** На первом этапе `mappingRules` сохраняется как произвольный JSON без строгой валидации структуры (`ExternalDataFetcherInterface` реализован как `NullExternalDataFetcher`). Валидация структуры и реализация конкретных интеграций добавляются при подключении реальных внешних систем.
 
 ---
 
@@ -125,7 +157,7 @@
 - 3a. `hours ≤ 0` → система отклоняет создание с сообщением об ошибке валидации.
 - 3b. Employee пытается добавить Ticket за другого сотрудника → система отклоняет операцию.
 - 3c. Task не существует → система отклоняет создание.
-- 4a. Для данной комбинации Employee/Work нет актуальной Rate → система фиксирует `rateSnapshot = 0` или отклоняет создание (поведение подлежит уточнению в рамках настройки Rate).
+- 4a. Для данной комбинации Employee/Work нет актуальной Rate → система фиксирует `rateSnapshot = 0`. Создание Ticket не блокируется.
 
 **Постусловия:** трудозатраты зафиксированы и доступны для формирования Report.
 
