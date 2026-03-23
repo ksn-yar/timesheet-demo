@@ -136,8 +136,8 @@ app/src/
 │       │   ├── PdfReportFileGenerator.php
 │       │   └── ReportFileGeneratorFactory.php
 │       ├── Repository/
-│       │   ├── DoctrineReportRepository.php
-│       │   └── DoctrineReportExportRepository.php
+│       │   ├── ReportRepository.php
+│       │   └── ReportExportRepository.php
 │       └── EventListener/
 │           └── AuditLogEventListener.php
 ```
@@ -547,7 +547,7 @@ Infrastructure Layer (зависит от Domain + Application):
   Transformer -> RequestDto, InputDto
   Presenter -> OutputDto, OutputPort, ResponseDto
   ValueResolver -> AbstractJsonValueResolver/AbstractValueResolver, RequestDto
-  DoctrineReportRepository -> Domain Repository Interface, Domain Entity, Domain VO, Persistence Entity, Persistence Repository
+  ReportRepository -> Domain Repository Interface, Domain Entity, Domain VO, Persistence Entity, Persistence Repository
   DoctrineTicketQueryService -> TicketQueryServiceInterface, Doctrine DBAL
   CsvReportFileGenerator -> ReportFileGeneratorInterface
   XlsxReportFileGenerator -> ReportFileGeneratorInterface
@@ -640,7 +640,7 @@ Persistence Layer (зависит от Doctrine):
 ### Этап 4: Infrastructure Layer
 
 **Шаг 4.1:** Реализации доменных репозиториев
-- `DoctrineReportRepository`, `DoctrineReportExportRepository`
+- `ReportRepository`, `ReportExportRepository`
 
 **Шаг 4.2:** Реализация портов
 - `DoctrineTicketQueryService` (прямой запрос к таблицам Ticket, User, Group, Task, CR, Project, Work)
@@ -713,8 +713,8 @@ Persistence Layer (зависит от Doctrine):
 
 | Тест | Что проверяем |
 |---|---|
-| `DoctrineReportRepositoryTest` | `save`, `findById`, `findAllMeta` с фильтрами и пагинацией, `count`; проверка что `findAllMeta` не загружает `data` |
-| `DoctrineReportExportRepositoryTest` | `save`, `findById`, `findAll` с фильтрами и пагинацией, `count` |
+| `ReportRepositoryTest` | `save`, `findById`, `findAllMeta` с фильтрами и пагинацией, `count`; проверка что `findAllMeta` не загружает `data` |
+| `ReportExportRepositoryTest` | `save`, `findById`, `findAll` с фильтрами и пагинацией, `count` |
 | `DoctrineTicketQueryServiceTest` | Корректность JOIN-запроса; фильтрация по периоду и фильтрам; возврат наименований связанных сущностей |
 
 ### Интеграционные тесты API

@@ -181,9 +181,9 @@
 
 **Описание:** ТЗ указывает: «WorkCatalogContext запрашивает IdentityContext для проверки, есть ли пользователи с данной `roleId`». Это означает, что Identity должен предоставить метод/порт для проверки `hasUsersWithRoleId(roleId): bool`.
 
-**Рекомендация:** Добавить метод `countActiveUsersByRoleId(string $roleId): int` в `UserRepositoryInterface`. Реализовать его в `DoctrineUserRepository`. Предоставить API-эндпоинт или использовать прямой запрос через Persistence (аналогично `hasTicketsForTask` в ProjectManagement).
+**Рекомендация:** Добавить метод `countActiveUsersByRoleId(string $roleId): int` в `UserRepositoryInterface`. Реализовать его в `UserRepository`. Предоставить API-эндпоинт или использовать прямой запрос через Persistence (аналогично `hasTicketsForTask` в ProjectManagement).
 
-**Решение:** Раздел 8 обновлён: Identity предоставляет метод `countActiveUsersByRoleId(string $roleId): int` в `UserRepositoryInterface`, реализованный в `DoctrineUserRepository` через Persistence (без дополнительного API-эндпоинта).
+**Решение:** Раздел 8 обновлён: Identity предоставляет метод `countActiveUsersByRoleId(string $roleId): int` в `UserRepositoryInterface`, реализованный в `UserRepository` через Persistence (без дополнительного API-эндпоинта).
 
 ---
 

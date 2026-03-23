@@ -172,8 +172,8 @@ app/src/
 │       ├── EventListener/
 │       │   └── AuditLogEventListener.php
 │       ├── Repository/
-│       │   ├── DoctrineTicketRepository.php
-│       │   └── DoctrineImportPolicyRepository.php
+│       │   ├── TicketRepository.php
+│       │   └── ImportPolicyRepository.php
 │       └── Port/
 │           ├── DoctrineTaskExistenceChecker.php
 │           ├── DoctrineWorkExistenceChecker.php
@@ -734,7 +734,7 @@ Persistence Layer (зависит от Doctrine):
 ### Этап 4: Infrastructure Layer
 
 **Шаг 4.1:** Реализации доменных репозиториев
-- `DoctrineTicketRepository`, `DoctrineImportPolicyRepository`
+- `TicketRepository`, `ImportPolicyRepository`
 
 **Шаг 4.2:** Реализации Port-интерфейсов
 - `DoctrineTaskExistenceChecker`, `DoctrineWorkExistenceChecker`, `DoctrineRateProvider`, `SecurityCurrentUserProvider`, `NullExternalDataFetcher`
@@ -806,8 +806,8 @@ Persistence Layer (зависит от Doctrine):
 
 | Тест | Что проверяется |
 |---|---|
-| `DoctrineTicketRepositoryTest` | Маппинг Domain Entity <-> Doctrine Entity (включая `externalId`); делегирование save/find; `existsByImportSourceAndExternalId` |
-| `DoctrineImportPolicyRepositoryTest` | Маппинг; делегирование; `findActiveBySourceSystem` |
+| `TicketRepositoryTest` | Маппинг Domain Entity <-> Doctrine Entity (включая `externalId`); делегирование save/find; `existsByImportSourceAndExternalId` |
+| `ImportPolicyRepositoryTest` | Маппинг; делегирование; `findActiveBySourceSystem` |
 | Transformer-тесты | Маппинг Request DTO -> InputDto для каждого Transformer |
 | Presenter-тесты | Маппинг OutputDto -> Response DTO для каждого Presenter |
 | `AuditLogEventListenerTest` | Перехват всех доменных событий; формирование корректной записи лога |

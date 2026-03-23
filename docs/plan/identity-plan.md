@@ -144,8 +144,8 @@ app/src/
 │       ├── EventListener/
 │       │   └── AuditLogEventListener.php
 │       ├── Repository/
-│       │   ├── DoctrineUserRepository.php
-│       │   └── DoctrineGroupRepository.php
+│       │   ├── UserRepository.php
+│       │   └── GroupRepository.php
 │       └── Security/
 │           └── SymfonyPasswordHasher.php
 ```
@@ -259,7 +259,7 @@ app/src/
 |---|---|---|
 | `TicketExistenceCheckerInterface` | `app/src/Identity/Application/Port/` | `hasTicketsForUser(UserId): bool` |
 
-Реализация размещается в `DoctrineUserRepository`.
+Реализация размещается в `UserRepository`.
 
 ### Порт к WorkCatalogContext
 
@@ -643,11 +643,11 @@ Persistence Layer (зависит от Doctrine):
 ### Этап 4: Infrastructure Layer
 
 **Шаг 4.1:** Реализации доменных репозиториев
-- `DoctrineUserRepository`, `DoctrineGroupRepository`
+- `UserRepository`, `GroupRepository`
 
 **Шаг 4.2:** Реализация портов
 - `SymfonyPasswordHasher` (реализация `PasswordHasherInterface`)
-- `TicketExistenceChecker` в `DoctrineUserRepository` (реализация `TicketExistenceCheckerInterface`)
+- `TicketExistenceChecker` в `UserRepository` (реализация `TicketExistenceCheckerInterface`)
 
 **Шаг 4.3:** Request DTO
 - Все Request DTO с атрибутами валидации
@@ -710,8 +710,8 @@ Persistence Layer (зависит от Doctrine):
 
 | Тест | Что проверяем |
 |---|---|
-| `DoctrineUserRepositoryTest` | `save`, `findById`, `existsByEmail`, `countActiveUsersByGroupId`, `hasTicketsForUser`, `findAll` с фильтрами и пагинацией, partial unique index на email |
-| `DoctrineGroupRepositoryTest` | `save`, `findById`, `existsByName`, `findAll` с пагинацией, partial unique index на name |
+| `UserRepositoryTest` | `save`, `findById`, `existsByEmail`, `countActiveUsersByGroupId`, `hasTicketsForUser`, `findAll` с фильтрами и пагинацией, partial unique index на email |
+| `GroupRepositoryTest` | `save`, `findById`, `existsByName`, `findAll` с пагинацией, partial unique index на name |
 
 ### Интеграционные тесты API
 

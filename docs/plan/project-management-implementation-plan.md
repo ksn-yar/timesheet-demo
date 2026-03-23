@@ -207,10 +207,10 @@ app/src/
 │       ├── EventListener/
 │       │   └── AuditLogEventListener.php
 │       └── Repository/
-│           ├── DoctrineClientRepository.php
-│           ├── DoctrineProjectRepository.php
-│           ├── DoctrineChangeRequestRepository.php
-│           └── DoctrineTaskRepository.php
+│           ├── ClientRepository.php
+│           ├── ProjectRepository.php
+│           ├── ChangeRequestRepository.php
+│           └── TaskRepository.php
 ```
 
 ### Persistence
@@ -328,7 +328,7 @@ app/src/
 
 **Примечания:**
 - Все методы подсчёта (`countActiveProjectsByClientId`, `countActiveTasksByProjectId`, `countActiveChangeRequestsByProjectId`, `countActiveTasksByChangeRequestId`) считают только **активные** записи (`deletedAt IS NULL`) -- это критично для корректной работы soft-delete
-- `hasTicketsForTask` -- проверка привязки Ticket через Persistence (прямой запрос к БД), без межсервисных вызовов. Реализуется в `DoctrineTaskRepository`
+- `hasTicketsForTask` -- проверка привязки Ticket через Persistence (прямой запрос к БД), без межсервисных вызовов. Реализуется в `TaskRepository`
 - Метод `findAll` принимает критерии фильтрации и параметры пагинации
 - `findAll` во всех репозиториях по умолчанию возвращает только активные (не удалённые, `deletedAt IS NULL`) записи
 - Все методы оперируют доменными типами (Value Objects, Domain Entity)
@@ -721,7 +721,7 @@ List Response DTO содержат `items[]`, `total`, `page`, `perPage`.
 
 Проверка привязки Ticket к Task при удалении реализуется через **Persistence** -- прямой запрос к таблице `tickets` в базе данных. Это не межсервисный вызов, а прямой SQL-запрос через Doctrine, так как все данные хранятся в одной базе.
 
-Метод `hasTicketsForTask(TaskId): bool` размещён в `TaskRepositoryInterface` (Domain) и реализуется в `DoctrineTaskRepository` (Infrastructure).
+Метод `hasTicketsForTask(TaskId): bool` размещён в `TaskRepositoryInterface` (Domain) и реализуется в `TaskRepository` (Infrastructure).
 
 ---
 
@@ -832,7 +832,7 @@ Persistence Layer (зависит от Doctrine):
 ### Этап 4: Infrastructure Layer
 
 **Шаг 4.1:** Реализации доменных репозиториев
-- `DoctrineClientRepository`, `DoctrineProjectRepository`, `DoctrineChangeRequestRepository`, `DoctrineTaskRepository`
+- `ClientRepository`, `ProjectRepository`, `ChangeRequestRepository`, `TaskRepository`
 
 **Шаг 4.2:** Кастомные валидаторы
 - `ExactlyOneParent` / `ExactlyOneParentValidator` (для CreateTaskRequestDto)

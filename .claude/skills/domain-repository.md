@@ -37,7 +37,7 @@ src/
 │   │       └── WorkEntryRepositoryInterface.php   # доменный интерфейс
 │   └── Infrastructure/
 │       └── Repository/
-│           └── DoctrineWorkEntryRepository.php     # реализация через composition
+│           └── WorkEntryRepository.php     # реализация через composition
 ```
 
 **Почему так:**
@@ -115,7 +115,7 @@ interface WorkEntryRepositoryInterface
 Реализация внедряет Doctrine Repository из `Persistence` через конструктор (composition) и выполняет маппинг между доменными объектами и Doctrine Entity.
 
 ```php
-// src/{BoundedContext}/Infrastructure/Repository/Doctrine{Entity}Repository.php
+// src/{BoundedContext}/Infrastructure/Repository/{Entity}Repository.php
 
 declare(strict_types=1);
 
@@ -131,7 +131,7 @@ use App\Persistence\Repository\{Entity}Repository as {Entity}OrmRepository;
  * Doctrine-реализация хранилища {Entity}.
  * Использует composition с Doctrine Repository из Persistence-домена.
  */
-final class Doctrine{Entity}Repository implements {Entity}RepositoryInterface
+final class {Entity}Repository implements {Entity}RepositoryInterface
 {
     public function __construct(
         private readonly {Entity}OrmRepository $ormRepository,
@@ -189,7 +189,7 @@ final class Doctrine{Entity}Repository implements {Entity}RepositoryInterface
 ### Конкретный пример
 
 ```php
-// src/Timesheet/Infrastructure/Repository/DoctrineWorkEntryRepository.php
+// src/Timesheet/Infrastructure/Repository/WorkEntryRepository.php
 
 declare(strict_types=1);
 
@@ -208,7 +208,7 @@ use App\Timesheet\Domain\ValueObject\DateRange;
  * Doctrine-реализация хранилища WorkEntry.
  * Использует composition с Doctrine Repository из Persistence-домена.
  */
-final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
+final class WorkEntryRepository implements WorkEntryRepositoryInterface
 {
     public function __construct(
         private readonly WorkEntryOrmRepository $ormRepository,
@@ -285,7 +285,7 @@ final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
 
 ## 3. Регистрация в DI-контейнере
 
-При стандартной конфигурации (autowire + autoconfigure включены, `App\\` сканируется из `src/`) Symfony автоматически обнаружит `DoctrineWorkEntryRepository` и внедрит в него `WorkEntryOrmRepository`.
+При стандартной конфигурации (autowire + autoconfigure включены, `App\\` сканируется из `src/`) Symfony автоматически обнаружит `WorkEntryRepository` и внедрит в него `WorkEntryOrmRepository`.
 
 Для привязки интерфейса к реализации требуется явный биндинг в конфигурации сервисов.
 
@@ -295,12 +295,12 @@ final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
 // config/services.php
 
 use App\Timesheet\Domain\Repository\WorkEntryRepositoryInterface;
-use App\Timesheet\Infrastructure\Repository\DoctrineWorkEntryRepository;
+use App\Timesheet\Infrastructure\Repository\WorkEntryRepository;
 
 return static function (ContainerConfigurator $container): void {
     $services = $container->services();
 
-    $services->alias(WorkEntryRepositoryInterface::class, DoctrineWorkEntryRepository::class);
+    $services->alias(WorkEntryRepositoryInterface::class, WorkEntryRepository::class);
 };
 ```
 
@@ -310,7 +310,7 @@ return static function (ContainerConfigurator $container): void {
 use Symfony\Component\DependencyInjection\Attribute\AsAlias;
 
 #[AsAlias(WorkEntryRepositoryInterface::class)]
-final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
+final class WorkEntryRepository implements WorkEntryRepositoryInterface
 {
     // ...
 }
@@ -357,7 +357,7 @@ public function save(WorkEntry $workEntry): void
 ## 5. Unit-тест реализации репозитория
 
 ```php
-// tests/Unit/{BoundedContext}/Infrastructure/Repository/Doctrine{Entity}RepositoryTest.php
+// tests/Unit/{BoundedContext}/Infrastructure/Repository/{Entity}RepositoryTest.php
 
 declare(strict_types=1);
 
@@ -365,22 +365,22 @@ namespace App\Tests\Unit\{BoundedContext}\Infrastructure\Repository;
 
 use App\{BoundedContext}\Domain\Entity\{Entity};
 use App\{BoundedContext}\Domain\ValueObject\{Entity}Id;
-use App\{BoundedContext}\Infrastructure\Repository\Doctrine{Entity}Repository;
+use App\{BoundedContext}\Infrastructure\Repository\{Entity}Repository;
 use App\Persistence\Entity\{Entity} as {Entity}OrmEntity;
 use App\Persistence\Repository\{Entity}Repository as {Entity}OrmRepository;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 /** Проверяет маппинг и делегирование вызовов в Doctrine Repository. */
-final class Doctrine{Entity}RepositoryTest extends TestCase
+final class {Entity}RepositoryTest extends TestCase
 {
     private {Entity}OrmRepository $ormRepository;
-    private Doctrine{Entity}Repository $repository;
+    private {Entity}Repository $repository;
 
     protected function setUp(): void
     {
         $this->ormRepository = $this->createMock({Entity}OrmRepository::class);
-        $this->repository = new Doctrine{Entity}Repository($this->ormRepository);
+        $this->repository = new {Entity}Repository($this->ormRepository);
     }
 
     #[Test]
@@ -460,7 +460,7 @@ final class Doctrine{Entity}RepositoryTest extends TestCase
 ### Реализация (Infrastructure)
 
 - [ ] Реализация размещена в `src/{BoundedContext}/Infrastructure/Repository/`
-- [ ] Именование: `Doctrine{Entity}Repository`
+- [ ] Именование: `{Entity}Repository`
 - [ ] Implements доменный интерфейс `{Entity}RepositoryInterface`
 - [ ] Класс объявлен как `final`
 - [ ] Doctrine Repository из `Persistence` внедряется через конструктор (**composition**)
@@ -488,7 +488,7 @@ final class Doctrine{Entity}RepositoryTest extends TestCase
 
 ```php
 // -- Наследование от ServiceEntityRepository -- нарушает composition over inheritance
-final class DoctrineWorkEntryRepository extends ServiceEntityRepository
+final class WorkEntryRepository extends ServiceEntityRepository
     implements WorkEntryRepositoryInterface
 {
     // Наследование связывает класс с Doctrine навсегда.
@@ -496,7 +496,7 @@ final class DoctrineWorkEntryRepository extends ServiceEntityRepository
 }
 
 // -- Прямое использование EntityManagerInterface вместо ORM Repository из Persistence
-final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
+final class WorkEntryRepository implements WorkEntryRepositoryInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em, // используйте WorkEntryOrmRepository
@@ -532,7 +532,7 @@ interface WorkEntryRepositoryInterface
 }
 
 // -- Отсутствие маппинга: сохранение доменной сущности напрямую в Doctrine
-final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
+final class WorkEntryRepository implements WorkEntryRepositoryInterface
 {
     public function save(WorkEntry $workEntry): void
     {
@@ -542,7 +542,7 @@ final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
 }
 
 // -- Бизнес-логика в репозитории
-final class DoctrineWorkEntryRepository implements WorkEntryRepositoryInterface
+final class WorkEntryRepository implements WorkEntryRepositoryInterface
 {
     public function submitWorkEntry(WorkEntry $workEntry): void
     {

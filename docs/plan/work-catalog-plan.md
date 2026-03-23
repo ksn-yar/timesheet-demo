@@ -158,9 +158,9 @@ app/src/
 │       ├── EventListener/
 │       │   └── AuditLogEventListener.php
 │       └── Repository/
-│           ├── DoctrineWorkRepository.php
-│           ├── DoctrineRoleRepository.php
-│           └── DoctrineRateRepository.php
+│           ├── WorkRepository.php
+│           ├── RoleRepository.php
+│           └── RateRepository.php
 ```
 
 ### Persistence
@@ -649,7 +649,7 @@ Persistence Layer (зависит от Doctrine):
 ### Этап 4: Infrastructure Layer
 
 **Шаг 4.1:** Реализации доменных репозиториев
-- `DoctrineWorkRepository`, `DoctrineRoleRepository`, `DoctrineRateRepository`
+- `WorkRepository`, `RoleRepository`, `RateRepository`
 
 **Шаг 4.2:** Реализации Port-интерфейсов
 - Реализации `TicketExistenceByWorkCheckerInterface`, `UserExistenceByRoleCheckerInterface`, `RateAppliedToTicketCheckerInterface` -- прямые запросы к Persistence
@@ -720,9 +720,9 @@ Persistence Layer (зависит от Doctrine):
 
 | Тест | Что проверяется |
 |---|---|
-| `DoctrineWorkRepositoryTest` | Маппинг Domain Entity <-> Doctrine Entity; делегирование save/find |
-| `DoctrineRoleRepositoryTest` | Маппинг; делегирование; `countActiveRatesByRoleId` |
-| `DoctrineRateRepositoryTest` | Маппинг; делегирование; фильтрация по roleId/workId |
+| `WorkRepositoryTest` | Маппинг Domain Entity <-> Doctrine Entity; делегирование save/find |
+| `RoleRepositoryTest` | Маппинг; делегирование; `countActiveRatesByRoleId` |
+| `RateRepositoryTest` | Маппинг; делегирование; фильтрация по roleId/workId |
 | Transformer-тесты | Маппинг Request DTO -> InputDto для каждого Transformer |
 | Presenter-тесты | Маппинг OutputDto -> Response DTO для каждого Presenter |
 | `AuditLogEventListenerTest` | Перехват событий; формирование корректной записи лога |
