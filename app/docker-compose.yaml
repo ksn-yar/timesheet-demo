@@ -22,8 +22,6 @@ services:
       PHP_XDEBUG_CLIENT_HOST: ${PHP_XDEBUG_CLIENT_HOST}
       PHP_XDEBUG_CLIENT_PORT: ${PHP_XDEBUG_CLIENT_PORT}
       REDIS_PASSWORD: ${REDIS_PASSWORD}
-    env_file:
-      - .env
     depends_on:
       corpo-ts-db:
         condition: service_healthy
@@ -62,7 +60,7 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT_INNER}"
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}

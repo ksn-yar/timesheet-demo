@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace app\src\Shared\Infrastructure\ValueResolver;
+namespace App\Shared\Infrastructure\ValueResolver;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;

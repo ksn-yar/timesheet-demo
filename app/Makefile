@@ -1,4 +1,22 @@
 
+dc-ps:
+	docker compose ps
+
+dc-up:
+	docker compose up -d
+
+dc-down:
+	docker compose down
+
+dc-start:
+	docker compose start
+
+dc-stop:
+	docker compose stop
+
+dc-restart:
+	docker compose restart
+
 back-bash:
 	docker exec -it corpo-ts-backend bash
 
