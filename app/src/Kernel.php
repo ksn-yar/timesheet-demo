@@ -18,10 +18,10 @@ class Kernel extends BaseKernel
     {
         $configDir = $this->getConfigDir();
 
-        $container->import($configDir.'/{packages}/*.{php,yaml}');
-        $container->import($configDir.'/{packages}/'.$this->environment.'/*.{php,yaml}');
+        $container->import($configDir . '/{packages}/*.{php,yaml}');
+        $container->import($configDir . '/{packages}/' . $this->environment . '/*.{php,yaml}');
 
-        $container->import($configDir.'/services.{php,yaml}');
-        $container->import($configDir.'/services_'.$this->environment.'.{php,yaml}');
+        $container->import($configDir . '/services.{php,yaml}');
+        $container->import($configDir . '/services_' . $this->environment . '.{php,yaml}');
     }
 }

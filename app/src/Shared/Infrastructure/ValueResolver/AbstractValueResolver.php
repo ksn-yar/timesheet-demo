@@ -52,7 +52,7 @@ abstract class AbstractValueResolver implements ValueResolverInterface
     abstract protected function getDtoRequestClass(): string;
 
     /**
-     * Процесс дессериализации
+     * Процесс дессериализации.
      */
     abstract protected function deserialize(Request $request, ArgumentMetadata $argument): object;
 }
