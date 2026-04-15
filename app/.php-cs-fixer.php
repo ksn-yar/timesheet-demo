@@ -20,17 +20,26 @@ $finder = (new Finder())
 ;
 
 $rules = [
-    '@PHP8x3Migration' => true,
+    '@PHP8x4Migration' => true,
     '@PhpCsFixer' => true,
     '@Symfony:risky' => true,
     'declare_strict_types' => true,
     'global_namespace_import' => true,
-    'concat_space' => false,
-    'method_argument_space' => false,
+    'concat_space' => [
+        'spacing' => 'one'
+    ],
+    'method_argument_space' => [
+        'on_multiline' => 'ensure_fully_multiline',
+    ],
     'single_line_throw' => false,
-    'php_unit_test_class_requires_covers' => false,
     'types_spaces' => ['space_multiple_catch' => 'single'],
-    'phpdoc_order' => ['order' => ['param', 'throws', 'return']],
+    'phpdoc_order' => ['order' => [
+        'deprecated',
+        'internal',
+        'param',
+        'return',
+        'throws',
+    ]],
     'phpdoc_separation' => ['groups' => [['ORM\\*'], ['Assert\\*'], ['Serializer\\*'], ['Constraints\\*']]],
 ];
 

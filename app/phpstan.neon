@@ -1,5 +1,6 @@
 parameters:
     level: 6
+    tmpDir: var/cache/phpstan
     paths:
         - bin/
         - config/
@@ -7,17 +8,24 @@ parameters:
         - src/
         - tests/
     excludePaths:
-        analyse:
+        analyseAndScan:
             - var/*
+            - docker/*
+            - share/*
+        analyse:
             - vendor/*
             - migrations/*
-            - data/*
-    checkMissingVarTagTypehint: true
     checkExplicitMixed: true
+    checkImplicitMixed: true
+    checkMissingVarTagTypehint: true
     checkUninitializedProperties: true
     inferPrivatePropertyTypeFromConstructor: true
     reportUnmatchedIgnoredErrors: true
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     ignoreErrors:
+        # Doctrine proxy / lazy loading
+        - '#Property .* might not be initialized#'
         # Doctrine ORM entities не используют конструкторы - Doctrine создает объекты через рефлексию
         - '#Class App\\.*\\Infrastructure\\Entity\\.* has an uninitialized property#'
         - '#Property App\\.*\\Infrastructure\\Entity\\.*::\$id .* is never assigned .* so it can be removed from the property type#'
