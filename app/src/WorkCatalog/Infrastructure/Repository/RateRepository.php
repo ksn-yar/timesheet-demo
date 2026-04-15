@@ -1,0 +1,108 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\WorkCatalog\Infrastructure\Repository;
+
+use App\Persistence\Entity\Rate as RateOrmEntity;
+use App\Persistence\Repository\RateRepository as RateOrmRepository;
+use App\WorkCatalog\Domain\Entity\Rate;
+use App\WorkCatalog\Domain\Repository\RateRepositoryInterface;
+use App\WorkCatalog\Domain\ValueObject\RateId;
+use DateTimeImmutable;
+
+/**
+ * Doctrine-реализация хранилища Rate.
+ * Использует composition с Doctrine Repository из Persistence-домена.
+ */
+final class RateRepository implements RateRepositoryInterface
+{
+    public function __construct(
+        private readonly RateOrmRepository $ormRepository,
+    ) {}
+
+    public function save(Rate $rate): void
+    {
+        $existingOrmEntity = $this->ormRepository->find($rate->getId()->value());
+
+        if (null !== $existingOrmEntity) {
+            $this->updateOrmEntity($existingOrmEntity, $rate);
+            $this->ormRepository->save($existingOrmEntity, flush: true);
+
+            return;
+        }
+
+        $ormEntity = $this->toOrmEntity($rate);
+        $this->ormRepository->save($ormEntity, flush: true);
+    }
+
+    public function findById(RateId $id): ?Rate
+    {
+        $ormEntity = $this->ormRepository->find($id->value());
+
+        if (null === $ormEntity) {
+            return null;
+        }
+
+        return $this->toDomainEntity($ormEntity);
+    }
+
+    /** @return Rate[] */
+    public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
+    {
+        $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
+
+        return array_map(
+            fn (RateOrmEntity $ormEntity): Rate => $this->toDomainEntity($ormEntity),
+            $ormEntities,
+        );
+    }
+
+    public function countAll(array $criteria = []): int
+    {
+        return $this->ormRepository->countActive($criteria);
+    }
+
+    /** Преобразует доменную сущность в новую Doctrine Entity. */
+    private function toOrmEntity(Rate $rate): RateOrmEntity
+    {
+        $ormEntity = new RateOrmEntity();
+        $ormEntity->setId($rate->getId()->value());
+        $ormEntity->setAmount($rate->getMoney()->amount());
+        $ormEntity->setCurrency($rate->getMoney()->currency());
+        $ormEntity->setEffectiveFrom($rate->getEffectiveFrom());
+        $ormEntity->setRoleId($rate->getRoleId()?->value());
+        $ormEntity->setWorkId($rate->getWorkId()?->value());
+        $ormEntity->setDeletedAt($rate->getDeletedAt());
+        $ormEntity->setCreatedAt(new DateTimeImmutable());
+        $ormEntity->setUpdatedAt(new DateTimeImmutable());
+
+        return $ormEntity;
+    }
+
+    /** Обновляет существующую Doctrine Entity из доменной сущности. */
+    private function updateOrmEntity(RateOrmEntity $ormEntity, Rate $rate): void
+    {
+        $ormEntity->setAmount($rate->getMoney()->amount());
+        $ormEntity->setCurrency($rate->getMoney()->currency());
+        $ormEntity->setEffectiveFrom($rate->getEffectiveFrom());
+        $ormEntity->setRoleId($rate->getRoleId()?->value());
+        $ormEntity->setWorkId($rate->getWorkId()?->value());
+        $ormEntity->setDeletedAt($rate->getDeletedAt());
+        $ormEntity->setUpdatedAt(new DateTimeImmutable());
+    }
+
+    /** Восстанавливает доменную сущность из Doctrine Entity. */
+    private function toDomainEntity(RateOrmEntity $ormEntity): Rate
+    {
+        return Rate::restore(
+            $ormEntity->getId(),
+            $ormEntity->getAmount(),
+            $ormEntity->getCurrency(),
+            $ormEntity->getEffectiveFrom(),
+            $ormEntity->getRoleId(),
+            $ormEntity->getWorkId(),
+            $ormEntity->getDeletedAt(),
+        );
+    }
+}
