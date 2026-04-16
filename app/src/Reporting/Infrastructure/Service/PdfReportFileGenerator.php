@@ -50,7 +50,7 @@ final class PdfReportFileGenerator implements ReportFileGeneratorInterface
      */
     private function buildHtml(array $reports): string
     {
-        $html = '<html><head><meta charset="UTF-8"><style>';
+        $html = '<html lang="ru"><head><meta charset="UTF-8"><style>';
         $html .= 'body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }';
         $html .= 'table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }';
         $html .= 'th, td { border: 1px solid #ccc; padding: 4px 6px; text-align: left; }';
