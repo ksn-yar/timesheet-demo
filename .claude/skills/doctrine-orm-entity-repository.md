@@ -203,7 +203,108 @@ public function getId(): ?int { return $this->id; }
 
 ---
 
-## 3. Doctrine Repository
+## 3. Association Mapping (связи между сущностями)
+
+Если между Entity существуют связи (например, `WorkEntry` принадлежит `Employee`), они **должны быть объявлены через Association Mapping атрибуты** Doctrine, а не через простое хранение `employeeId` как `string`.
+
+### Типы связей
+
+| Атрибут | Направление | Описание |
+|---|---|---|
+| `#[ORM\ManyToOne]` | Many→One | Много записей ссылаются на одну сущность |
+| `#[ORM\OneToMany]` | One→Many | Одна сущность содержит коллекцию дочерних |
+| `#[ORM\ManyToMany]` | Many→Many | Обе стороны содержат коллекции |
+| `#[ORM\OneToOne]` | One→One | Одна к одной |
+
+### Пример: ManyToOne (WorkEntry → Employee)
+
+```php
+use Doctrine\ORM\Mapping as ORM;
+use App\Persistence\Entity\Employee;
+
+#[ORM\Entity(repositoryClass: WorkEntryRepository::class)]
+#[ORM\Table(name: 'work_entries')]
+class WorkEntry
+{
+    // ...
+
+    /** Связь с сотрудником — владелец ассоциации (хранит FK в своей таблице) */
+    #[ORM\ManyToOne(targetEntity: Employee::class)]
+    #[ORM\JoinColumn(name: 'employee_id', referencedColumnName: 'id', nullable: false)]
+    private Employee $employee;
+
+    public function getEmployee(): Employee
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(Employee $employee): void
+    {
+        $this->employee = $employee;
+    }
+}
+```
+
+### Пример: OneToMany (Employee → WorkEntry[])
+
+```php
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+
+#[ORM\Entity(repositoryClass: EmployeeRepository::class)]
+#[ORM\Table(name: 'employees')]
+class Employee
+{
+    // ...
+
+    /** Коллекция записей рабочего времени. Обратная сторона ассоциации (mappedBy). */
+    #[ORM\OneToMany(targetEntity: WorkEntry::class, mappedBy: 'employee', cascade: ['persist', 'remove'])]
+    private Collection $workEntries;
+
+    public function __construct()
+    {
+        $this->workEntries = new ArrayCollection();
+    }
+
+    /** @return Collection<int, WorkEntry> */
+    public function getWorkEntries(): Collection
+    {
+        return $this->workEntries;
+    }
+}
+```
+
+### Правила Association Mapping
+
+- **Владелец ассоциации** (owning side) — сторона, которая хранит FK-колонку в таблице. Обычно это `ManyToOne` или сторона без `mappedBy`.
+- **Обратная сторона** (inverse side) — объявляет `mappedBy`, ссылаясь на поле владельца. Doctrine управляет связью только через владельца.
+- **`cascade`** — используйте осторожно. `cascade: ['persist']` разрешает каскадное сохранение, `cascade: ['remove']` — каскадное удаление. Не добавляйте без явной необходимости.
+- **Lazy Loading по умолчанию** — связанные сущности загружаются лениво (`fetch: LAZY`). Для явной загрузки используйте `fetch: EAGER` или `JOIN` в запросе репозитория.
+- **Индексы** — если FK-колонка участвует в частых запросах, добавьте `#[ORM\Index]` на классе Entity.
+- **Nullable FK** — если связь необязательна, указывайте `nullable: true` в `#[ORM\JoinColumn]` и тип поля как `?Employee`.
+
+### Антипаттерны Association Mapping
+
+```php
+// -- Хранить только ID вместо ассоциации, если нужна навигация по объектам
+#[ORM\Column(type: 'guid')]
+private string $employeeId;  // ОК только если Employee никогда не нужен через эту Entity
+
+// -- Добавлять cascade: ['remove'] без понимания последствий
+// Удаление Employee автоматически удалит все его WorkEntry
+#[ORM\OneToMany(targetEntity: WorkEntry::class, cascade: ['remove'])]
+
+// -- Двунаправленная связь без mappedBy/inversedBy — Doctrine не знает об обратной стороне
+#[ORM\ManyToOne(targetEntity: Employee::class)]
+// и одновременно в Employee без mappedBy на поле WorkEntry
+
+// -- Инициализировать Collection через массив, а не ArrayCollection
+private array $workEntries = [];  // используйте ArrayCollection
+```
+
+---
+
+## 4. Doctrine Repository
 
 Реализация репозитория наследуется от `ServiceEntityRepository`:
 
@@ -264,7 +365,7 @@ class WorkEntryRepository extends ServiceEntityRepository
 
 ---
 
-## 4. Миграции
+## 5. Миграции
 
 Миграции генерируются автоматически на основе разницы между текущей схемой БД и маппингом Entity. Не нужно писать миграции вручную.
 
@@ -280,7 +381,7 @@ php bin/console doctrine:migrations:migrate
 
 ---
 
-## 5. Интеграционный тест репозитория
+## 6. Интеграционный тест репозитория
 
 ```php
 // tests/Integration/Persistence/Repository/WorkEntryRepositoryTest.php
@@ -376,6 +477,11 @@ final class WorkEntryRepositoryTest extends KernelTestCase
 - [ ] Enum маппится через `enumType:` в атрибуте колонки
 - [ ] Конструктор отсутствует или без обязательных параметров (Doctrine создаёт объекты через рефлексию)
 - [ ] Публичные сеттеры для изменяемых полей
+- [ ] Связи между Entity объявлены через Association Mapping (`#[ORM\ManyToOne]`, `#[ORM\OneToMany]`, `#[ORM\ManyToMany]`, `#[ORM\OneToOne]`), если таковые есть
+- [ ] Владелец ассоциации (owning side) хранит FK-колонку и не имеет `mappedBy`
+- [ ] Обратная сторона (inverse side) объявляет `mappedBy`, указывая на поле владельца
+- [ ] Коллекции инициализируются через `ArrayCollection` в конструкторе
+- [ ] `cascade` указан только при явной необходимости каскадного поведения
 - [ ] Индексы объявлены через `#[ORM\Index]` на классе
 - [ ] Миграция сгенерирована через `doctrine:migrations:diff`
 - [ ] Интеграционный тест вызывает `$em->clear()` перед повторным чтением из БД
