@@ -3,5 +3,6 @@
 /.vscode
 
 /.claude/agent-memory/
+/.claude/memory/
 /tmp/*
 !/tmp/.gitkeep
