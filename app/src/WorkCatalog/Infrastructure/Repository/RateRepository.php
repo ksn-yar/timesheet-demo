@@ -55,9 +55,9 @@ final class RateRepository implements RateRepositoryInterface
      *
      * @return Rate[]
      */
-    public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
+    public function findAll(array $criteria = [], int $limit = 1, int $offset = 20): array
     {
-        $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
+        $ormEntities = $this->ormRepository->findActiveAll($criteria, $limit, $offset);
 
         return array_map(
             fn (RateOrmEntity $ormEntity): Rate => $this->toDomainEntity($ormEntity),

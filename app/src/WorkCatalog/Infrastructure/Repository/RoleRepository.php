@@ -27,13 +27,13 @@ final class RoleRepository implements RoleRepositoryInterface
 
         if (null !== $existingOrmEntity) {
             $this->updateOrmEntity($existingOrmEntity, $role);
-            $this->ormRepository->save($existingOrmEntity, flush: true);
+            $this->ormRepository->save($existingOrmEntity);
 
             return;
         }
 
         $ormEntity = $this->toOrmEntity($role);
-        $this->ormRepository->save($ormEntity, flush: true);
+        $this->ormRepository->save($ormEntity);
     }
 
     public function findById(RoleId $id): ?Role
@@ -63,9 +63,9 @@ final class RoleRepository implements RoleRepositoryInterface
      *
      * @return Role[]
      */
-    public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
+    public function findAll(array $criteria = [], int $limit = 1, int $offset = 20): array
     {
-        $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
+        $ormEntities = $this->ormRepository->findActiveAll($criteria, $limit, $offset);
 
         return array_map(
             fn (RoleOrmEntity $ormEntity): Role => $this->toDomainEntity($ormEntity),
@@ -79,9 +79,9 @@ final class RoleRepository implements RoleRepositoryInterface
         return $this->ormRepository->countActive($criteria);
     }
 
-    public function countActiveRatesByRoleId(RoleId $roleId): int
+    public function countActiveRatesByRoleId(RoleId $id): int
     {
-        return $this->ormRepository->countActiveRatesByRoleId($roleId->value());
+        return $this->ormRepository->countActiveRatesByRoleId($id->value());
     }
 
     /** Преобразует доменную сущность в новую Doctrine Entity. */
