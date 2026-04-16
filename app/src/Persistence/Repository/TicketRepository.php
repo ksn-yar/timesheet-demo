@@ -9,6 +9,7 @@ use App\Persistence\Entity\Ticket;
 use App\Persistence\Entity\User;
 use App\Persistence\Entity\Work;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -125,6 +126,100 @@ class TicketRepository extends ServiceEntityRepository
         ;
 
         return (int) $count > 0;
+    }
+
+    /**
+     * Выбирает денормализованные проекции тикетов для формирования отчёта.
+     * Параметры являются примитивами, чтобы не создавать зависимость на другие Bounded Contexts.
+     *
+     * @param string[]|null $employeeIds
+     * @param string[]|null $groupIds
+     * @param string[]|null $projectIds
+     * @param string[]|null $crIds
+     * @param string[]|null $taskIds
+     * @param string[]|null $workIds
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function findForReport(
+        string $periodFrom,
+        string $periodTo,
+        ?array $employeeIds = null,
+        ?array $groupIds = null,
+        ?array $projectIds = null,
+        ?array $crIds = null,
+        ?array $taskIds = null,
+        ?array $workIds = null,
+    ): array {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+
+        $qb->select(
+            't.id          AS ticketId',
+            't.employee_id AS employeeId',
+            'u.name        AS employeeName',
+            'g.id          AS groupId',
+            'g.name        AS groupName',
+            't.task_id     AS taskId',
+            'tk.name       AS taskName',
+            'cr.id         AS crId',
+            'cr.name       AS crName',
+            'p.id          AS projectId',
+            'p.name        AS projectName',
+            't.work_id     AS workId',
+            'w.name        AS workName',
+            't.date        AS date',
+            't.hours       AS hours',
+            't.rate_snapshot AS rateSnapshot',
+        )
+            ->from('tickets', 't')
+            ->join('t', 'users', 'u', 'u.id = t.employee_id')
+            ->join('u', 'groups', 'g', 'g.id = u.group_id')
+            ->join('t', 'tasks', 'tk', 'tk.id = t.task_id')
+            ->join('tk', 'change_requests', 'cr', 'cr.id = tk.change_request_id')
+            ->join('cr', 'projects', 'p', 'p.id = cr.project_id')
+            ->join('t', 'works', 'w', 'w.id = t.work_id')
+            ->where('t.date BETWEEN :periodFrom AND :periodTo')
+            ->setParameter('periodFrom', $periodFrom)
+            ->setParameter('periodTo', $periodTo)
+        ;
+
+        if (null !== $employeeIds) {
+            $qb->andWhere('t.employee_id IN (:employeeIds)')
+                ->setParameter('employeeIds', $employeeIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        if (null !== $groupIds) {
+            $qb->andWhere('g.id IN (:groupIds)')
+                ->setParameter('groupIds', $groupIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        if (null !== $projectIds) {
+            $qb->andWhere('p.id IN (:projectIds)')
+                ->setParameter('projectIds', $projectIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        if (null !== $crIds) {
+            $qb->andWhere('cr.id IN (:crIds)')
+                ->setParameter('crIds', $crIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        if (null !== $taskIds) {
+            $qb->andWhere('t.task_id IN (:taskIds)')
+                ->setParameter('taskIds', $taskIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        if (null !== $workIds) {
+            $qb->andWhere('t.work_id IN (:workIds)')
+                ->setParameter('workIds', $workIds, ArrayParameterType::STRING)
+            ;
+        }
+
+        return $qb->executeQuery()->fetchAllAssociative();
     }
 
     /**

@@ -4,7 +4,8 @@
       "Bash(docker exec:*)",
       "Bash(mkdir:*)",
       "Bash(mkdir -p:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(make back-php-stan:*)"
     ],
     "deny": [
       "Bash(php -l:*)",

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Reporting\Infrastructure\Repository;
 
+use App\Persistence\Entity\Report as ReportEntity;
+use App\Persistence\Repository\ReportRepository as DoctrineReportRepository;
 use App\Reporting\Domain\Entity\Report;
 use App\Reporting\Domain\Repository\ReportRepositoryInterface;
 use App\Reporting\Domain\ValueObject\ReportData;
@@ -12,208 +14,131 @@ use App\Reporting\Domain\ValueObject\ReportGroupBy;
 use App\Reporting\Domain\ValueObject\ReportId;
 use App\Reporting\Domain\ValueObject\ReportPeriod;
 use DateTimeImmutable;
-use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * DBAL-реализация хранилища отчётов.
- * Использует нативный SQL через DBAL Connection, т.к. Persistence Entity для Report ещё не создана.
+ * Реализация доменного репозитория отчётов через Doctrine ORM.
+ * Выполняет маппинг между доменной сущностью Report и Persistence Entity.
  */
 final class ReportRepository implements ReportRepositoryInterface
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
+        private readonly DoctrineReportRepository $doctrineRepository,
     ) {}
 
     public function save(Report $report): void
     {
-        $connection = $this->entityManager->getConnection();
+        $entity = $this->doctrineRepository->find($report->getId()->value());
 
-        $connection->executeStatement(
-            <<<'SQL'
-                INSERT INTO reports (id, name, created_by, created_at, period_from, period_to, filters, group_by, data)
-                VALUES (:id, :name, :created_by, :created_at, :period_from, :period_to, :filters, :group_by, :data)
-                ON CONFLICT (id) DO UPDATE SET
-                    name        = EXCLUDED.name,
-                    created_by  = EXCLUDED.created_by,
-                    created_at  = EXCLUDED.created_at,
-                    period_from = EXCLUDED.period_from,
-                    period_to   = EXCLUDED.period_to,
-                    filters     = EXCLUDED.filters,
-                    group_by    = EXCLUDED.group_by,
-                    data        = EXCLUDED.data
-                SQL,
-            [
-                'id' => $report->getId()->value(),
-                'name' => $report->getName(),
-                'created_by' => $report->getCreatedBy(),
-                'created_at' => $report->getCreatedAt()->format('Y-m-d H:i:s'),
-                'period_from' => $report->getPeriod()->from()->format('Y-m-d'),
-                'period_to' => $report->getPeriod()->to()->format('Y-m-d'),
-                'filters' => json_encode($report->getFilters()->toArray(), \JSON_THROW_ON_ERROR),
-                'group_by' => json_encode($report->getGroupBy()->toArray(), \JSON_THROW_ON_ERROR),
-                'data' => json_encode($report->getData()->toArray(), \JSON_THROW_ON_ERROR),
-            ],
-        );
+        if (null === $entity) {
+            $entity = new ReportEntity();
+            $entity->setId($report->getId()->value());
+        }
+
+        $entity->setName($report->getName());
+        $entity->setCreatedBy($report->getCreatedBy());
+        $entity->setCreatedAt($report->getCreatedAt());
+        $entity->setPeriodFrom($report->getPeriod()->from());
+        $entity->setPeriodTo($report->getPeriod()->to());
+        $entity->setFilters($report->getFilters()->toArray());
+        $entity->setGroupBy($report->getGroupBy()->toArray());
+        $entity->setData($report->getData()->toArray());
+
+        $this->doctrineRepository->save($entity);
     }
 
     public function findById(ReportId $id): ?Report
     {
-        $connection = $this->entityManager->getConnection();
+        $entity = $this->doctrineRepository->find($id->value());
 
-        $row = $connection->fetchAssociative(
-            'SELECT id, name, created_by, created_at, period_from, period_to, filters, group_by, data FROM reports WHERE id = :id',
-            ['id' => $id->value()],
-        );
-
-        if (false === $row) {
+        if (null === $entity) {
             return null;
         }
 
-        return $this->hydrateReport($row);
+        return $this->toDomain($entity);
     }
 
     /**
+     * Возвращает список отчётов без поля data (оптимизация памяти для списков).
+     *
      * @param array<string, mixed> $criteria
      *
      * @return Report[]
      */
     public function findAll(array $criteria): array
     {
-        $connection = $this->entityManager->getConnection();
-        [$sql, $params] = $this->buildSelectQuery($criteria, includeData: false);
+        $rawPage = $criteria['page'] ?? 1;
+        $rawPerPage = $criteria['perPage'] ?? 20;
+        $page = is_numeric($rawPage) ? (int) $rawPage : 1;
+        $perPage = is_numeric($rawPerPage) ? (int) $rawPerPage : 20;
 
-        $rows = $connection->fetchAllAssociative($sql, $params);
+        $rows = $this->doctrineRepository->findAllMeta($criteria, $page, $perPage);
 
-        return array_map(fn (array $row): Report => $this->hydrateReport($row), $rows);
+        return array_map(fn (array $row): Report => $this->toDomainFromArray($row), $rows);
     }
 
     /** @param array<string, mixed> $criteria */
     public function count(array $criteria): int
     {
-        $connection = $this->entityManager->getConnection();
-        [$sql, $params] = $this->buildCountQuery($criteria);
-
-        /** @var int|string $result */
-        $result = $connection->fetchOne($sql, $params);
-
-        return (int) $result;
+        return $this->doctrineRepository->countByCriteria($criteria);
     }
 
-    /**
-     * Строит SELECT-запрос с фильтрами и пагинацией.
-     * При includeData=false колонка data исключается для экономии памяти при списках.
-     *
-     * @param array<string, mixed> $criteria
-     *
-     * @return array{0: string, 1: array<string, mixed>}
-     */
-    private function buildSelectQuery(array $criteria, bool $includeData = true): array
+    /** Восстанавливает доменную сущность Report из Persistence Entity (для findById). */
+    private function toDomain(ReportEntity $entity): Report
     {
-        $columns = $includeData
-            ? 'id, name, created_by, created_at, period_from, period_to, filters, group_by, data'
-            : 'id, name, created_by, created_at, period_from, period_to, filters, group_by';
-
-        $where = [];
-        $params = [];
-
-        $this->applyFilterCriteria($criteria, $where, $params);
-
-        $rawPage = $criteria['page'] ?? 1;
-        $rawPerPage = $criteria['perPage'] ?? 20;
-        $page = is_numeric($rawPage) ? (int) $rawPage : 1;
-        $perPage = is_numeric($rawPerPage) ? (int) $rawPerPage : 20;
-        $offset = ($page - 1) * $perPage;
-
-        $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-        $sql = "SELECT {$columns} FROM reports {$whereClause} ORDER BY created_at DESC LIMIT :limit OFFSET :offset";
-
-        $params['limit'] = $perPage;
-        $params['offset'] = $offset;
-
-        return [$sql, $params];
+        return Report::restore(
+            id: $entity->getId(),
+            name: $entity->getName(),
+            createdBy: $entity->getCreatedBy(),
+            createdAt: $entity->getCreatedAt(),
+            period: new ReportPeriod(
+                $entity->getPeriodFrom(),
+                $entity->getPeriodTo(),
+            ),
+            filters: ReportFilters::fromArray($entity->getFilters()),
+            groupBy: ReportGroupBy::fromArray($entity->getGroupBy()),
+            data: ReportData::fromArray($entity->getData()),
+        );
     }
 
     /**
-     * @param array<string, mixed> $criteria
-     *
-     * @return array{0: string, 1: array<string, mixed>}
-     */
-    private function buildCountQuery(array $criteria): array
-    {
-        $where = [];
-        $params = [];
-
-        $this->applyFilterCriteria($criteria, $where, $params);
-
-        $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
-        $sql = "SELECT COUNT(*) FROM reports {$whereClause}";
-
-        return [$sql, $params];
-    }
-
-    /**
-     * Применяет поддерживаемые критерии фильтрации к массивам WHERE и params.
-     *
-     * @param array<string, mixed> $criteria
-     * @param string[]             $where
-     * @param array<string, mixed> $params
-     */
-    private function applyFilterCriteria(array $criteria, array &$where, array &$params): void
-    {
-        if (isset($criteria['createdBy'])) {
-            $where[] = 'created_by = :createdBy';
-            $params['createdBy'] = $criteria['createdBy'];
-        }
-
-        if (isset($criteria['periodFrom'])) {
-            $where[] = 'period_from >= :periodFrom';
-            $params['periodFrom'] = $criteria['periodFrom'];
-        }
-
-        if (isset($criteria['periodTo'])) {
-            $where[] = 'period_to <= :periodTo';
-            $params['periodTo'] = $criteria['periodTo'];
-        }
-
-        if (isset($criteria['name']) && \is_string($criteria['name'])) {
-            $where[] = 'name ILIKE :name';
-            $params['name'] = '%' . $criteria['name'] . '%';
-        }
-    }
-
-    /**
-     * Восстанавливает доменную сущность Report из строки DBAL.
+     * Восстанавливает доменную сущность Report из массива скалярных данных (для findAllMeta).
+     * Поле data отсутствует — возвращает Report с пустым ReportData.
      *
      * @param array<string, mixed> $row
      */
-    private function hydrateReport(array $row): Report
+    private function toDomainFromArray(array $row): Report
     {
-        $filters = ReportFilters::fromArray(
-            json_decode($row['filters'], true, 512, \JSON_THROW_ON_ERROR) ?? [],
-        );
+        $id = is_string($row['id']) ? $row['id'] : '';
+        $name = is_string($row['name']) ? $row['name'] : '';
+        $createdBy = is_string($row['createdBy']) ? $row['createdBy'] : '';
 
-        $groupBy = ReportGroupBy::fromArray(
-            json_decode($row['group_by'], true, 512, \JSON_THROW_ON_ERROR) ?? [],
-        );
+        $createdAt = $row['createdAt'] instanceof DateTimeImmutable
+            ? $row['createdAt']
+            : new DateTimeImmutable();
 
-        $data = ReportData::fromArray(
-            isset($row['data'])
-                ? json_decode($row['data'], true, 512, \JSON_THROW_ON_ERROR) ?? []
-                : [],
-        );
+        $periodFrom = $row['periodFrom'] instanceof DateTimeImmutable
+            ? $row['periodFrom']
+            : new DateTimeImmutable();
+
+        $periodTo = $row['periodTo'] instanceof DateTimeImmutable
+            ? $row['periodTo']
+            : new DateTimeImmutable();
+
+        /** @var array<string, null|string[]> $filtersRaw */
+        $filtersRaw = is_array($row['filters']) ? $row['filters'] : [];
+
+        /** @var string[] $groupByRaw */
+        $groupByRaw = is_array($row['groupBy']) ? $row['groupBy'] : [];
 
         return Report::restore(
-            id: $row['id'],
-            name: $row['name'],
-            createdBy: $row['created_by'],
-            createdAt: new DateTimeImmutable($row['created_at']),
-            period: new ReportPeriod(
-                new DateTimeImmutable($row['period_from']),
-                new DateTimeImmutable($row['period_to']),
-            ),
-            filters: $filters,
-            groupBy: $groupBy,
-            data: $data,
+            id: $id,
+            name: $name,
+            createdBy: $createdBy,
+            createdAt: $createdAt,
+            period: new ReportPeriod($periodFrom, $periodTo),
+            filters: ReportFilters::fromArray($filtersRaw),
+            groupBy: ReportGroupBy::fromArray($groupByRaw),
+            data: ReportData::fromArray([]),
         );
     }
 }

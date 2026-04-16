@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reporting\Application\Port;
 
+use App\Reporting\Application\Dto\TicketReportRowDto;
 use App\Reporting\Domain\ValueObject\ReportFilters;
 use App\Reporting\Domain\ValueObject\ReportPeriod;
 
@@ -15,12 +16,8 @@ interface TicketQueryServiceInterface
 {
     /**
      * Возвращает проекции тикетов для формирования отчёта.
-     * Каждый элемент массива содержит:
-     * ticketId, employeeId, employeeName, groupId, groupName,
-     * taskId, taskName, crId, crName, projectId, projectName,
-     * workId, workName, date, hours, rateSnapshot.
      *
-     * @return array<int, array<string, mixed>>
+     * @return TicketReportRowDto[]
      */
     public function queryTickets(ReportPeriod $period, ReportFilters $filters): array;
 }

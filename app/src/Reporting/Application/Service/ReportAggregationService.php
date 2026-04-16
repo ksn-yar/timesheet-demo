@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Reporting\Application\Service;
 
+use App\Reporting\Application\Dto\TicketReportRowDto;
 use App\Reporting\Domain\Enum\GroupByDimension;
 use App\Reporting\Domain\ValueObject\ReportData;
 use App\Reporting\Domain\ValueObject\ReportGroupBy;
@@ -17,7 +18,7 @@ final class ReportAggregationService
     /**
      * Группирует тикеты по измерениям и вычисляет агрегированные показатели для каждой группы.
      *
-     * @param array<int, array<string, mixed>> $tickets Проекции тикетов из TicketQueryServiceInterface
+     * @param TicketReportRowDto[] $tickets Проекции тикетов из TicketQueryServiceInterface
      */
     public function aggregate(array $tickets, ReportGroupBy $groupBy): ReportData
     {
@@ -36,10 +37,8 @@ final class ReportAggregationService
                 ];
             }
 
-            $rawHours = $ticket['hours'] ?? 0.0;
-            $rawRate = $ticket['rateSnapshot'] ?? 0.0;
-            $hours = is_numeric($rawHours) ? (float) $rawHours : 0.0;
-            $rate = is_numeric($rawRate) ? (float) $rawRate : 0.0;
+            $hours = is_numeric($ticket->hours) ? (float) $ticket->hours : 0.0;
+            $rate = is_numeric($ticket->rateSnapshot) ? (float) $ticket->rateSnapshot : 0.0;
 
             $groups[$key]['totalHours'] += $hours;
             $groups[$key]['totalCost'] += $hours * $rate;
@@ -64,26 +63,20 @@ final class ReportAggregationService
     /**
      * Строит строковый ключ группы из значений измерений для заданного тикета.
      *
-     * @param array<string, mixed> $ticket
-     * @param GroupByDimension[]   $dimensions
+     * @param GroupByDimension[] $dimensions
      */
-    private function buildGroupKey(array $ticket, array $dimensions): string
+    private function buildGroupKey(TicketReportRowDto $ticket, array $dimensions): string
     {
         $parts = [];
 
-        $ticketStrings = array_map(
-            static fn (mixed $v): string => \is_scalar($v) ? (string) $v : '',
-            $ticket,
-        );
-
         foreach ($dimensions as $dimension) {
             $parts[] = match ($dimension) {
-                GroupByDimension::Employee => 'employee:' . ($ticketStrings['employeeId'] ?? ''),
-                GroupByDimension::Group => 'group:' . ($ticketStrings['groupId'] ?? ''),
-                GroupByDimension::Project => 'project:' . ($ticketStrings['projectId'] ?? ''),
-                GroupByDimension::ChangeRequest => 'cr:' . ($ticketStrings['crId'] ?? ''),
-                GroupByDimension::Task => 'task:' . ($ticketStrings['taskId'] ?? ''),
-                GroupByDimension::Work => 'work:' . ($ticketStrings['workId'] ?? ''),
+                GroupByDimension::Employee => 'employee:' . $ticket->employeeId,
+                GroupByDimension::Group => 'group:' . $ticket->groupId,
+                GroupByDimension::Project => 'project:' . $ticket->projectId,
+                GroupByDimension::ChangeRequest => 'cr:' . $ticket->crId,
+                GroupByDimension::Task => 'task:' . $ticket->taskId,
+                GroupByDimension::Work => 'work:' . $ticket->workId,
             };
         }
 
@@ -93,40 +86,39 @@ final class ReportAggregationService
     /**
      * Извлекает поля ID и наименований для активных измерений из первого тикета группы.
      *
-     * @param array<string, mixed> $ticket
-     * @param GroupByDimension[]   $dimensions
+     * @param GroupByDimension[] $dimensions
      *
      * @return array<string, mixed>
      */
-    private function extractDimensionFields(array $ticket, array $dimensions): array
+    private function extractDimensionFields(TicketReportRowDto $ticket, array $dimensions): array
     {
         $fields = [];
 
         foreach ($dimensions as $dimension) {
             $fields = array_merge($fields, match ($dimension) {
                 GroupByDimension::Employee => [
-                    'employeeId' => $ticket['employeeId'] ?? null,
-                    'employeeName' => $ticket['employeeName'] ?? null,
+                    'employeeId' => $ticket->employeeId,
+                    'employeeName' => $ticket->employeeName,
                 ],
                 GroupByDimension::Group => [
-                    'groupId' => $ticket['groupId'] ?? null,
-                    'groupName' => $ticket['groupName'] ?? null,
+                    'groupId' => $ticket->groupId,
+                    'groupName' => $ticket->groupName,
                 ],
                 GroupByDimension::Project => [
-                    'projectId' => $ticket['projectId'] ?? null,
-                    'projectName' => $ticket['projectName'] ?? null,
+                    'projectId' => $ticket->projectId,
+                    'projectName' => $ticket->projectName,
                 ],
                 GroupByDimension::ChangeRequest => [
-                    'crId' => $ticket['crId'] ?? null,
-                    'crName' => $ticket['crName'] ?? null,
+                    'crId' => $ticket->crId,
+                    'crName' => $ticket->crName,
                 ],
                 GroupByDimension::Task => [
-                    'taskId' => $ticket['taskId'] ?? null,
-                    'taskName' => $ticket['taskName'] ?? null,
+                    'taskId' => $ticket->taskId,
+                    'taskName' => $ticket->taskName,
                 ],
                 GroupByDimension::Work => [
-                    'workId' => $ticket['workId'] ?? null,
-                    'workName' => $ticket['workName'] ?? null,
+                    'workId' => $ticket->workId,
+                    'workName' => $ticket->workName,
                 ],
             });
         }

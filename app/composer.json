@@ -90,6 +90,8 @@
         "phpStan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",
         "nelmioDoc": "php -d memory_limit=-1 bin/console nelmio:apidoc:dump --format=yaml > share/openapi.yaml",
         "configTransform": "vendor/bin/config-transformer config",
+        "migrationDiff": "./bin/console doctrine:migrations:diff --no-interaction",
+        "migrationUp": "./bin/console doctrine:migrations:migrate --no-interaction",
         "post-install-cmd": [
             "@auto-scripts"
         ],

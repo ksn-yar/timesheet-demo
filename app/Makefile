@@ -20,6 +20,12 @@ dc-restart:
 back-bash:
 	docker exec -it corpo-ts-backend bash
 
+back-migration-diff:
+	docker exec corpo-ts-backend bash -c "composer migrationDiff"
+
+back-migration-up:
+	docker exec corpo-ts-backend bash -c "composer migrationUp"
+
 back-php-stan:
 	docker exec corpo-ts-backend bash -c "composer phpStan"
 

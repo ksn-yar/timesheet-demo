@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Persistence\Repository;
 
 use App\Persistence\Entity\Task;
+use App\Persistence\Entity\Ticket;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -103,16 +104,18 @@ class TaskRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
-    /** Проверяет наличие тикетов, привязанных к задаче, через прямой SQL-запрос. */
+    /** Проверяет наличие тикетов, привязанных к задаче, через Doctrine ORM QueryBuilder. */
     public function hasTicketsForTask(string $taskId): bool
     {
         /** @var int|string $count */
         $count = $this->getEntityManager()
-            ->getConnection()
-            ->fetchOne(
-                'SELECT COUNT(*) FROM tickets WHERE task_id = :taskId',
-                ['taskId' => $taskId],
-            )
+            ->createQueryBuilder()
+            ->select('COUNT(t.id)')
+            ->from(Ticket::class, 't')
+            ->where('t.taskId = :taskId')
+            ->setParameter('taskId', $taskId)
+            ->getQuery()
+            ->getSingleScalarResult()
         ;
 
         return (int) $count > 0;
