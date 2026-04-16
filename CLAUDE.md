@@ -23,6 +23,15 @@ Always reference files relative to project root.
 ✅ Correct: `docs/technical-specification.md`
 ❌ Wrong:   `/home/john/projects/myapp/docs/technical-specification.md`
 
+## Temporary Files
+
+Never use `/tmp`, `/var/tmp` (system-level) or any absolute path outside the project root.
+Use `./tmp/` (project-relative) for all temporary files if necessary.
+
+## Project Memory
+
+All common persistent notes, decisions and context are stored in `./memory/`.
+
 ## Язык
 
 **Правило:** Вся документация, комментарии в коде и текстовые ответы — на русском языке.
