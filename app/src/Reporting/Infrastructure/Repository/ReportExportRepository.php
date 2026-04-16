@@ -61,7 +61,11 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         return $this->hydrateExport($row);
     }
 
-    /** @return ReportExport[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return ReportExport[]
+     */
     public function findAll(array $criteria): array
     {
         $connection = $this->entityManager->getConnection();
@@ -72,15 +76,23 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         return array_map(fn (array $row): ReportExport => $this->hydrateExport($row), $rows);
     }
 
+    /** @param array<string, mixed> $criteria */
     public function count(array $criteria): int
     {
         $connection = $this->entityManager->getConnection();
         [$sql, $params] = $this->buildCountQuery($criteria);
 
-        return (int) $connection->fetchOne($sql, $params);
+        /** @var int|string $result */
+        $result = $connection->fetchOne($sql, $params);
+
+        return (int) $result;
     }
 
-    /** @return array{0: string, 1: array<string, mixed>} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{0: string, 1: array<string, mixed>}
+     */
     private function buildSelectQuery(array $criteria): array
     {
         $where = [];
@@ -88,8 +100,10 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
 
         $this->applyFilterCriteria($criteria, $where, $params);
 
-        $page = (int) ($criteria['page'] ?? 1);
-        $perPage = (int) ($criteria['perPage'] ?? 20);
+        $rawPage = $criteria['page'] ?? 1;
+        $rawPerPage = $criteria['perPage'] ?? 20;
+        $page = is_numeric($rawPage) ? (int) $rawPage : 1;
+        $perPage = is_numeric($rawPerPage) ? (int) $rawPerPage : 20;
         $offset = ($page - 1) * $perPage;
 
         $whereClause = $where ? 'WHERE ' . implode(' AND ', $where) : '';
@@ -101,7 +115,11 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         return [$sql, $params];
     }
 
-    /** @return array{0: string, 1: array<string, mixed>} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{0: string, 1: array<string, mixed>}
+     */
     private function buildCountQuery(array $criteria): array
     {
         $where = [];
@@ -115,7 +133,13 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         return [$sql, $params];
     }
 
-    /** Применяет поддерживаемые критерии фильтрации к массивам WHERE и params. */
+    /**
+     * Применяет поддерживаемые критерии фильтрации к массивам WHERE и params.
+     *
+     * @param array<string, mixed> $criteria
+     * @param string[]             $where
+     * @param array<string, mixed> $params
+     */
     private function applyFilterCriteria(array $criteria, array &$where, array &$params): void
     {
         if (isset($criteria['format'])) {
@@ -134,7 +158,11 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         }
     }
 
-    /** Восстанавливает Value Object ReportExport из строки DBAL. */
+    /**
+     * Восстанавливает Value Object ReportExport из строки DBAL.
+     *
+     * @param array<string, mixed> $row
+     */
     private function hydrateExport(array $row): ReportExport
     {
         return new ReportExport(

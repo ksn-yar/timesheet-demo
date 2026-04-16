@@ -7,6 +7,7 @@ namespace App\Timesheet\Application\Dto;
 /** Входные данные Use Case создания политики импорта. */
 final readonly class CreateImportPolicyInputDto
 {
+    /** @param array<string, mixed> $mappingRules */
     public function __construct(
         public string $name,
         public string $sourceSystem,

@@ -95,7 +95,11 @@ class TicketRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт тикетов с учётом фильтров. */
+    /**
+     * Подсчёт тикетов с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('t')
@@ -174,7 +178,8 @@ class TicketRepository extends ServiceEntityRepository
                 $qb->innerJoin(Task::class, 'task', 'WITH', 'task.id = t.taskId');
             }
             $qb->andWhere('task.crId = :crId')
-                ->setParameter('crId', $criteria['crId']);
+                ->setParameter('crId', $criteria['crId'])
+            ;
         }
     }
 }

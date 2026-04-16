@@ -7,6 +7,7 @@ namespace App\Reporting\Infrastructure\Service;
 use App\Reporting\Application\Port\TicketQueryServiceInterface;
 use App\Reporting\Domain\ValueObject\ReportFilters;
 use App\Reporting\Domain\ValueObject\ReportPeriod;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -60,37 +61,37 @@ final class DoctrineTicketQueryService implements TicketQueryServiceInterface
         // Применяем опциональные фильтры из ReportFilters
         if (null !== $filters->employeeIds()) {
             $qb->andWhere('t.employee_id IN (:employeeIds)')
-                ->setParameter('employeeIds', $filters->employeeIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('employeeIds', $filters->employeeIds(), ArrayParameterType::STRING)
             ;
         }
 
         if (null !== $filters->groupIds()) {
             $qb->andWhere('g.id IN (:groupIds)')
-                ->setParameter('groupIds', $filters->groupIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('groupIds', $filters->groupIds(), ArrayParameterType::STRING)
             ;
         }
 
         if (null !== $filters->projectIds()) {
             $qb->andWhere('p.id IN (:projectIds)')
-                ->setParameter('projectIds', $filters->projectIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('projectIds', $filters->projectIds(), ArrayParameterType::STRING)
             ;
         }
 
         if (null !== $filters->crIds()) {
             $qb->andWhere('cr.id IN (:crIds)')
-                ->setParameter('crIds', $filters->crIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('crIds', $filters->crIds(), ArrayParameterType::STRING)
             ;
         }
 
         if (null !== $filters->taskIds()) {
             $qb->andWhere('t.task_id IN (:taskIds)')
-                ->setParameter('taskIds', $filters->taskIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('taskIds', $filters->taskIds(), ArrayParameterType::STRING)
             ;
         }
 
         if (null !== $filters->workIds()) {
             $qb->andWhere('t.work_id IN (:workIds)')
-                ->setParameter('workIds', $filters->workIds(), Connection::PARAM_STR_ARRAY)
+                ->setParameter('workIds', $filters->workIds(), ArrayParameterType::STRING)
             ;
         }
 

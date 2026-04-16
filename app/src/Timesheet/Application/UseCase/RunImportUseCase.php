@@ -68,8 +68,17 @@ final class RunImportUseCase
 
         $mappingRules = $policy->getMappingRules();
 
+        /** @var array<string, mixed> $employeeMappingRules */
+        $employeeMappingRules = $mappingRules['employeeMapping'] ?? [];
+
+        /** @var array<string, mixed> $taskMappingRules */
+        $taskMappingRules = $mappingRules['taskMapping'] ?? [];
+
+        /** @var array<string, mixed> $workMappingRules */
+        $workMappingRules = $mappingRules['workMapping'] ?? [];
+
         foreach ($records as $record) {
-            $externalId = $record['externalId'] ?? '';
+            $externalId = (string) ($record['externalId'] ?? '');
 
             if ($this->ticketRepository->existsByImportSourceAndExternalId($policy->getSourceSystem(), $externalId)) {
                 ++$duplicates;
@@ -78,16 +87,19 @@ final class RunImportUseCase
                 continue;
             }
 
-            $employeeMatchBy = $mappingRules['employeeMapping']['matchBy'] ?? 'email';
-            $employeeValue = $record[$mappingRules['employeeMapping']['field'] ?? 'employee'] ?? '';
+            $employeeMatchBy = (string) ($employeeMappingRules['matchBy'] ?? 'email');
+            $employeeField = (string) ($employeeMappingRules['field'] ?? 'employee');
+            $employeeValue = (string) ($record[$employeeField] ?? '');
             $employeeId = $this->employeeResolver->resolve($employeeValue, $employeeMatchBy);
 
-            $taskMatchBy = $mappingRules['taskMapping']['matchBy'] ?? 'name';
-            $taskValue = $record[$mappingRules['taskMapping']['field'] ?? 'task'] ?? '';
+            $taskMatchBy = (string) ($taskMappingRules['matchBy'] ?? 'name');
+            $taskField = (string) ($taskMappingRules['field'] ?? 'task');
+            $taskValue = (string) ($record[$taskField] ?? '');
             $taskId = $this->taskResolver->resolve($taskValue, $taskMatchBy);
 
-            $workMatchBy = $mappingRules['workMapping']['matchBy'] ?? 'name';
-            $workValue = $record[$mappingRules['workMapping']['field'] ?? 'work'] ?? '';
+            $workMatchBy = (string) ($workMappingRules['matchBy'] ?? 'name');
+            $workField = (string) ($workMappingRules['field'] ?? 'work');
+            $workValue = (string) ($record[$workField] ?? '');
             $workId = $this->workResolver->resolve($workValue, $workMatchBy);
 
             $unmapped = [];
@@ -114,9 +126,13 @@ final class RunImportUseCase
 
             $rateSnapshot = $this->rateProvider->getCurrentRate($employeeId, $workId);
 
-            $dateValue = $record[$mappingRules['dateField'] ?? 'date'] ?? 'now';
-            $hoursValue = (string) ($record[$mappingRules['hoursField'] ?? 'hours'] ?? '0');
-            $comment = $record[$mappingRules['commentField'] ?? 'comment'] ?? null;
+            $dateField = (string) ($mappingRules['dateField'] ?? 'date');
+            $hoursField = (string) ($mappingRules['hoursField'] ?? 'hours');
+            $commentField = (string) ($mappingRules['commentField'] ?? 'comment');
+            $dateValue = (string) ($record[$dateField] ?? 'now');
+            $hoursValue = (string) ($record[$hoursField] ?? '0');
+            $rawComment = $record[$commentField] ?? null;
+            $comment = null !== $rawComment ? (string) $rawComment : null;
 
             $ticket = Ticket::createImported(
                 TicketId::generate(),
@@ -125,7 +141,7 @@ final class RunImportUseCase
                 $workId,
                 new DateTimeImmutable($dateValue),
                 $hoursValue,
-                null !== $comment ? (string) $comment : null,
+                $comment,
                 $rateSnapshot,
                 $policy->getSourceSystem(),
                 $externalId,

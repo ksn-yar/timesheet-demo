@@ -9,6 +9,12 @@ use DateTimeImmutable;
 /** Получает записи из внешней системы для импорта тикетов. */
 interface ExternalDataFetcherInterface
 {
-    /** Получает записи из внешней системы для импорта. Возвращает массив ассоциативных массивов. */
+    /**
+     * Получает записи из внешней системы для импорта. Возвращает массив ассоциативных массивов.
+     *
+     * @param array<string, mixed> $mappingRules
+     *
+     * @return array<int, array<string, mixed>>
+     */
     public function fetch(string $sourceSystem, array $mappingRules, DateTimeImmutable $dateFrom, DateTimeImmutable $dateTo): array;
 }

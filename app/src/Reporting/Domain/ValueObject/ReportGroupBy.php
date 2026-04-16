@@ -19,6 +19,7 @@ final readonly class ReportGroupBy
         }
     }
 
+    /** @param string[] $data */
     public static function fromArray(array $data): self
     {
         $dimensions = array_map(
@@ -35,6 +36,7 @@ final readonly class ReportGroupBy
         return $this->dimensions;
     }
 
+    /** @return string[] */
     public function toArray(): array
     {
         return array_map(

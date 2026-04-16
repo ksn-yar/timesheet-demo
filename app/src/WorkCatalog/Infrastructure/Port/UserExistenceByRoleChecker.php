@@ -17,6 +17,7 @@ final class UserExistenceByRoleChecker implements UserExistenceByRoleCheckerInte
 
     public function hasUsersByRole(RoleId $roleId): bool
     {
+        /** @var int|string $count */
         $count = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM users WHERE role_id = :roleId',
             ['roleId' => $roleId->value()],

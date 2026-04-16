@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Port;
 
+use App\Persistence\Entity\Rate as RateOrmEntity;
+use App\Persistence\Entity\User as UserOrmEntity;
 use App\Persistence\Repository\RateRepository;
 use App\Persistence\Repository\UserRepository;
 use App\Timesheet\Application\Port\RateProviderInterface;
@@ -22,6 +24,7 @@ final class DoctrineRateProvider implements RateProviderInterface
 
     public function getCurrentRate(string $employeeId, string $workId): string
     {
+        /** @var null|UserOrmEntity $user */
         $user = $this->userRepository->find($employeeId);
         $roleId = $user?->getRoleId();
 
@@ -74,6 +77,7 @@ final class DoctrineRateProvider implements RateProviderInterface
             $qb->andWhere('r.roleId IS NULL');
         }
 
+        /** @var null|RateOrmEntity $rate */
         $rate = $qb->getQuery()->getOneOrNullResult();
 
         return $rate?->getAmount();

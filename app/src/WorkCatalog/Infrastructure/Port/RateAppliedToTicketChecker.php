@@ -17,6 +17,7 @@ final class RateAppliedToTicketChecker implements RateAppliedToTicketCheckerInte
 
     public function isRateAppliedToTicket(RateId $rateId): bool
     {
+        /** @var int|string $count */
         $count = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM tickets WHERE rate_id = :rateId',
             ['rateId' => $rateId->value()],

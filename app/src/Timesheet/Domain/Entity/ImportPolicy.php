@@ -18,12 +18,15 @@ final class ImportPolicy
     private ImportPolicyId $id;
     private string $name;
     private string $sourceSystem;
+
+    /** @var array<string, mixed> */
     private array $mappingRules;
     private bool $allowEdit;
     private bool $isActive;
 
     private function __construct() {}
 
+    /** @param array<string, mixed> $mappingRules */
     public static function create(
         ImportPolicyId $id,
         string $name,
@@ -56,6 +59,7 @@ final class ImportPolicy
         return $policy;
     }
 
+    /** @param array<string, mixed> $mappingRules */
     public static function restore(
         string $id,
         string $name,
@@ -75,6 +79,7 @@ final class ImportPolicy
         return $policy;
     }
 
+    /** @param null|array<string, mixed> $mappingRules */
     public function update(
         ?array $mappingRules,
         ?bool $allowEdit,
@@ -120,6 +125,7 @@ final class ImportPolicy
         return $this->sourceSystem;
     }
 
+    /** @return array<string, mixed> */
     public function getMappingRules(): array
     {
         return $this->mappingRules;

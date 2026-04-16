@@ -153,7 +153,11 @@ class UserRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт пользователей с учётом фильтров. */
+    /**
+     * Подсчёт пользователей с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('u')
@@ -166,6 +170,7 @@ class UserRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
+    /** @param array<string, mixed> $criteria */
     private function applyCriteria(QueryBuilder $qb, array $criteria): void
     {
         if (isset($criteria['groupId'])) {
@@ -182,7 +187,8 @@ class UserRepository extends ServiceEntityRepository
 
         if (isset($criteria['isActive'])) {
             $qb->andWhere('u.isActive = :isActive')
-                ->setParameter('isActive', $criteria['isActive']);
+                ->setParameter('isActive', $criteria['isActive'])
+            ;
         }
     }
 }

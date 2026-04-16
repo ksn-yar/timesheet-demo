@@ -58,7 +58,11 @@ final class RoleRepository implements RoleRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Role[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Role[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
@@ -69,6 +73,7 @@ final class RoleRepository implements RoleRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countActive($criteria);
@@ -106,7 +111,7 @@ final class RoleRepository implements RoleRepositoryInterface
     private function toDomainEntity(RoleOrmEntity $ormEntity): Role
     {
         return Role::restore(
-            $ormEntity->getId(),
+            new RoleId($ormEntity->getId()),
             $ormEntity->getName(),
             $ormEntity->getDescription(),
             $ormEntity->getDeletedAt(),

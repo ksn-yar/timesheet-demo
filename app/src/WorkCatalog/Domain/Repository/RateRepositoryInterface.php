@@ -14,8 +14,13 @@ interface RateRepositoryInterface
 
     public function findById(RateId $id): ?Rate;
 
-    /** @return Rate[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Rate[]
+     */
     public function findAll(array $criteria, int $limit, int $offset): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria): int;
 }

@@ -47,7 +47,11 @@ final class TaskRepository implements TaskRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Task[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Task[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);
@@ -58,6 +62,7 @@ final class TaskRepository implements TaskRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);
@@ -77,7 +82,8 @@ final class TaskRepository implements TaskRepositoryInterface
         $ormEntity->setCrId($task->getCrId()?->value());
         $ormEntity->setName($task->getName());
         $ormEntity->setDescription($task->getDescription());
-        $ormEntity->setEstimate($task->getEstimate()?->value());
+        $estimateValue = $task->getEstimate()?->value();
+        $ormEntity->setEstimate(null !== $estimateValue ? (string) $estimateValue : null);
         $ormEntity->setDeletedAt($task->getDeletedAt());
         $ormEntity->setCreatedAt(new DateTimeImmutable());
         $ormEntity->setUpdatedAt(new DateTimeImmutable());
@@ -90,7 +96,8 @@ final class TaskRepository implements TaskRepositoryInterface
     {
         $ormEntity->setName($task->getName());
         $ormEntity->setDescription($task->getDescription());
-        $ormEntity->setEstimate($task->getEstimate()?->value());
+        $estimateValue = $task->getEstimate()?->value();
+        $ormEntity->setEstimate(null !== $estimateValue ? (string) $estimateValue : null);
         $ormEntity->setDeletedAt($task->getDeletedAt());
         $ormEntity->setUpdatedAt(new DateTimeImmutable());
     }
@@ -98,13 +105,15 @@ final class TaskRepository implements TaskRepositoryInterface
     /** Восстанавливает доменную сущность из Doctrine Entity. */
     private function toDomainEntity(TaskOrmEntity $ormEntity): Task
     {
+        $estimateStr = $ormEntity->getEstimate();
+
         return Task::restore(
             $ormEntity->getId(),
             $ormEntity->getProjectId(),
             $ormEntity->getCrId(),
             $ormEntity->getName(),
             $ormEntity->getDescription(),
-            $ormEntity->getEstimate(),
+            null !== $estimateStr ? (float) $estimateStr : null,
             $ormEntity->getDeletedAt(),
         );
     }

@@ -26,7 +26,11 @@ enum GroupByDimension: string
         };
     }
 
-    /** Возвращает массив допустимых значений для использования в Assert\Choice. */
+    /**
+     * Возвращает массив допустимых значений для использования в Assert\Choice.
+     *
+     * @return string[]
+     */
     public static function values(): array
     {
         return array_column(self::cases(), 'value');

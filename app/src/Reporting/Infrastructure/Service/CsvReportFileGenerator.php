@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Reporting\Infrastructure\Service;
 
 use App\Reporting\Application\Port\ReportFileGeneratorInterface;
+use App\Reporting\Domain\Entity\Report;
 use App\Reporting\Domain\Enum\ExportFormat;
 use App\Reporting\Domain\Exception\ReportExportGenerationException;
 use Symfony\Component\Uid\Uuid;
@@ -12,6 +13,7 @@ use Symfony\Component\Uid\Uuid;
 /** Генератор файлов экспорта отчётов в формате CSV. */
 final class CsvReportFileGenerator implements ReportFileGeneratorInterface
 {
+    /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string
     {
         // Собираем все строки данных из всех отчётов

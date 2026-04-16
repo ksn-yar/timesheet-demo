@@ -16,8 +16,13 @@ interface WorkRepositoryInterface
 
     public function findByName(string $name): ?Work;
 
-    /** @return Work[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Work[]
+     */
     public function findAll(array $criteria, int $limit, int $offset): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria): int;
 }

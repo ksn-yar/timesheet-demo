@@ -58,7 +58,11 @@ final class WorkRepository implements WorkRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Work[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Work[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
@@ -69,6 +73,7 @@ final class WorkRepository implements WorkRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countActive($criteria);
@@ -101,7 +106,7 @@ final class WorkRepository implements WorkRepositoryInterface
     private function toDomainEntity(WorkOrmEntity $ormEntity): Work
     {
         return Work::restore(
-            $ormEntity->getId(),
+            new WorkId($ormEntity->getId()),
             $ormEntity->getName(),
             $ormEntity->getDescription(),
             $ormEntity->getDeletedAt(),

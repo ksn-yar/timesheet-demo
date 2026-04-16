@@ -14,7 +14,11 @@ interface GroupRepositoryInterface
 
     public function findById(GroupId $id): ?Group;
 
-    /** @return array{items: Group[], total: int} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{items: Group[], total: int}
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
     public function existsByName(string $name): bool;

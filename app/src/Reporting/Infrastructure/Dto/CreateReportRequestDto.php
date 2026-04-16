@@ -10,6 +10,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** DTO входящего HTTP-запроса на создание отчёта. */
 final readonly class CreateReportRequestDto
 {
+    /**
+     * @param null|array<string, mixed> $filters
+     * @param string[]                  $groupBy
+     */
     public function __construct(
         #[Assert\NotBlank(message: 'Название отчёта обязательно.')]
         #[Assert\Length(max: 255, maxMessage: 'Название не должно превышать 255 символов.')]

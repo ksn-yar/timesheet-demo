@@ -67,7 +67,11 @@ class WorkRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт активных видов работ. */
+    /**
+     * Подсчёт активных видов работ.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countActive(array $criteria): int
     {
         $qb = $this->createQueryBuilder('w')

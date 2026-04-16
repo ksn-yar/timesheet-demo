@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class ImportSummaryResponseDto
 {
+    /** @param array<int, array<string, mixed>> $logEntries */
     public function __construct(
         #[OA\Property(title: 'Импортировано', description: 'Количество успешно импортированных записей.')]
         public int $imported,

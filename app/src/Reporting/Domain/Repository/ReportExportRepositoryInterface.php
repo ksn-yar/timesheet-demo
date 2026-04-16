@@ -14,7 +14,13 @@ interface ReportExportRepositoryInterface
 
     public function findById(ReportExportId $id): ?ReportExport;
 
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array<int, mixed>
+     */
     public function findAll(array $criteria): array;
 
+    /** @param array<string, mixed> $criteria */
     public function count(array $criteria): int;
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Reporting\Infrastructure\Service;
 
 use App\Reporting\Application\Port\ReportFileGeneratorInterface;
+use App\Reporting\Domain\Entity\Report;
 use App\Reporting\Domain\Enum\ExportFormat;
 use App\Reporting\Domain\Exception\ReportExportGenerationException;
 use Dompdf\Dompdf;
@@ -14,6 +15,7 @@ use Throwable;
 /** Генератор файлов экспорта отчётов в формате PDF через Dompdf. */
 final class PdfReportFileGenerator implements ReportFileGeneratorInterface
 {
+    /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string
     {
         $fileRef = 'var/exports/export_' . Uuid::v4()->toRfc4122() . '.pdf';
@@ -41,7 +43,11 @@ final class PdfReportFileGenerator implements ReportFileGeneratorInterface
         return $fileRef;
     }
 
-    /** Формирует HTML-таблицу для рендеринга в PDF. */
+    /**
+     * Формирует HTML-таблицу для рендеринга в PDF.
+     *
+     * @param Report[] $reports
+     */
     private function buildHtml(array $reports): string
     {
         $html = '<html><head><meta charset="UTF-8"><style>';

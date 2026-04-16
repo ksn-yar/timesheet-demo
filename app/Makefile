@@ -20,6 +20,12 @@ dc-restart:
 back-bash:
 	docker exec -it corpo-ts-backend bash
 
+back-php-stan:
+	docker exec corpo-ts-backend bash -c "composer phpStan"
+
+back-cs-fix:
+	docker exec corpo-ts-backend bash -c "composer csFix"
+
 # example: make back-exec composer i
 back-exec:
 	docker exec -it corpo-ts-backend $(filter-out $@,$(MAKECMDGOALS))

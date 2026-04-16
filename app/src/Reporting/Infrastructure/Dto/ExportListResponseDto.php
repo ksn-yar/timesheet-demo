@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class ExportListResponseDto
 {
+    /** @param ExportListItemResponseDto[] $items */
     public function __construct(
         #[OA\Property(title: 'Элементы', description: 'Список выгрузок на текущей странице.', type: 'array', items: new OA\Items(ref: ExportListItemResponseDto::class))]
         public array $items,

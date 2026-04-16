@@ -76,7 +76,11 @@ class TaskRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт задач с учётом фильтров. */
+    /**
+     * Подсчёт задач с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('t')
@@ -102,6 +106,7 @@ class TaskRepository extends ServiceEntityRepository
     /** Проверяет наличие тикетов, привязанных к задаче, через прямой SQL-запрос. */
     public function hasTicketsForTask(string $taskId): bool
     {
+        /** @var int|string $count */
         $count = $this->getEntityManager()
             ->getConnection()
             ->fetchOne(

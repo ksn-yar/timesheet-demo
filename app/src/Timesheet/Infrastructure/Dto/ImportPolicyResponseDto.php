@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class ImportPolicyResponseDto
 {
+    /** @param array<string, mixed> $mappingRules */
     public function __construct(
         #[OA\Property(title: 'Идентификатор', description: 'Уникальный идентификатор политики.', format: 'uuid')]
         public string $id,

@@ -14,9 +14,14 @@ interface ImportPolicyRepositoryInterface
 
     public function findById(ImportPolicyId $id): ?ImportPolicy;
 
-    /** @return ImportPolicy[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return ImportPolicy[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function findActiveBySourceSystem(string $sourceSystem): ?ImportPolicy;

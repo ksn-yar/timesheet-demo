@@ -8,7 +8,10 @@ use App\Persistence\Entity\Rate as RateOrmEntity;
 use App\Persistence\Repository\RateRepository as RateOrmRepository;
 use App\WorkCatalog\Domain\Entity\Rate;
 use App\WorkCatalog\Domain\Repository\RateRepositoryInterface;
+use App\WorkCatalog\Domain\ValueObject\Money;
 use App\WorkCatalog\Domain\ValueObject\RateId;
+use App\WorkCatalog\Domain\ValueObject\RoleId;
+use App\WorkCatalog\Domain\ValueObject\WorkId;
 use DateTimeImmutable;
 
 /**
@@ -47,7 +50,11 @@ final class RateRepository implements RateRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Rate[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Rate[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findActiveAll($criteria, $page, $perPage);
@@ -58,6 +65,7 @@ final class RateRepository implements RateRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countActive($criteria);
@@ -95,13 +103,15 @@ final class RateRepository implements RateRepositoryInterface
     /** Восстанавливает доменную сущность из Doctrine Entity. */
     private function toDomainEntity(RateOrmEntity $ormEntity): Rate
     {
+        $roleIdStr = $ormEntity->getRoleId();
+        $workIdStr = $ormEntity->getWorkId();
+
         return Rate::restore(
-            $ormEntity->getId(),
-            $ormEntity->getAmount(),
-            $ormEntity->getCurrency(),
+            new RateId($ormEntity->getId()),
+            new Money($ormEntity->getAmount(), $ormEntity->getCurrency()),
             $ormEntity->getEffectiveFrom(),
-            $ormEntity->getRoleId(),
-            $ormEntity->getWorkId(),
+            null !== $roleIdStr ? new RoleId($roleIdStr) : null,
+            null !== $workIdStr ? new WorkId($workIdStr) : null,
             $ormEntity->getDeletedAt(),
         );
     }

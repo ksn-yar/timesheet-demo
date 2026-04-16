@@ -14,9 +14,14 @@ interface ClientRepositoryInterface
 
     public function findById(ClientId $id): ?Client;
 
-    /** @return Client[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Client[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function countActiveProjectsByClientId(ClientId $clientId): int;

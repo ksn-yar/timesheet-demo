@@ -36,8 +36,10 @@ final class ReportAggregationService
                 ];
             }
 
-            $hours = (float) ($ticket['hours'] ?? 0.0);
-            $rate = (float) ($ticket['rateSnapshot'] ?? 0.0);
+            $rawHours = $ticket['hours'] ?? 0.0;
+            $rawRate = $ticket['rateSnapshot'] ?? 0.0;
+            $hours = is_numeric($rawHours) ? (float) $rawHours : 0.0;
+            $rate = is_numeric($rawRate) ? (float) $rawRate : 0.0;
 
             $groups[$key]['totalHours'] += $hours;
             $groups[$key]['totalCost'] += $hours * $rate;
@@ -69,14 +71,19 @@ final class ReportAggregationService
     {
         $parts = [];
 
+        $ticketStrings = array_map(
+            static fn (mixed $v): string => \is_scalar($v) ? (string) $v : '',
+            $ticket,
+        );
+
         foreach ($dimensions as $dimension) {
             $parts[] = match ($dimension) {
-                GroupByDimension::Employee => 'employee:' . ($ticket['employeeId'] ?? ''),
-                GroupByDimension::Group => 'group:' . ($ticket['groupId'] ?? ''),
-                GroupByDimension::Project => 'project:' . ($ticket['projectId'] ?? ''),
-                GroupByDimension::ChangeRequest => 'cr:' . ($ticket['crId'] ?? ''),
-                GroupByDimension::Task => 'task:' . ($ticket['taskId'] ?? ''),
-                GroupByDimension::Work => 'work:' . ($ticket['workId'] ?? ''),
+                GroupByDimension::Employee => 'employee:' . ($ticketStrings['employeeId'] ?? ''),
+                GroupByDimension::Group => 'group:' . ($ticketStrings['groupId'] ?? ''),
+                GroupByDimension::Project => 'project:' . ($ticketStrings['projectId'] ?? ''),
+                GroupByDimension::ChangeRequest => 'cr:' . ($ticketStrings['crId'] ?? ''),
+                GroupByDimension::Task => 'task:' . ($ticketStrings['taskId'] ?? ''),
+                GroupByDimension::Work => 'work:' . ($ticketStrings['workId'] ?? ''),
             };
         }
 

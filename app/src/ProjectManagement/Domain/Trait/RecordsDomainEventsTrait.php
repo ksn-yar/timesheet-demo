@@ -7,6 +7,7 @@ namespace App\ProjectManagement\Domain\Trait;
 /** Накапливает доменные события для последующей публикации через Use Case. */
 trait RecordsDomainEventsTrait
 {
+    /** @var object[] */
     private array $domainEvents = [];
 
     /** @return object[] */

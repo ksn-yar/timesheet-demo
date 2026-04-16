@@ -13,6 +13,7 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class ReportListResponseDto
 {
+    /** @param ReportListItemResponseDto[] $items */
     public function __construct(
         #[OA\Property(title: 'Элементы', description: 'Список отчётов на текущей странице.', type: 'array', items: new OA\Items(ref: ReportListItemResponseDto::class))]
         public array $items,

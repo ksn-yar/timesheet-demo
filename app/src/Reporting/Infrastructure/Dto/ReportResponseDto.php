@@ -13,6 +13,11 @@ use OpenApi\Attributes as OA;
 )]
 final readonly class ReportResponseDto
 {
+    /**
+     * @param null|array<string, mixed>        $filters
+     * @param string[]                         $groupBy
+     * @param array<int, array<string, mixed>> $data
+     */
     public function __construct(
         #[OA\Property(title: 'Идентификатор', description: 'Уникальный идентификатор отчёта.', format: 'uuid', example: '550e8400-e29b-41d4-a716-446655440000')]
         public string $id,

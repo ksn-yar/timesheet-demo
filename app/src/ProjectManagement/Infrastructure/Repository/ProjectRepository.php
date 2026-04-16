@@ -48,7 +48,11 @@ final class ProjectRepository implements ProjectRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Project[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Project[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);
@@ -59,6 +63,7 @@ final class ProjectRepository implements ProjectRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);

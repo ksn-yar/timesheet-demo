@@ -17,6 +17,7 @@ final class TicketExistenceByWorkChecker implements TicketExistenceByWorkChecker
 
     public function hasTicketsForWork(WorkId $workId): bool
     {
+        /** @var int|string $count */
         $count = $this->connection->fetchOne(
             'SELECT COUNT(*) FROM tickets WHERE work_id = :workId',
             ['workId' => $workId->value()],

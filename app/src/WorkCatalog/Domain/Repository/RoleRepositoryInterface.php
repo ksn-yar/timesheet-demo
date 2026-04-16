@@ -16,9 +16,14 @@ interface RoleRepositoryInterface
 
     public function findByName(string $name): ?Role;
 
-    /** @return Role[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Role[]
+     */
     public function findAll(array $criteria, int $limit, int $offset): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria): int;
 
     public function countActiveRatesByRoleId(RoleId $id): int;

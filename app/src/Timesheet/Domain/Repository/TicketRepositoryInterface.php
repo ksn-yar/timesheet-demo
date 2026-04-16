@@ -14,15 +14,22 @@ interface TicketRepositoryInterface
 
     public function findById(TicketId $id): ?Ticket;
 
-    /** @return Ticket[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Ticket[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function existsByImportSourceAndExternalId(string $importSource, string $externalId): bool;
 
     /**
      * Возвращает тикеты с именами связанных сущностей (сотрудника, задачи, вида работ).
+     *
+     * @param array<string, mixed> $criteria
      *
      * @return array<array{ticket: Ticket, employeeName: string, taskName: string, workName: string}>
      */

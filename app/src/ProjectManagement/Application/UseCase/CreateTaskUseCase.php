@@ -80,6 +80,8 @@ final class CreateTaskUseCase
 
         $this->eventDispatcher->dispatch(new TaskCreated(
             new TaskId($task->getId()->value()),
+            $task->getProjectId(),
+            $task->getCrId(),
             $task->getName(),
         ));
     }

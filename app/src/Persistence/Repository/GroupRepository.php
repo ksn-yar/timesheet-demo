@@ -81,7 +81,11 @@ class GroupRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт групп с учётом фильтров. */
+    /**
+     * Подсчёт групп с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('g')

@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** DTO входящего HTTP-запроса на экспорт набора отчётов в файл. */
 final readonly class ExportReportsRequestDto
 {
+    /** @param string[] $reportIds */
     public function __construct(
         #[Assert\NotBlank(message: 'Список идентификаторов отчётов обязателен.')]
         #[Assert\Count(min: 1, minMessage: 'Необходимо указать хотя бы один отчёт для экспорта.')]

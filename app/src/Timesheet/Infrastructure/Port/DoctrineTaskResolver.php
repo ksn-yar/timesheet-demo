@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Port;
 
+use App\Persistence\Entity\Task as TaskOrmEntity;
 use App\Persistence\Repository\TaskRepository;
 use App\Timesheet\Application\Port\TaskResolverInterface;
 use InvalidArgumentException;
@@ -26,6 +27,7 @@ final class DoctrineTaskResolver implements TaskResolverInterface
             default => throw new InvalidArgumentException("Неизвестный matchBy: {$matchBy}"),
         };
 
+        /** @var null|TaskOrmEntity $task */
         $task = $qb->setParameter('value', $value)
             ->setMaxResults(1)
             ->getQuery()

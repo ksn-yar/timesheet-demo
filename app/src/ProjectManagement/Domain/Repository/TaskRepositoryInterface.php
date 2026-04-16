@@ -14,9 +14,14 @@ interface TaskRepositoryInterface
 
     public function findById(TaskId $id): ?Task;
 
-    /** @return Task[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Task[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function hasTicketsForTask(TaskId $taskId): bool;

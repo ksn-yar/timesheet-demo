@@ -49,7 +49,11 @@ final class ClientRepository implements ClientRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return Client[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Client[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);
@@ -60,6 +64,7 @@ final class ClientRepository implements ClientRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);

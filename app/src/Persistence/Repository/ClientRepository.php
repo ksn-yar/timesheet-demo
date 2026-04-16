@@ -68,7 +68,7 @@ class ClientRepository extends ServiceEntityRepository
             ->andWhere('c.deletedAt IS NULL')
         ;
 
-        if (isset($criteria['name'])) {
+        if (isset($criteria['name']) && \is_string($criteria['name'])) {
             $qb->andWhere('c.name LIKE :name')
                 ->setParameter('name', '%' . $criteria['name'] . '%')
             ;
@@ -83,7 +83,11 @@ class ClientRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт клиентов с учётом фильтров. */
+    /**
+     * Подсчёт клиентов с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('c')
@@ -91,7 +95,7 @@ class ClientRepository extends ServiceEntityRepository
             ->andWhere('c.deletedAt IS NULL')
         ;
 
-        if (isset($criteria['name'])) {
+        if (isset($criteria['name']) && \is_string($criteria['name'])) {
             $qb->andWhere('c.name LIKE :name')
                 ->setParameter('name', '%' . $criteria['name'] . '%')
             ;

@@ -67,7 +67,11 @@ class RateRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт активных ставок с учётом фильтров. */
+    /**
+     * Подсчёт активных ставок с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countActive(array $criteria): int
     {
         $qb = $this->createQueryBuilder('r')
@@ -118,6 +122,7 @@ class RateRepository extends ServiceEntityRepository
             ->setParameter('workId', $workId)
             ->andWhere('r.deletedAt IS NULL')
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
 }

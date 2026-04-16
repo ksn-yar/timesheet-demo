@@ -68,7 +68,11 @@ class RoleRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт активных ролей. */
+    /**
+     * Подсчёт активных ролей.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countActive(array $criteria): int
     {
         $qb = $this->createQueryBuilder('r')
@@ -90,6 +94,7 @@ class RoleRepository extends ServiceEntityRepository
             ->setParameter('roleId', $roleId)
             ->andWhere('rate.deletedAt IS NULL')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

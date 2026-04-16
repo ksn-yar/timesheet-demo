@@ -76,7 +76,11 @@ class ProjectRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт проектов с учётом фильтров. */
+    /**
+     * Подсчёт проектов с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('p')
@@ -138,6 +142,7 @@ class ProjectRepository extends ServiceEntityRepository
             ->andWhere('cr.deletedAt IS NULL')
             ->setParameter('projectId', $projectId)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

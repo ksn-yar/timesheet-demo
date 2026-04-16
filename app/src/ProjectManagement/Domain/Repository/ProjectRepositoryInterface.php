@@ -14,9 +14,14 @@ interface ProjectRepositoryInterface
 
     public function findById(ProjectId $id): ?Project;
 
-    /** @return Project[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Project[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function countActiveTasksByProjectId(ProjectId $projectId): int;

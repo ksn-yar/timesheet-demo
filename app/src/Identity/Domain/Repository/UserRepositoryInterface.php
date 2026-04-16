@@ -16,7 +16,11 @@ interface UserRepositoryInterface
 
     public function findById(UserId $id): ?User;
 
-    /** @return array{items: User[], total: int} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{items: User[], total: int}
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
     public function existsByEmail(Email $email): bool;

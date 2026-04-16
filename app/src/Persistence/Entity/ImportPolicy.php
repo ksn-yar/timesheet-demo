@@ -25,6 +25,7 @@ class ImportPolicy
     #[ORM\Column(name: 'source_system', type: 'string', length: 255)]
     private string $sourceSystem;
 
+    /** @var array<string, mixed> */
     #[ORM\Column(name: 'mapping_rules', type: 'json')]
     private array $mappingRules = [];
 
@@ -70,11 +71,13 @@ class ImportPolicy
         $this->sourceSystem = $sourceSystem;
     }
 
+    /** @return array<string, mixed> */
     public function getMappingRules(): array
     {
         return $this->mappingRules;
     }
 
+    /** @param array<string, mixed> $mappingRules */
     public function setMappingRules(array $mappingRules): void
     {
         $this->mappingRules = $mappingRules;

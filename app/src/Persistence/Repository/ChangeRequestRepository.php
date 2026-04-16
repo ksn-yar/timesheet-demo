@@ -61,7 +61,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
             ;
         }
 
-        if (isset($criteria['name'])) {
+        if (isset($criteria['name']) && \is_string($criteria['name'])) {
             $qb->andWhere('cr.name LIKE :name')
                 ->setParameter('name', '%' . $criteria['name'] . '%')
             ;
@@ -76,7 +76,11 @@ class ChangeRequestRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт запросов на изменение с учётом фильтров. */
+    /**
+     * Подсчёт запросов на изменение с учётом фильтров.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         $qb = $this->createQueryBuilder('cr')
@@ -90,7 +94,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
             ;
         }
 
-        if (isset($criteria['name'])) {
+        if (isset($criteria['name']) && \is_string($criteria['name'])) {
             $qb->andWhere('cr.name LIKE :name')
                 ->setParameter('name', '%' . $criteria['name'] . '%')
             ;
@@ -110,6 +114,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
             ->andWhere('t.deletedAt IS NULL')
             ->setParameter('crId', $crId)
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult()
+        ;
     }
 }

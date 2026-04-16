@@ -52,7 +52,11 @@ final class UserRepository implements UserRepositoryInterface, TicketExistenceCh
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return array{items: User[], total: int} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{items: User[], total: int}
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);

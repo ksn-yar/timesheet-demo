@@ -38,6 +38,7 @@ final readonly class ImportSummary
         return $this->logEntries;
     }
 
+    /** @return array<string, mixed> */
     public function toArray(): array
     {
         return [

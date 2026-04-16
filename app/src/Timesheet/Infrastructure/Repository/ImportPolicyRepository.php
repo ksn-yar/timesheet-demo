@@ -42,7 +42,11 @@ final class ImportPolicyRepository implements ImportPolicyRepositoryInterface
         return null !== $orm ? $this->toDomainEntity($orm) : null;
     }
 
-    /** @return ImportPolicy[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return ImportPolicy[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         return array_map(
@@ -51,6 +55,7 @@ final class ImportPolicyRepository implements ImportPolicyRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);

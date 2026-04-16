@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Port;
 
+use App\Persistence\Entity\Work as WorkOrmEntity;
 use App\Persistence\Repository\WorkRepository;
 use App\Timesheet\Application\Port\WorkResolverInterface;
 use InvalidArgumentException;
@@ -26,6 +27,7 @@ final class DoctrineWorkResolver implements WorkResolverInterface
             default => throw new InvalidArgumentException("Неизвестный matchBy: {$matchBy}"),
         };
 
+        /** @var null|WorkOrmEntity $work */
         $work = $qb->setParameter('value', $value)
             ->setMaxResults(1)
             ->getQuery()

@@ -47,7 +47,11 @@ final class ChangeRequestRepository implements ChangeRequestRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return ChangeRequest[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return ChangeRequest[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);
@@ -58,6 +62,7 @@ final class ChangeRequestRepository implements ChangeRequestRepositoryInterface
         );
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);

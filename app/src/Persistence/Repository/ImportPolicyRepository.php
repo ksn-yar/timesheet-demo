@@ -62,7 +62,11 @@ class ImportPolicyRepository extends ServiceEntityRepository
         ;
     }
 
-    /** Подсчёт политик импорта. */
+    /**
+     * Подсчёт политик импорта.
+     *
+     * @param array<string, mixed> $criteria
+     */
     public function countAll(array $criteria): int
     {
         return (int) $this->createQueryBuilder('ip')

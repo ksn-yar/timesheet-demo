@@ -47,7 +47,11 @@ final class GroupRepository implements GroupRepositoryInterface
         return $this->toDomainEntity($ormEntity);
     }
 
-    /** @return array{items: Group[], total: int} */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return array{items: Group[], total: int}
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $ormEntities = $this->ormRepository->findAllPaginated($criteria, $page, $perPage);

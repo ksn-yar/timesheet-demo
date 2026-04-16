@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Reporting\Infrastructure\Service;
 
 use App\Reporting\Application\Port\ReportFileGeneratorInterface;
+use App\Reporting\Domain\Entity\Report;
 use App\Reporting\Domain\Enum\ExportFormat;
 use App\Reporting\Domain\Exception\ReportExportGenerationException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -15,6 +16,7 @@ use Throwable;
 /** Генератор файлов экспорта отчётов в формате XLSX. */
 final class XlsxReportFileGenerator implements ReportFileGeneratorInterface
 {
+    /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string
     {
         // Собираем все строки данных из всех отчётов

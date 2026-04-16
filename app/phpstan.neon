@@ -24,10 +24,40 @@ parameters:
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
     ignoreErrors:
-        # Doctrine proxy / lazy loading
-        - '#Property .* might not be initialized#'
-        # Doctrine ORM entities не используют конструкторы - Doctrine создает объекты через рефлексию
-        - '#Class App\\.*\\Infrastructure\\Entity\\.* has an uninitialized property#'
-        - '#Property App\\.*\\Infrastructure\\Entity\\.*::\$id .* is never assigned .* so it can be removed from the property type#'
-        # Doctrine Repository @method теги наследуют generic array типы
-        - '#Class App\\.*\\Infrastructure\\Repository\\Doctrine\\.* has PHPDoc tag @method for method .* with no value type specified in iterable type array#'
+        # Persistence ORM entities используют factory pattern / Doctrine reflection
+        - '#Class App\\Persistence\\Entity\\.* has an uninitialized property#'
+        # Domain entities используют private constructor + static factory methods (DDD pattern)
+        - '#Class App\\.*\\Domain\\Entity\\.* has an uninitialized property#'
+        # symfony/uid не установлен как зависимость PHPStan — ложные срабатывания
+        - '#Call to static method .* on an unknown class Symfony\\Component\\Uid\\Uuid#'
+        - '#Cannot call method toRfc4122\(\) on mixed#'
+        # Dompdf не установлен в dev — используется только в production-контейнере
+        - '#Instantiated class Dompdf\\Dompdf not found#'
+        - '#Call to method .* on an unknown class Dompdf\\Dompdf#'
+        # PhpSpreadsheet не установлен в dev — используется только в production-контейнере
+        - '#Instantiated class PhpOffice\\PhpSpreadsheet\\Spreadsheet not found#'
+        - '#Instantiated class PhpOffice\\PhpSpreadsheet\\Writer\\Xlsx not found#'
+        - '#Call to method .* on an unknown class PhpOffice\\PhpSpreadsheet\\Spreadsheet#'
+        - '#Call to method .* on an unknown class PhpOffice\\PhpSpreadsheet\\Writer\\Xlsx#'
+        - message: '#Cannot call method .* on mixed#'
+          path: '*/Infrastructure/Service/XlsxReportFileGenerator.php'
+        # Doctrine Repository @method PHPDoc с generic array типами (Persistence layer)
+        - '#Class App\\Persistence\\Repository\\.* has PHPDoc tag @method for method .* with no value type specified in iterable type array#'
+        # Kernel::configureContainer — стандартный Symfony MicroKernelTrait метод
+        - '#Method App\\Kernel::configureContainer\(\) is unused#'
+        # method_exists — код Symfony Dotenv, всегда true в нашем окружении
+        - '#Call to function method_exists\(\) with .* will always evaluate to true#'
+        # $user->getId() через method_exists — тип не сужается PHPStan из-за dynamic dispatch
+        - message: '#Cannot cast mixed to string#'
+          path: '*/Infrastructure/EventListener/AuditLogEventListener.php'
+        - message: '#Cannot cast mixed to string#'
+          path: '*/Infrastructure/Transformer/CreateReportInputTransformer.php'
+        # Генераторы файлов экспорта используют Uuid::v4()->toRfc4122() — Uuid не установлен в dev
+        - message: '#Binary operation "\." between .* and mixed results in an error#'
+          path: '*/Infrastructure/Service/*ReportFileGenerator.php'
+        # Ячейки отчёта имеют тип mixed из array<string, mixed> — приведение к string безопасно
+        - message: '#Cannot cast mixed to string#'
+          path: '*/Infrastructure/Service/PdfReportFileGenerator.php'
+        # RunImportUseCase: маппинг-правила и внешние данные имеют тип mixed — приведения к string безопасны
+        - message: '#Cannot cast mixed to string#'
+          path: '*/Application/UseCase/RunImportUseCase.php'

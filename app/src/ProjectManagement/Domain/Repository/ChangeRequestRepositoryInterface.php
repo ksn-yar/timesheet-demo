@@ -14,9 +14,14 @@ interface ChangeRequestRepositoryInterface
 
     public function findById(ChangeRequestId $id): ?ChangeRequest;
 
-    /** @return ChangeRequest[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return ChangeRequest[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array;
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int;
 
     public function countActiveTasksByChangeRequestId(ChangeRequestId $changeRequestId): int;

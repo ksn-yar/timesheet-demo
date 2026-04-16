@@ -7,6 +7,7 @@ namespace App\Timesheet\Infrastructure\Repository;
 use App\Persistence\Entity\Ticket as TicketOrmEntity;
 use App\Persistence\Repository\TicketRepository as TicketOrmRepository;
 use App\Timesheet\Domain\Entity\Ticket;
+use App\Timesheet\Domain\Enum\TicketType;
 use App\Timesheet\Domain\Repository\TicketRepositoryInterface;
 use App\Timesheet\Domain\ValueObject\TicketId;
 use DateTimeImmutable;
@@ -42,7 +43,11 @@ final class TicketRepository implements TicketRepositoryInterface
         return null !== $orm ? $this->toDomainEntity($orm) : null;
     }
 
-    /** @return Ticket[] */
+    /**
+     * @param array<string, mixed> $criteria
+     *
+     * @return Ticket[]
+     */
     public function findAll(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         return array_map(
@@ -54,20 +59,26 @@ final class TicketRepository implements TicketRepositoryInterface
     /**
      * Поиск тикетов с именами связанных сущностей.
      *
+     * @param array<string, mixed> $criteria
+     *
      * @return array<array{ticket: Ticket, employeeName: string, taskName: string, workName: string}>
      */
     public function findAllWithNames(array $criteria = [], int $page = 1, int $perPage = 20): array
     {
         $rows = $this->ormRepository->findAllWithNamesPaginated($criteria, $page, $perPage);
 
-        return array_map(fn (array $row): array => [
-            'ticket' => $this->toDomainEntity($row[0]),
-            'employeeName' => $row['employeeName'] ?? '',
-            'taskName' => $row['taskName'] ?? '',
-            'workName' => $row['workName'] ?? '',
-        ], $rows);
+        return array_map(function (array $row): array {
+            // @var array{0: TicketOrmEntity, employeeName: string, taskName: string, workName: string} $row
+            return [
+                'ticket' => $this->toDomainEntity($row[0]),
+                'employeeName' => $row['employeeName'],
+                'taskName' => $row['taskName'],
+                'workName' => $row['workName'],
+            ];
+        }, $rows);
     }
 
+    /** @param array<string, mixed> $criteria */
     public function countAll(array $criteria = []): int
     {
         return $this->ormRepository->countAll($criteria);
@@ -122,7 +133,7 @@ final class TicketRepository implements TicketRepositoryInterface
             $orm->getHours(),
             $orm->getComment(),
             $orm->getRateSnapshot(),
-            $orm->getType(),
+            TicketType::from($orm->getType()),
             $orm->getImportSource(),
             $orm->getExternalId(),
             $orm->isEditable(),

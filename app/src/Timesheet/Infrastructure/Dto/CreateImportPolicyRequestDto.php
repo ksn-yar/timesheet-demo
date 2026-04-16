@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /** DTO входящего HTTP-запроса на создание политики импорта. */
 final readonly class CreateImportPolicyRequestDto
 {
+    /** @param array<string, mixed> $mappingRules */
     public function __construct(
         #[Assert\NotBlank(message: 'Название политики обязательно.')]
         #[Assert\Length(max: 255, maxMessage: 'Название политики не должно превышать 255 символов.')]
