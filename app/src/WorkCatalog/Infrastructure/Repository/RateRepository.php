@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\WorkCatalog\Infrastructure\Repository;
 
 use App\Persistence\Entity\Rate as RateOrmEntity;
+use App\Persistence\Entity\Role as RoleOrmEntity;
+use App\Persistence\Entity\Work as WorkOrmEntity;
 use App\Persistence\Repository\RateRepository as RateOrmRepository;
 use App\WorkCatalog\Domain\Entity\Rate;
 use App\WorkCatalog\Domain\Repository\RateRepositoryInterface;
@@ -79,8 +81,11 @@ final class RateRepository implements RateRepositoryInterface
         $ormEntity->setAmount($rate->getMoney()->amount());
         $ormEntity->setCurrency($rate->getMoney()->currency());
         $ormEntity->setEffectiveFrom($rate->getEffectiveFrom());
-        $ormEntity->setRoleId($rate->getRoleId()?->value());
-        $ormEntity->setWorkId($rate->getWorkId()?->value());
+        $em = $this->ormRepository->getEntityManager();
+        $roleId = $rate->getRoleId()?->value();
+        $ormEntity->setRole(null !== $roleId ? $em->getReference(RoleOrmEntity::class, $roleId) : null);
+        $workId = $rate->getWorkId()?->value();
+        $ormEntity->setWork(null !== $workId ? $em->getReference(WorkOrmEntity::class, $workId) : null);
         $ormEntity->setDeletedAt($rate->getDeletedAt());
         $ormEntity->setCreatedAt(new DateTimeImmutable());
         $ormEntity->setUpdatedAt(new DateTimeImmutable());
@@ -94,8 +99,11 @@ final class RateRepository implements RateRepositoryInterface
         $ormEntity->setAmount($rate->getMoney()->amount());
         $ormEntity->setCurrency($rate->getMoney()->currency());
         $ormEntity->setEffectiveFrom($rate->getEffectiveFrom());
-        $ormEntity->setRoleId($rate->getRoleId()?->value());
-        $ormEntity->setWorkId($rate->getWorkId()?->value());
+        $em = $this->ormRepository->getEntityManager();
+        $roleId = $rate->getRoleId()?->value();
+        $ormEntity->setRole(null !== $roleId ? $em->getReference(RoleOrmEntity::class, $roleId) : null);
+        $workId = $rate->getWorkId()?->value();
+        $ormEntity->setWork(null !== $workId ? $em->getReference(WorkOrmEntity::class, $workId) : null);
         $ormEntity->setDeletedAt($rate->getDeletedAt());
         $ormEntity->setUpdatedAt(new DateTimeImmutable());
     }

@@ -65,7 +65,7 @@ class UserRepository extends ServiceEntityRepository
     public function findByGroupId(string $groupId): array
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.groupId = :groupId')
+            ->andWhere('u.group = :groupId')
             ->andWhere('u.deletedAt IS NULL')
             ->setParameter('groupId', $groupId)
             ->orderBy('u.name', 'ASC')
@@ -78,7 +78,7 @@ class UserRepository extends ServiceEntityRepository
     public function findByRoleId(string $roleId): array
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.roleId = :roleId')
+            ->andWhere('u.role = :roleId')
             ->andWhere('u.deletedAt IS NULL')
             ->setParameter('roleId', $roleId)
             ->orderBy('u.name', 'ASC')
@@ -92,7 +92,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->andWhere('u.groupId = :groupId')
+            ->andWhere('u.group = :groupId')
             ->andWhere('u.isActive = true')
             ->andWhere('u.deletedAt IS NULL')
             ->setParameter('groupId', $groupId)
@@ -106,7 +106,7 @@ class UserRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('u')
             ->select('COUNT(u.id)')
-            ->andWhere('u.roleId = :roleId')
+            ->andWhere('u.role = :roleId')
             ->andWhere('u.isActive = true')
             ->andWhere('u.deletedAt IS NULL')
             ->setParameter('roleId', $roleId)
@@ -122,7 +122,7 @@ class UserRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(t.id)')
             ->from(Ticket::class, 't')
-            ->andWhere('t.employeeId = :userId')
+            ->andWhere('t.employee = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()
             ->getSingleScalarResult() > 0
@@ -174,13 +174,13 @@ class UserRepository extends ServiceEntityRepository
     private function applyCriteria(QueryBuilder $qb, array $criteria): void
     {
         if (isset($criteria['groupId'])) {
-            $qb->andWhere('u.groupId = :groupId')
+            $qb->andWhere('u.group = :groupId')
                 ->setParameter('groupId', $criteria['groupId'])
             ;
         }
 
         if (isset($criteria['roleId'])) {
-            $qb->andWhere('u.roleId = :roleId')
+            $qb->andWhere('u.role = :roleId')
                 ->setParameter('roleId', $criteria['roleId'])
             ;
         }

@@ -23,14 +23,20 @@ class Ticket
     #[ORM\GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    #[ORM\Column(name: 'employee_id', type: 'guid')]
-    private string $employeeId;
+    /** Связь с сотрудником — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'employee_id', referencedColumnName: 'id', nullable: false)]
+    private User $employee;
 
-    #[ORM\Column(name: 'task_id', type: 'guid')]
-    private string $taskId;
+    /** Связь с задачей — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Task::class)]
+    #[ORM\JoinColumn(name: 'task_id', referencedColumnName: 'id', nullable: false)]
+    private Task $task;
 
-    #[ORM\Column(name: 'work_id', type: 'guid')]
-    private string $workId;
+    /** Связь с видом работ — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Work::class)]
+    #[ORM\JoinColumn(name: 'work_id', referencedColumnName: 'id', nullable: false)]
+    private Work $work;
 
     #[ORM\Column(type: 'date_immutable')]
     private DateTimeImmutable $date;
@@ -72,34 +78,52 @@ class Ticket
         $this->id = $id;
     }
 
+    public function getEmployee(): User
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(User $employee): void
+    {
+        $this->employee = $employee;
+    }
+
+    /** Возвращает UUID сотрудника для обратной совместимости с существующим кодом. */
     public function getEmployeeId(): string
     {
-        return $this->employeeId;
+        return $this->employee->getId();
     }
 
-    public function setEmployeeId(string $employeeId): void
+    public function getTask(): Task
     {
-        $this->employeeId = $employeeId;
+        return $this->task;
     }
 
+    public function setTask(Task $task): void
+    {
+        $this->task = $task;
+    }
+
+    /** Возвращает UUID задачи для обратной совместимости с существующим кодом. */
     public function getTaskId(): string
     {
-        return $this->taskId;
+        return $this->task->getId();
     }
 
-    public function setTaskId(string $taskId): void
+    public function getWork(): Work
     {
-        $this->taskId = $taskId;
+        return $this->work;
     }
 
+    public function setWork(Work $work): void
+    {
+        $this->work = $work;
+    }
+
+    /** Возвращает UUID вида работ для обратной совместимости с существующим кодом. */
     public function getWorkId(): string
     {
-        return $this->workId;
-    }
-
-    public function setWorkId(string $workId): void
-    {
-        $this->workId = $workId;
+        return $this->work->getId();
     }
 
     public function getDate(): DateTimeImmutable

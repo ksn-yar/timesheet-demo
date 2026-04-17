@@ -47,13 +47,13 @@ class RateRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['roleId'])) {
-            $qb->andWhere('r.roleId = :roleId')
+            $qb->andWhere('r.role = :roleId')
                 ->setParameter('roleId', $criteria['roleId'])
             ;
         }
 
         if (isset($criteria['workId'])) {
-            $qb->andWhere('r.workId = :workId')
+            $qb->andWhere('r.work = :workId')
                 ->setParameter('workId', $criteria['workId'])
             ;
         }
@@ -80,13 +80,13 @@ class RateRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['roleId'])) {
-            $qb->andWhere('r.roleId = :roleId')
+            $qb->andWhere('r.role = :roleId')
                 ->setParameter('roleId', $criteria['roleId'])
             ;
         }
 
         if (isset($criteria['workId'])) {
-            $qb->andWhere('r.workId = :workId')
+            $qb->andWhere('r.work = :workId')
                 ->setParameter('workId', $criteria['workId'])
             ;
         }
@@ -102,7 +102,7 @@ class RateRepository extends ServiceEntityRepository
     public function findByRoleId(string $roleId): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.roleId = :roleId')
+            ->andWhere('r.role = :roleId')
             ->setParameter('roleId', $roleId)
             ->andWhere('r.deletedAt IS NULL')
             ->getQuery()
@@ -118,7 +118,7 @@ class RateRepository extends ServiceEntityRepository
     public function findByWorkId(string $workId): array
     {
         return $this->createQueryBuilder('r')
-            ->andWhere('r.workId = :workId')
+            ->andWhere('r.work = :workId')
             ->setParameter('workId', $workId)
             ->andWhere('r.deletedAt IS NULL')
             ->getQuery()

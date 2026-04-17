@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\ProjectManagement\Infrastructure\Repository;
 
+use App\Persistence\Entity\Client as ClientOrmEntity;
 use App\Persistence\Entity\Project as ProjectOrmEntity;
 use App\Persistence\Repository\ProjectRepository as ProjectOrmRepository;
 use App\ProjectManagement\Domain\Entity\Project;
@@ -84,7 +85,9 @@ final class ProjectRepository implements ProjectRepositoryInterface
     {
         $ormEntity = new ProjectOrmEntity();
         $ormEntity->setId($project->getId()->value());
-        $ormEntity->setClientId($project->getClientId()->value());
+        $ormEntity->setClient(
+            $this->ormRepository->getEntityManager()->getReference(ClientOrmEntity::class, $project->getClientId()->value())
+        );
         $ormEntity->setName($project->getName());
         $ormEntity->setStatus($project->getStatus()->value);
         $ormEntity->setDescription($project->getDescription());

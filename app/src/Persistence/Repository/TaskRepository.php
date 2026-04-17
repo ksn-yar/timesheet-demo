@@ -57,13 +57,13 @@ class TaskRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['projectId'])) {
-            $qb->andWhere('t.projectId = :projectId')
+            $qb->andWhere('t.project = :projectId')
                 ->setParameter('projectId', $criteria['projectId'])
             ;
         }
 
         if (isset($criteria['crId'])) {
-            $qb->andWhere('t.crId = :crId')
+            $qb->andWhere('t.changeRequest = :crId')
                 ->setParameter('crId', $criteria['crId'])
             ;
         }
@@ -90,13 +90,13 @@ class TaskRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['projectId'])) {
-            $qb->andWhere('t.projectId = :projectId')
+            $qb->andWhere('t.project = :projectId')
                 ->setParameter('projectId', $criteria['projectId'])
             ;
         }
 
         if (isset($criteria['crId'])) {
-            $qb->andWhere('t.crId = :crId')
+            $qb->andWhere('t.changeRequest = :crId')
                 ->setParameter('crId', $criteria['crId'])
             ;
         }
@@ -112,7 +112,7 @@ class TaskRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(t.id)')
             ->from(Ticket::class, 't')
-            ->where('t.taskId = :taskId')
+            ->where('t.task = :taskId')
             ->setParameter('taskId', $taskId)
             ->getQuery()
             ->getSingleScalarResult()

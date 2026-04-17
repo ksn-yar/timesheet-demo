@@ -35,11 +35,15 @@ class User
     #[ORM\Column(name: 'system_role', type: 'string', length: 50)]
     private string $systemRole;
 
-    #[ORM\Column(name: 'group_id', type: 'guid', nullable: true)]
-    private ?string $groupId = null;
+    /** Связь с группой пользователей — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Group::class)]
+    #[ORM\JoinColumn(name: 'group_id', referencedColumnName: 'id', nullable: true)]
+    private ?Group $group = null;
 
-    #[ORM\Column(name: 'role_id', type: 'guid', nullable: true)]
-    private ?string $roleId = null;
+    /** Связь с ролью из WorkCatalog — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Role::class)]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', nullable: true)]
+    private ?Role $role = null;
 
     #[ORM\Column(name: 'is_active', type: 'boolean', options: ['default' => true])]
     private bool $isActive = true;
@@ -103,24 +107,36 @@ class User
         $this->systemRole = $systemRole;
     }
 
+    public function getGroup(): ?Group
+    {
+        return $this->group;
+    }
+
+    public function setGroup(?Group $group): void
+    {
+        $this->group = $group;
+    }
+
+    /** Возвращает UUID группы для обратной совместимости с существующим кодом. */
     public function getGroupId(): ?string
     {
-        return $this->groupId;
+        return $this->group?->getId();
     }
 
-    public function setGroupId(?string $groupId): void
+    public function getRole(): ?Role
     {
-        $this->groupId = $groupId;
+        return $this->role;
     }
 
+    public function setRole(?Role $role): void
+    {
+        $this->role = $role;
+    }
+
+    /** Возвращает UUID роли для обратной совместимости с существующим кодом. */
     public function getRoleId(): ?string
     {
-        return $this->roleId;
-    }
-
-    public function setRoleId(?string $roleId): void
-    {
-        $this->roleId = $roleId;
+        return $this->role?->getId();
     }
 
     public function isActive(): bool

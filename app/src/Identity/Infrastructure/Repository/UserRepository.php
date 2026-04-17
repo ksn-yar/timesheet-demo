@@ -12,6 +12,8 @@ use App\Identity\Domain\ValueObject\Email;
 use App\Identity\Domain\ValueObject\GroupId;
 use App\Identity\Domain\ValueObject\HashedPassword;
 use App\Identity\Domain\ValueObject\UserId;
+use App\Persistence\Entity\Group as GroupOrmEntity;
+use App\Persistence\Entity\Role as RoleOrmEntity;
 use App\Persistence\Entity\User as UserOrmEntity;
 use App\Persistence\Repository\UserRepository as UserOrmRepository;
 use DateTimeImmutable;
@@ -100,8 +102,18 @@ final class UserRepository implements UserRepositoryInterface, TicketExistenceCh
         $ormEntity->setEmail($user->getEmail()->value());
         $ormEntity->setPasswordHash($user->getPasswordHash()->value());
         $ormEntity->setSystemRole($user->getSystemRole()->value);
-        $ormEntity->setGroupId($user->getGroupId()?->value());
-        $ormEntity->setRoleId($user->getRoleId());
+        $groupId = $user->getGroupId()?->value();
+        $ormEntity->setGroup(
+            null !== $groupId
+                ? $this->ormRepository->getEntityManager()->getReference(GroupOrmEntity::class, $groupId)
+                : null
+        );
+        $roleId = $user->getRoleId();
+        $ormEntity->setRole(
+            null !== $roleId
+                ? $this->ormRepository->getEntityManager()->getReference(RoleOrmEntity::class, $roleId)
+                : null
+        );
         $ormEntity->setIsActive($user->isActive());
         $ormEntity->setDeletedAt($user->getDeletedAt());
         $ormEntity->setCreatedAt(new DateTimeImmutable());
@@ -117,8 +129,18 @@ final class UserRepository implements UserRepositoryInterface, TicketExistenceCh
         $ormEntity->setEmail($user->getEmail()->value());
         $ormEntity->setPasswordHash($user->getPasswordHash()->value());
         $ormEntity->setSystemRole($user->getSystemRole()->value);
-        $ormEntity->setGroupId($user->getGroupId()?->value());
-        $ormEntity->setRoleId($user->getRoleId());
+        $groupId = $user->getGroupId()?->value();
+        $ormEntity->setGroup(
+            null !== $groupId
+                ? $this->ormRepository->getEntityManager()->getReference(GroupOrmEntity::class, $groupId)
+                : null
+        );
+        $roleId = $user->getRoleId();
+        $ormEntity->setRole(
+            null !== $roleId
+                ? $this->ormRepository->getEntityManager()->getReference(RoleOrmEntity::class, $roleId)
+                : null
+        );
         $ormEntity->setIsActive($user->isActive());
         $ormEntity->setDeletedAt($user->getDeletedAt());
         $ormEntity->setUpdatedAt(new DateTimeImmutable());

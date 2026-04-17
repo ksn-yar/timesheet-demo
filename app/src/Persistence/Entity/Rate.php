@@ -30,11 +30,15 @@ class Rate
     #[ORM\Column(name: 'effective_from', type: 'date_immutable')]
     private DateTimeImmutable $effectiveFrom;
 
-    #[ORM\Column(name: 'role_id', type: 'guid', nullable: true)]
-    private ?string $roleId = null;
+    /** Связь с ролью — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Role::class)]
+    #[ORM\JoinColumn(name: 'role_id', referencedColumnName: 'id', nullable: true)]
+    private ?Role $role = null;
 
-    #[ORM\Column(name: 'work_id', type: 'guid', nullable: true)]
-    private ?string $workId = null;
+    /** Связь с видом работ — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Work::class)]
+    #[ORM\JoinColumn(name: 'work_id', referencedColumnName: 'id', nullable: true)]
+    private ?Work $work = null;
 
     #[ORM\Column(name: 'deleted_at', type: 'datetime_immutable', nullable: true)]
     private ?DateTimeImmutable $deletedAt = null;
@@ -85,24 +89,36 @@ class Rate
         $this->effectiveFrom = $effectiveFrom;
     }
 
+    public function getRole(): ?Role
+    {
+        return $this->role;
+    }
+
+    public function setRole(?Role $role): void
+    {
+        $this->role = $role;
+    }
+
+    /** Возвращает UUID роли для обратной совместимости с существующим кодом. */
     public function getRoleId(): ?string
     {
-        return $this->roleId;
+        return $this->role?->getId();
     }
 
-    public function setRoleId(?string $roleId): void
+    public function getWork(): ?Work
     {
-        $this->roleId = $roleId;
+        return $this->work;
     }
 
+    public function setWork(?Work $work): void
+    {
+        $this->work = $work;
+    }
+
+    /** Возвращает UUID вида работ для обратной совместимости с существующим кодом. */
     public function getWorkId(): ?string
     {
-        return $this->workId;
-    }
-
-    public function setWorkId(?string $workId): void
-    {
-        $this->workId = $workId;
+        return $this->work?->getId();
     }
 
     public function getDeletedAt(): ?DateTimeImmutable

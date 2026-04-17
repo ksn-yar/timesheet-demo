@@ -21,11 +21,15 @@ class Task
     #[ORM\GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    #[ORM\Column(name: 'project_id', type: 'guid', nullable: true)]
-    private ?string $projectId = null;
+    /** Связь с проектом — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: true)]
+    private ?Project $project = null;
 
-    #[ORM\Column(name: 'cr_id', type: 'guid', nullable: true)]
-    private ?string $crId = null;
+    /** Связь с запросом на изменение — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: ChangeRequest::class)]
+    #[ORM\JoinColumn(name: 'cr_id', referencedColumnName: 'id', nullable: true)]
+    private ?ChangeRequest $changeRequest = null;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
@@ -55,24 +59,36 @@ class Task
         $this->id = $id;
     }
 
+    public function getProject(): ?Project
+    {
+        return $this->project;
+    }
+
+    public function setProject(?Project $project): void
+    {
+        $this->project = $project;
+    }
+
+    /** Возвращает UUID проекта для обратной совместимости с существующим кодом. */
     public function getProjectId(): ?string
     {
-        return $this->projectId;
+        return $this->project?->getId();
     }
 
-    public function setProjectId(?string $projectId): void
+    public function getChangeRequest(): ?ChangeRequest
     {
-        $this->projectId = $projectId;
+        return $this->changeRequest;
     }
 
+    public function setChangeRequest(?ChangeRequest $changeRequest): void
+    {
+        $this->changeRequest = $changeRequest;
+    }
+
+    /** Возвращает UUID запроса на изменение для обратной совместимости с существующим кодом. */
     public function getCrId(): ?string
     {
-        return $this->crId;
-    }
-
-    public function setCrId(?string $crId): void
-    {
-        $this->crId = $crId;
+        return $this->changeRequest?->getId();
     }
 
     public function getName(): string

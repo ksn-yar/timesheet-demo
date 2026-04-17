@@ -20,8 +20,10 @@ class Project
     #[ORM\GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    #[ORM\Column(name: 'client_id', type: 'guid')]
-    private string $clientId;
+    /** Связь с клиентом — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Client::class)]
+    #[ORM\JoinColumn(name: 'client_id', referencedColumnName: 'id', nullable: false)]
+    private Client $client;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
@@ -51,14 +53,20 @@ class Project
         $this->id = $id;
     }
 
-    public function getClientId(): string
+    public function getClient(): Client
     {
-        return $this->clientId;
+        return $this->client;
     }
 
-    public function setClientId(string $clientId): void
+    public function setClient(Client $client): void
     {
-        $this->clientId = $clientId;
+        $this->client = $client;
+    }
+
+    /** Возвращает UUID клиента для обратной совместимости с существующим кодом. */
+    public function getClientId(): string
+    {
+        return $this->client->getId();
     }
 
     public function getName(): string

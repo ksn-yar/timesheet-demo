@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ProjectManagement\Infrastructure\Repository;
 
 use App\Persistence\Entity\ChangeRequest as ChangeRequestOrmEntity;
+use App\Persistence\Entity\Project as ProjectOrmEntity;
 use App\Persistence\Repository\ChangeRequestRepository as ChangeRequestOrmRepository;
 use App\ProjectManagement\Domain\Entity\ChangeRequest;
 use App\ProjectManagement\Domain\Repository\ChangeRequestRepositoryInterface;
@@ -78,7 +79,9 @@ final class ChangeRequestRepository implements ChangeRequestRepositoryInterface
     {
         $ormEntity = new ChangeRequestOrmEntity();
         $ormEntity->setId($changeRequest->getId()->value());
-        $ormEntity->setProjectId($changeRequest->getProjectId()->value());
+        $ormEntity->setProject(
+            $this->ormRepository->getEntityManager()->getReference(ProjectOrmEntity::class, $changeRequest->getProjectId()->value())
+        );
         $ormEntity->setName($changeRequest->getName());
         $ormEntity->setDescription($changeRequest->getDescription());
         $ormEntity->setDeletedAt($changeRequest->getDeletedAt());

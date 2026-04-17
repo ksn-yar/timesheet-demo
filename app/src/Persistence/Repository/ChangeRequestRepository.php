@@ -56,7 +56,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['projectId'])) {
-            $qb->andWhere('cr.projectId = :projectId')
+            $qb->andWhere('cr.project = :projectId')
                 ->setParameter('projectId', $criteria['projectId'])
             ;
         }
@@ -89,7 +89,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['projectId'])) {
-            $qb->andWhere('cr.projectId = :projectId')
+            $qb->andWhere('cr.project = :projectId')
                 ->setParameter('projectId', $criteria['projectId'])
             ;
         }
@@ -110,7 +110,7 @@ class ChangeRequestRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(t.id)')
             ->from('App\Persistence\Entity\Task', 't')
-            ->andWhere('t.crId = :crId')
+            ->andWhere('t.changeRequest = :crId')
             ->andWhere('t.deletedAt IS NULL')
             ->setParameter('crId', $crId)
             ->getQuery()

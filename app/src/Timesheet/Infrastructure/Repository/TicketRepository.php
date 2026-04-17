@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Timesheet\Infrastructure\Repository;
 
+use App\Persistence\Entity\Task as TaskOrmEntity;
 use App\Persistence\Entity\Ticket as TicketOrmEntity;
+use App\Persistence\Entity\User as UserOrmEntity;
+use App\Persistence\Entity\Work as WorkOrmEntity;
 use App\Persistence\Repository\TicketRepository as TicketOrmRepository;
 use App\Timesheet\Domain\Entity\Ticket;
 use App\Timesheet\Domain\Enum\TicketType;
@@ -94,9 +97,10 @@ final class TicketRepository implements TicketRepositoryInterface
     {
         $orm = new TicketOrmEntity();
         $orm->setId($ticket->getId()->value());
-        $orm->setEmployeeId($ticket->getEmployeeId());
-        $orm->setTaskId($ticket->getTaskId());
-        $orm->setWorkId($ticket->getWorkId());
+        $em = $this->ormRepository->getEntityManager();
+        $orm->setEmployee($em->getReference(UserOrmEntity::class, $ticket->getEmployeeId()));
+        $orm->setTask($em->getReference(TaskOrmEntity::class, $ticket->getTaskId()));
+        $orm->setWork($em->getReference(WorkOrmEntity::class, $ticket->getWorkId()));
         $orm->setDate($ticket->getDate());
         $orm->setHours($ticket->getHours());
         $orm->setComment($ticket->getComment());
@@ -116,7 +120,7 @@ final class TicketRepository implements TicketRepositoryInterface
         $orm->setDate($ticket->getDate());
         $orm->setHours($ticket->getHours());
         $orm->setComment($ticket->getComment());
-        $orm->setWorkId($ticket->getWorkId());
+        $orm->setWork($this->ormRepository->getEntityManager()->getReference(WorkOrmEntity::class, $ticket->getWorkId()));
         $orm->setIsEditable($ticket->isEditable());
         $orm->setUpdatedAt(new DateTimeImmutable());
     }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\ProjectManagement\Infrastructure\Repository;
 
+use App\Persistence\Entity\ChangeRequest as ChangeRequestOrmEntity;
+use App\Persistence\Entity\Project as ProjectOrmEntity;
 use App\Persistence\Entity\Task as TaskOrmEntity;
 use App\Persistence\Repository\TaskRepository as TaskOrmRepository;
 use App\ProjectManagement\Domain\Entity\Task;
@@ -78,8 +80,11 @@ final class TaskRepository implements TaskRepositoryInterface
     {
         $ormEntity = new TaskOrmEntity();
         $ormEntity->setId($task->getId()->value());
-        $ormEntity->setProjectId($task->getProjectId()?->value());
-        $ormEntity->setCrId($task->getCrId()?->value());
+        $em = $this->ormRepository->getEntityManager();
+        $projectId = $task->getProjectId()?->value();
+        $ormEntity->setProject(null !== $projectId ? $em->getReference(ProjectOrmEntity::class, $projectId) : null);
+        $crId = $task->getCrId()?->value();
+        $ormEntity->setChangeRequest(null !== $crId ? $em->getReference(ChangeRequestOrmEntity::class, $crId) : null);
         $ormEntity->setName($task->getName());
         $ormEntity->setDescription($task->getDescription());
         $estimateValue = $task->getEstimate()?->value();

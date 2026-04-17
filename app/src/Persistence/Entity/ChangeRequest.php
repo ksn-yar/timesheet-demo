@@ -20,8 +20,10 @@ class ChangeRequest
     #[ORM\GeneratedValue(strategy: 'NONE')]
     private string $id;
 
-    #[ORM\Column(name: 'project_id', type: 'guid')]
-    private string $projectId;
+    /** Связь с проектом — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Project::class)]
+    #[ORM\JoinColumn(name: 'project_id', referencedColumnName: 'id', nullable: false)]
+    private Project $project;
 
     #[ORM\Column(type: 'string', length: 255)]
     private string $name;
@@ -48,14 +50,20 @@ class ChangeRequest
         $this->id = $id;
     }
 
-    public function getProjectId(): string
+    public function getProject(): Project
     {
-        return $this->projectId;
+        return $this->project;
     }
 
-    public function setProjectId(string $projectId): void
+    public function setProject(Project $project): void
     {
-        $this->projectId = $projectId;
+        $this->project = $project;
+    }
+
+    /** Возвращает UUID проекта для обратной совместимости с существующим кодом. */
+    public function getProjectId(): string
+    {
+        return $this->project->getId();
     }
 
     public function getName(): string

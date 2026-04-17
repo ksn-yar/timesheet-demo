@@ -56,7 +56,7 @@ class ProjectRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['clientId'])) {
-            $qb->andWhere('p.clientId = :clientId')
+            $qb->andWhere('p.client = :clientId')
                 ->setParameter('clientId', $criteria['clientId'])
             ;
         }
@@ -89,7 +89,7 @@ class ProjectRepository extends ServiceEntityRepository
         ;
 
         if (isset($criteria['clientId'])) {
-            $qb->andWhere('p.clientId = :clientId')
+            $qb->andWhere('p.client = :clientId')
                 ->setParameter('clientId', $criteria['clientId'])
             ;
         }
@@ -108,7 +108,7 @@ class ProjectRepository extends ServiceEntityRepository
     {
         return (int) $this->createQueryBuilder('p')
             ->select('COUNT(p.id)')
-            ->andWhere('p.clientId = :clientId')
+            ->andWhere('p.client = :clientId')
             ->andWhere('p.deletedAt IS NULL')
             ->setParameter('clientId', $clientId)
             ->getQuery()
@@ -123,7 +123,7 @@ class ProjectRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(t.id)')
             ->from('App\Persistence\Entity\Task', 't')
-            ->andWhere('t.projectId = :projectId')
+            ->andWhere('t.project = :projectId')
             ->andWhere('t.deletedAt IS NULL')
             ->setParameter('projectId', $projectId)
             ->getQuery()
@@ -138,7 +138,7 @@ class ProjectRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(cr.id)')
             ->from('App\Persistence\Entity\ChangeRequest', 'cr')
-            ->andWhere('cr.projectId = :projectId')
+            ->andWhere('cr.project = :projectId')
             ->andWhere('cr.deletedAt IS NULL')
             ->setParameter('projectId', $projectId)
             ->getQuery()

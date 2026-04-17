@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace App\Persistence\Repository;
 
-use App\Persistence\Entity\Task;
 use App\Persistence\Entity\Ticket;
-use App\Persistence\Entity\User;
-use App\Persistence\Entity\Work;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\ORM\QueryBuilder;
@@ -80,9 +77,9 @@ class TicketRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('t')
             ->select('t, u.name as employeeName, task.name as taskName, w.name as workName')
-            ->innerJoin(User::class, 'u', 'WITH', 'u.id = t.employeeId')
-            ->innerJoin(Task::class, 'task', 'WITH', 'task.id = t.taskId')
-            ->innerJoin(Work::class, 'w', 'WITH', 'w.id = t.workId')
+            ->innerJoin('t.employee', 'u')
+            ->innerJoin('t.task', 'task')
+            ->innerJoin('t.work', 'w')
         ;
 
         $this->applyCriteria($qb, $criteria);
@@ -175,7 +172,7 @@ class TicketRepository extends ServiceEntityRepository
             ->join('t', 'users', 'u', 'u.id = t.employee_id')
             ->join('u', 'groups', 'g', 'g.id = u.group_id')
             ->join('t', 'tasks', 'tk', 'tk.id = t.task_id')
-            ->join('tk', 'change_requests', 'cr', 'cr.id = tk.change_request_id')
+            ->join('tk', 'change_requests', 'cr', 'cr.id = tk.cr_id')
             ->join('cr', 'projects', 'p', 'p.id = cr.project_id')
             ->join('t', 'works', 'w', 'w.id = t.work_id')
             ->where('t.date BETWEEN :periodFrom AND :periodTo')
@@ -230,19 +227,19 @@ class TicketRepository extends ServiceEntityRepository
     private function applyCriteria(QueryBuilder $qb, array $criteria): void
     {
         if (isset($criteria['employeeId'])) {
-            $qb->andWhere('t.employeeId = :employeeId')
+            $qb->andWhere('t.employee = :employeeId')
                 ->setParameter('employeeId', $criteria['employeeId'])
             ;
         }
 
         if (isset($criteria['taskId'])) {
-            $qb->andWhere('t.taskId = :taskId')
+            $qb->andWhere('t.task = :taskId')
                 ->setParameter('taskId', $criteria['taskId'])
             ;
         }
 
         if (isset($criteria['workId'])) {
-            $qb->andWhere('t.workId = :workId')
+            $qb->andWhere('t.work = :workId')
                 ->setParameter('workId', $criteria['workId'])
             ;
         }
@@ -261,18 +258,18 @@ class TicketRepository extends ServiceEntityRepository
 
         if (isset($criteria['projectId'])) {
             if (!\in_array('task', $qb->getAllAliases(), true)) {
-                $qb->innerJoin(Task::class, 'task', 'WITH', 'task.id = t.taskId');
+                $qb->innerJoin('t.task', 'task');
             }
-            $qb->andWhere('task.projectId = :projectId')
+            $qb->andWhere('task.project = :projectId')
                 ->setParameter('projectId', $criteria['projectId'])
             ;
         }
 
         if (isset($criteria['crId'])) {
             if (!\in_array('task', $qb->getAllAliases(), true)) {
-                $qb->innerJoin(Task::class, 'task', 'WITH', 'task.id = t.taskId');
+                $qb->innerJoin('t.task', 'task');
             }
-            $qb->andWhere('task.crId = :crId')
+            $qb->andWhere('task.changeRequest = :crId')
                 ->setParameter('crId', $criteria['crId'])
             ;
         }
