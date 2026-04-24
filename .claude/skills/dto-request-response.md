@@ -1,5 +1,5 @@
 ---
-name: dto
+name: dto-request-response
 description: Правила создания DTO (Data Transfer Object) — Request DTO для входящих HTTP-запросов и Response DTO для исходящих ответов API, с валидацией, сериализацией и OpenAPI-описанием
 ---
 
