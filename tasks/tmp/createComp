@@ -1,0 +1,9 @@
+Создай в корне проекта composer.json со следующими пакетами и требованиями:
+- пакет symfony фреймворк
+- nelmio api doc bundle
+- orm doctrine
+- для dev разработки phpunit
+- для dev разработки phpstan
+- для dev разработки php-cs-fixer
+- требование php 8.4 и более свежей версии
+- autoload psr-4 namespace App для папки src
