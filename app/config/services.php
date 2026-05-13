@@ -5,6 +5,7 @@ declare(strict_types=1);
 use App\Identity\Application\Port\ListGroupsOutputPortInterface;
 use App\Identity\Application\Port\ListUsersOutputPortInterface;
 use App\Identity\Application\Port\PasswordHasherInterface;
+use App\Identity\Application\Port\PasswordVerifierInterface;
 use App\Identity\Application\Port\TicketExistenceCheckerInterface;
 use App\Identity\Domain\Event\GroupCreated;
 use App\Identity\Domain\Event\GroupDeleted;
@@ -22,6 +23,7 @@ use App\Identity\Infrastructure\Presenter\HttpListUsersPresenter;
 use App\Identity\Infrastructure\Repository\GroupRepository;
 use App\Identity\Infrastructure\Repository\UserRepository;
 use App\Identity\Infrastructure\Security\SymfonyPasswordHasher;
+use App\Identity\Infrastructure\Security\SymfonyPasswordVerifier;
 use App\ProjectManagement\Application\Port\ListChangeRequestsOutputPortInterface;
 use App\ProjectManagement\Application\Port\ListClientsOutputPortInterface;
 use App\ProjectManagement\Application\Port\ListProjectsOutputPortInterface;
@@ -220,6 +222,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services->alias(
         PasswordHasherInterface::class,
         SymfonyPasswordHasher::class,
+    );
+
+    $services->alias(
+        PasswordVerifierInterface::class,
+        SymfonyPasswordVerifier::class,
     );
 
     $services->alias(

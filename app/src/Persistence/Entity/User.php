@@ -7,8 +7,13 @@ namespace App\Persistence\Entity;
 use App\Persistence\Repository\UserRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/** Doctrine-сущность пользователя. Чистый ORM-класс без бизнес-логики. */
+/**
+ * Doctrine-сущность пользователя. Реализует UserInterface для интеграции
+ * с Symfony Security — используется как субъект аутентификации.
+ */
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: 'users')]
 #[ORM\UniqueConstraint(name: 'uq_users_email', columns: ['email'])]
@@ -16,7 +21,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(columns: ['group_id'], name: 'idx_users_group_id')]
 #[ORM\Index(columns: ['role_id'], name: 'idx_users_role_id')]
 #[ORM\Index(columns: ['is_active', 'deleted_at'], name: 'idx_users_active_deleted')]
-class User
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'guid')]
@@ -178,4 +183,31 @@ class User
     {
         $this->updatedAt = $updatedAt;
     }
+
+    // --- Реализация UserInterface ---
+
+    /** Возвращает уникальный идентификатор пользователя для Symfony Security. */
+    public function getUserIdentifier(): string
+    {
+        return $this->email;
+    }
+
+    /**
+     * Возвращает роли Symfony Security на основе системной роли пользователя.
+     *
+     * @return string[]
+     */
+    public function getRoles(): array
+    {
+        return ['ROLE_' . mb_strtoupper($this->systemRole), 'ROLE_USER'];
+    }
+
+    /** Возвращает хэш пароля для Symfony PasswordHasher. */
+    public function getPassword(): ?string
+    {
+        return $this->passwordHash;
+    }
+
+    /** Очищает чувствительные данные после аутентификации (не требуется при хэшировании bcrypt/argon). */
+    public function eraseCredentials(): void {}
 }

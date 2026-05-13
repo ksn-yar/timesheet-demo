@@ -6,19 +6,22 @@ namespace App\Identity\Infrastructure\Security;
 
 use App\Identity\Application\Port\PasswordHasherInterface;
 use App\Identity\Domain\ValueObject\HashedPassword;
-use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use App\Persistence\Entity\User;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-/** Реализация хэширования паролей через Symfony PasswordHasher. */
+/** Реализация хэширования паролей через Symfony UserPasswordHasher. */
 final class SymfonyPasswordHasher implements PasswordHasherInterface
 {
     public function __construct(
-        private readonly PasswordHasherFactoryInterface $hasherFactory,
+        private readonly UserPasswordHasherInterface $passwordHasher,
     ) {}
 
     public function hash(string $plainPassword): HashedPassword
     {
-        $hasher = $this->hasherFactory->getPasswordHasher('default');
+        // Используем фиктивного пользователя только для выбора алгоритма;
+        // сам хэш не зависит от конкретного экземпляра сущности
+        $hash = $this->passwordHasher->hashPassword(new User(), $plainPassword);
 
-        return new HashedPassword($hasher->hash($plainPassword));
+        return new HashedPassword($hash);
     }
 }
