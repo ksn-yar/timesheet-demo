@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Index(columns: ['employee_id'], name: 'idx_tickets_employee_id')]
 #[ORM\Index(columns: ['task_id'], name: 'idx_tickets_task_id')]
 #[ORM\Index(columns: ['work_id'], name: 'idx_tickets_work_id')]
+#[ORM\Index(columns: ['rate_id'], name: 'idx_tickets_rate_id')]
 #[ORM\Index(columns: ['date'], name: 'idx_tickets_date')]
 #[ORM\UniqueConstraint(name: 'uq_tickets_import_source_external_id', columns: ['import_source', 'external_id'])]
 class Ticket
@@ -37,6 +38,11 @@ class Ticket
     #[ORM\ManyToOne(targetEntity: Work::class)]
     #[ORM\JoinColumn(name: 'work_id', referencedColumnName: 'id', nullable: false)]
     private Work $work;
+
+    /** Связь со ставкой — владелец ассоциации (хранит FK в своей таблице). */
+    #[ORM\ManyToOne(targetEntity: Rate::class)]
+    #[ORM\JoinColumn(name: 'rate_id', referencedColumnName: 'id', nullable: true)]
+    private ?Rate $rate = null;
 
     #[ORM\Column(type: 'date_immutable')]
     private DateTimeImmutable $date;
@@ -124,6 +130,22 @@ class Ticket
     public function getWorkId(): string
     {
         return $this->work->getId();
+    }
+
+    public function getRate(): ?Rate
+    {
+        return $this->rate;
+    }
+
+    public function setRate(?Rate $rate): void
+    {
+        $this->rate = $rate;
+    }
+
+    /** Возвращает UUID ставки для обратной совместимости с существующим кодом. */
+    public function getRateId(): ?string
+    {
+        return $this->rate?->getId();
     }
 
     public function getDate(): DateTimeImmutable

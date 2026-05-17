@@ -6,23 +6,17 @@ namespace App\WorkCatalog\Infrastructure\Port;
 
 use App\WorkCatalog\Application\Port\UserExistenceByRoleCheckerInterface;
 use App\WorkCatalog\Domain\ValueObject\RoleId;
-use Doctrine\DBAL\Connection;
+use App\WorkCatalog\Infrastructure\Repository\UserRepository;
 
-/** Проверяет наличие пользователей, привязанных к роли, через DBAL-запрос. */
+/** Проверяет наличие пользователей, привязанных к роли. */
 final readonly class UserExistenceByRoleChecker implements UserExistenceByRoleCheckerInterface
 {
     public function __construct(
-        private Connection $connection,
+        private UserRepository $userRepository,
     ) {}
 
     public function hasUsersByRole(RoleId $roleId): bool
     {
-        /** @var int|string $count */
-        $count = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM users WHERE role_id = :roleId',
-            ['roleId' => $roleId->value()],
-        );
-
-        return (int) $count > 0;
+        return $this->userRepository->existsByRoleId($roleId);
     }
 }

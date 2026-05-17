@@ -6,23 +6,17 @@ namespace App\WorkCatalog\Infrastructure\Port;
 
 use App\WorkCatalog\Application\Port\TicketExistenceByWorkCheckerInterface;
 use App\WorkCatalog\Domain\ValueObject\WorkId;
-use Doctrine\DBAL\Connection;
+use App\WorkCatalog\Infrastructure\Repository\TicketRepository;
 
-/** Проверяет наличие тикетов, привязанных к виду работ, через DBAL-запрос. */
+/** Проверяет наличие тикетов, привязанных к виду работ. */
 final readonly class TicketExistenceByWorkChecker implements TicketExistenceByWorkCheckerInterface
 {
     public function __construct(
-        private Connection $connection,
+        private TicketRepository $ticketRepository,
     ) {}
 
     public function hasTicketsForWork(WorkId $workId): bool
     {
-        /** @var int|string $count */
-        $count = $this->connection->fetchOne(
-            'SELECT COUNT(*) FROM tickets WHERE work_id = :workId',
-            ['workId' => $workId->value()],
-        );
-
-        return (int) $count > 0;
+        return $this->ticketRepository->existsByWorkId($workId);
     }
 }

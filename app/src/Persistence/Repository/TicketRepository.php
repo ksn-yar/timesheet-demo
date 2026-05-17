@@ -109,6 +109,28 @@ class TicketRepository extends ServiceEntityRepository
         return (int) $qb->getQuery()->getSingleScalarResult();
     }
 
+    /** Проверяет наличие тикетов с указанной ставкой. */
+    public function existsByRateId(string $rateId): bool
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->andWhere('t.rate = :rateId')
+            ->setParameter('rateId', $rateId)
+            ->getQuery()
+            ->getSingleScalarResult() > 0;
+    }
+
+    /** Проверяет наличие тикетов, привязанных к виду работ, через DQL. */
+    public function existsByWorkId(string $workId): bool
+    {
+        return (int) $this->createQueryBuilder('t')
+            ->select('COUNT(t.id)')
+            ->andWhere('t.work = :workId')
+            ->setParameter('workId', $workId)
+            ->getQuery()
+            ->getSingleScalarResult() > 0;
+    }
+
     /** Проверяет существование тикета по источнику импорта и внешнему идентификатору. */
     public function existsByImportSourceAndExternalId(string $importSource, string $externalId): bool
     {
