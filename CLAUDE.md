@@ -32,6 +32,36 @@ Use `./tmp/` (project-relative) for all temporary files if necessary.
 
 All common persistent notes, decisions and context are stored in `./memory/`.
 
+## PHP-классы: readonly по умолчанию
+
+**Правило:** Все PHP-классы должны быть объявлены как `readonly` по умолчанию.
+
+Исключения (не использовать `readonly`):
+- Классы, которые явно требуют мутабельного состояния (указывать причину в комментарии)
+
+## By DDD layer:
+| Layer           | readonly? | Reason                     |
+|-----------------|-----------|----------------------------|
+| DTO             | ✅ always  | Data transfer, no mutation |
+| Value Object    | ✅ always  | Immutability is the point  |
+| Command / Query | ✅ always  | Input objects              |
+| Event           | ✅ always  | Facts, never mutated       |
+| Entity          | ❌ usually | Lifecycle state changes    |
+| Repository      | ❌         | Service with dependencies  |
+| Service         | ❌         | Stateless but not readonly |
+
+```php
+// ✅ Правильно — Value Object, DTO, сервис
+readonly class CreateUserCommand { ... }
+
+// ✅ Правильно — Doctrine Entity (исключение)
+#[ORM\Entity]
+class User { ... }
+
+// ❌ Неправильно — забыли readonly
+class CreateUserCommand { ... }
+```
+
 ## Язык
 
 **Правило:** Вся документация, комментарии в коде и текстовые ответы — на русском языке.
