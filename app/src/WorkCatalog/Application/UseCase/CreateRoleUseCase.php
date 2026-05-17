@@ -11,11 +11,11 @@ use App\WorkCatalog\Domain\Repository\RoleRepositoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания новой роли. */
-final class CreateRoleUseCase
+final readonly class CreateRoleUseCase
 {
     public function __construct(
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private RoleRepositoryInterface $roleRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateRoleInputDto $input): void

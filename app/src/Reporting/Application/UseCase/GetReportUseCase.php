@@ -13,11 +13,11 @@ use App\Reporting\Domain\ValueObject\ReportId;
 use DateTimeInterface;
 
 /** Use Case получения полных данных отчёта по идентификатору, включая строки агрегации. */
-final class GetReportUseCase
+final readonly class GetReportUseCase
 {
     public function __construct(
-        private readonly ReportRepositoryInterface $reportRepository,
-        private readonly GetReportOutputPortInterface $presenter,
+        private ReportRepositoryInterface $reportRepository,
+        private GetReportOutputPortInterface $presenter,
     ) {}
 
     public function execute(GetReportInputDto $input): void

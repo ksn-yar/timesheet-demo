@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\CreateUserInputDto;
 use App\Identity\Infrastructure\Dto\CreateUserRequestDto;
 
 /** Трансформирует CreateUserRequestDto в CreateUserInputDto для Use Case. */
-final class CreateUserInputTransformer
+final readonly class CreateUserInputTransformer
 {
     public function transform(CreateUserRequestDto $dto): CreateUserInputDto
     {

@@ -9,10 +9,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /** Делегирует проверку пароля Symfony UserPasswordHasher. */
-final class SymfonyPasswordVerifier implements PasswordVerifierInterface
+final readonly class SymfonyPasswordVerifier implements PasswordVerifierInterface
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {}
 
     public function isValid(PasswordAuthenticatedUserInterface $user, string $plainPassword): bool

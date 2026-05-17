@@ -7,7 +7,7 @@ namespace App\ProjectManagement\Infrastructure\Transformer;
 use App\ProjectManagement\Application\Dto\DeleteChangeRequestInputDto;
 
 /** Трансформирует path-параметр id в DeleteChangeRequestInputDto для Use Case. */
-final class DeleteChangeRequestInputTransformer
+final readonly class DeleteChangeRequestInputTransformer
 {
     public function transform(string $id): DeleteChangeRequestInputDto
     {

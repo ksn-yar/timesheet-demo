@@ -17,13 +17,13 @@ use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания нового отчёта: запрашивает тикеты, агрегирует данные и сохраняет отчёт. */
-final class CreateReportUseCase
+final readonly class CreateReportUseCase
 {
     public function __construct(
-        private readonly ReportRepositoryInterface $reportRepository,
-        private readonly TicketQueryServiceInterface $ticketQueryService,
-        private readonly ReportAggregationService $aggregationService,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ReportRepositoryInterface $reportRepository,
+        private TicketQueryServiceInterface $ticketQueryService,
+        private ReportAggregationService $aggregationService,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateReportInputDto $input): void

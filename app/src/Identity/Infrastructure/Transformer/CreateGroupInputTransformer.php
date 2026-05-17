@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\CreateGroupInputDto;
 use App\Identity\Infrastructure\Dto\CreateGroupRequestDto;
 
 /** Трансформирует CreateGroupRequestDto в CreateGroupInputDto для Use Case. */
-final class CreateGroupInputTransformer
+final readonly class CreateGroupInputTransformer
 {
     public function transform(CreateGroupRequestDto $dto): CreateGroupInputDto
     {

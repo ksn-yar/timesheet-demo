@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\UpdateGroupInputDto;
 use App\Identity\Infrastructure\Dto\UpdateGroupRequestDto;
 
 /** Трансформирует UpdateGroupRequestDto в UpdateGroupInputDto для Use Case. */
-final class UpdateGroupInputTransformer
+final readonly class UpdateGroupInputTransformer
 {
     public function transform(string $id, UpdateGroupRequestDto $dto): UpdateGroupInputDto
     {

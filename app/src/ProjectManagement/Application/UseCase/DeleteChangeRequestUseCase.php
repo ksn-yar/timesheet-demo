@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\ChangeRequestId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления запроса на изменение (soft delete). */
-final class DeleteChangeRequestUseCase
+final readonly class DeleteChangeRequestUseCase
 {
     public function __construct(
-        private readonly ChangeRequestRepositoryInterface $changeRequestRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ChangeRequestRepositoryInterface $changeRequestRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteChangeRequestInputDto $input): void

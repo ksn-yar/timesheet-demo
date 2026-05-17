@@ -12,11 +12,11 @@ use App\Identity\Domain\ValueObject\GroupId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания новой группы. */
-final class CreateGroupUseCase
+final readonly class CreateGroupUseCase
 {
     public function __construct(
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private GroupRepositoryInterface $groupRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateGroupInputDto $input): void

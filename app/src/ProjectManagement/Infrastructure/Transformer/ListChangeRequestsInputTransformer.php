@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\ListChangeRequestsInputDto;
 use App\ProjectManagement\Infrastructure\Dto\ListChangeRequestsRequestDto;
 
 /** Трансформирует ListChangeRequestsRequestDto в ListChangeRequestsInputDto для Use Case. */
-final class ListChangeRequestsInputTransformer
+final readonly class ListChangeRequestsInputTransformer
 {
     public function transform(ListChangeRequestsRequestDto $dto): ListChangeRequestsInputDto
     {

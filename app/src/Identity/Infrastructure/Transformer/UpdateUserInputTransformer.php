@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\UpdateUserInputDto;
 use App\Identity\Infrastructure\Dto\UpdateUserRequestDto;
 
 /** Трансформирует UpdateUserRequestDto в UpdateUserInputDto для Use Case. */
-final class UpdateUserInputTransformer
+final readonly class UpdateUserInputTransformer
 {
     public function transform(string $id, UpdateUserRequestDto $dto): UpdateUserInputDto
     {

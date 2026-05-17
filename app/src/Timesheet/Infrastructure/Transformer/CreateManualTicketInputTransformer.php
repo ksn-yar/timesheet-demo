@@ -9,7 +9,7 @@ use App\Timesheet\Infrastructure\Dto\CreateManualTicketRequestDto;
 use DateTimeImmutable;
 
 /** Трансформирует HTTP DTO создания тикета в Application DTO. */
-final class CreateManualTicketInputTransformer
+final readonly class CreateManualTicketInputTransformer
 {
     public function transform(CreateManualTicketRequestDto $dto): CreateManualTicketInputDto
     {

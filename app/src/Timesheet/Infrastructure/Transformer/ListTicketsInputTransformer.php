@@ -9,7 +9,7 @@ use App\Timesheet\Infrastructure\Dto\ListTicketsRequestDto;
 use DateTimeImmutable;
 
 /** Трансформирует HTTP DTO списка тикетов в Application DTO. */
-final class ListTicketsInputTransformer
+final readonly class ListTicketsInputTransformer
 {
     public function transform(ListTicketsRequestDto $dto): ListTicketsInputDto
     {

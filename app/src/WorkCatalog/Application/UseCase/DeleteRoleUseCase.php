@@ -15,12 +15,12 @@ use App\WorkCatalog\Domain\ValueObject\RoleId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления роли (soft delete). */
-final class DeleteRoleUseCase
+final readonly class DeleteRoleUseCase
 {
     public function __construct(
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly UserExistenceByRoleCheckerInterface $userChecker,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private RoleRepositoryInterface $roleRepository,
+        private UserExistenceByRoleCheckerInterface $userChecker,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteRoleInputDto $input): void

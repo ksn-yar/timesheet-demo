@@ -17,15 +17,15 @@ use DomainException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания тикета вручную с проверкой прав и валидацией связанных сущностей. */
-final class CreateManualTicketUseCase
+final readonly class CreateManualTicketUseCase
 {
     public function __construct(
-        private readonly TicketRepositoryInterface $ticketRepository,
-        private readonly TaskExistenceCheckerInterface $taskExistenceChecker,
-        private readonly WorkExistenceCheckerInterface $workExistenceChecker,
-        private readonly RateProviderInterface $rateProvider,
-        private readonly CurrentUserProviderInterface $currentUserProvider,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private TicketRepositoryInterface $ticketRepository,
+        private TaskExistenceCheckerInterface $taskExistenceChecker,
+        private WorkExistenceCheckerInterface $workExistenceChecker,
+        private RateProviderInterface $rateProvider,
+        private CurrentUserProviderInterface $currentUserProvider,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateManualTicketInputDto $input): void

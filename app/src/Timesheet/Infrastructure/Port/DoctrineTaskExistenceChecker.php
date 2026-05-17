@@ -8,10 +8,10 @@ use App\Persistence\Repository\TaskRepository;
 use App\Timesheet\Application\Port\TaskExistenceCheckerInterface;
 
 /** Проверяет существование задачи через Doctrine ORM. */
-final class DoctrineTaskExistenceChecker implements TaskExistenceCheckerInterface
+final readonly class DoctrineTaskExistenceChecker implements TaskExistenceCheckerInterface
 {
     public function __construct(
-        private readonly TaskRepository $taskRepository,
+        private TaskRepository $taskRepository,
     ) {}
 
     public function taskExists(string $taskId): bool

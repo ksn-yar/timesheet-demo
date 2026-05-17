@@ -19,13 +19,13 @@ use InvalidArgumentException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case экспорта набора отчётов в файл заданного формата. */
-final class ExportReportsUseCase
+final readonly class ExportReportsUseCase
 {
     public function __construct(
-        private readonly ReportRepositoryInterface $reportRepository,
-        private readonly ReportExportRepositoryInterface $exportRepository,
-        private readonly ReportFileGeneratorInterface $fileGenerator,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ReportRepositoryInterface $reportRepository,
+        private ReportExportRepositoryInterface $exportRepository,
+        private ReportFileGeneratorInterface $fileGenerator,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(ExportReportsInputDto $input): void

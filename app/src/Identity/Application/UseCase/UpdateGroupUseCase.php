@@ -12,11 +12,11 @@ use App\Identity\Domain\ValueObject\GroupId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления атрибутов группы. */
-final class UpdateGroupUseCase
+final readonly class UpdateGroupUseCase
 {
     public function __construct(
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private GroupRepositoryInterface $groupRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateGroupInputDto $input): void

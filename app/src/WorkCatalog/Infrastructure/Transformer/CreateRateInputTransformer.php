@@ -8,7 +8,7 @@ use App\WorkCatalog\Application\Dto\CreateRateInputDto;
 use App\WorkCatalog\Infrastructure\Dto\CreateRateRequestDto;
 
 /** Трансформирует CreateRateRequestDto в CreateRateInputDto для Use Case. */
-final class CreateRateInputTransformer
+final readonly class CreateRateInputTransformer
 {
     public function transform(CreateRateRequestDto $dto): CreateRateInputDto
     {

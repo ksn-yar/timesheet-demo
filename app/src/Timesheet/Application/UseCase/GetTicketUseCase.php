@@ -13,11 +13,11 @@ use App\Timesheet\Domain\Repository\TicketRepositoryInterface;
 use App\Timesheet\Domain\ValueObject\TicketId;
 
 /** Use Case получения тикета по идентификатору с проверкой прав доступа. */
-final class GetTicketUseCase
+final readonly class GetTicketUseCase
 {
     public function __construct(
-        private readonly TicketRepositoryInterface $ticketRepository,
-        private readonly CurrentUserProviderInterface $currentUserProvider,
+        private TicketRepositoryInterface $ticketRepository,
+        private CurrentUserProviderInterface $currentUserProvider,
     ) {}
 
     public function execute(GetTicketInputDto $input): Ticket

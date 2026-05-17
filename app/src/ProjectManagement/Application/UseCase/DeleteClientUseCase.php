@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\ClientId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления клиента (soft delete). */
-final class DeleteClientUseCase
+final readonly class DeleteClientUseCase
 {
     public function __construct(
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ClientRepositoryInterface $clientRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteClientInputDto $input): void

@@ -19,13 +19,13 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания нового пользователя. */
-final class CreateUserUseCase
+final readonly class CreateUserUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly PasswordHasherInterface $passwordHasher,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private UserRepositoryInterface $userRepository,
+        private GroupRepositoryInterface $groupRepository,
+        private PasswordHasherInterface $passwordHasher,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateUserInputDto $input): void

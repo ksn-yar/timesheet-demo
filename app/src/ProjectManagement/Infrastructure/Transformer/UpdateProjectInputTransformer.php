@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\UpdateProjectInputDto;
 use App\ProjectManagement\Infrastructure\Dto\UpdateProjectRequestDto;
 
 /** Трансформирует UpdateProjectRequestDto в UpdateProjectInputDto для Use Case. */
-final class UpdateProjectInputTransformer
+final readonly class UpdateProjectInputTransformer
 {
     public function transform(string $id, UpdateProjectRequestDto $dto): UpdateProjectInputDto
     {

@@ -13,11 +13,11 @@ use App\Reporting\Domain\ValueObject\ReportExport;
 use DateTimeInterface;
 
 /** Use Case получения списка выгрузок отчётов с пагинацией и опциональной фильтрацией. */
-final class ListExportedReportsUseCase
+final readonly class ListExportedReportsUseCase
 {
     public function __construct(
-        private readonly ReportExportRepositoryInterface $exportRepository,
-        private readonly ListExportedReportsOutputPortInterface $presenter,
+        private ReportExportRepositoryInterface $exportRepository,
+        private ListExportedReportsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListExportedReportsInputDto $input): void

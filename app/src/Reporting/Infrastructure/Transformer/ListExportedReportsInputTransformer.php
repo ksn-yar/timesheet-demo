@@ -8,7 +8,7 @@ use App\Reporting\Application\Dto\ListExportedReportsInputDto;
 use App\Reporting\Infrastructure\Dto\ListExportedReportsRequestDto;
 
 /** Трансформирует ListExportedReportsRequestDto в ListExportedReportsInputDto для Use Case. */
-final class ListExportedReportsInputTransformer
+final readonly class ListExportedReportsInputTransformer
 {
     public function transform(ListExportedReportsRequestDto $dto): ListExportedReportsInputDto
     {

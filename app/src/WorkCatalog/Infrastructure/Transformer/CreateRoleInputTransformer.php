@@ -8,7 +8,7 @@ use App\WorkCatalog\Application\Dto\CreateRoleInputDto;
 use App\WorkCatalog\Infrastructure\Dto\CreateRoleRequestDto;
 
 /** Трансформирует CreateRoleRequestDto в CreateRoleInputDto для Use Case. */
-final class CreateRoleInputTransformer
+final readonly class CreateRoleInputTransformer
 {
     public function transform(CreateRoleRequestDto $dto): CreateRoleInputDto
     {

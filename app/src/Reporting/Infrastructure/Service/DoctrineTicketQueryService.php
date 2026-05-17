@@ -14,9 +14,9 @@ use App\Reporting\Domain\ValueObject\ReportPeriod;
  * Реализация ACL-сервиса получения тикетов из Timesheet BC через TicketRepository.
  * Транслирует доменные Value Objects в примитивы и конвертирует результат в DTO.
  */
-final class DoctrineTicketQueryService implements TicketQueryServiceInterface
+final readonly class DoctrineTicketQueryService implements TicketQueryServiceInterface
 {
-    public function __construct(private readonly TicketRepository $ticketRepository) {}
+    public function __construct(private TicketRepository $ticketRepository) {}
 
     /**
      * @return TicketReportRowDto[]

@@ -15,13 +15,13 @@ use DomainException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления тикета с проверкой прав владения и редактируемости. */
-final class UpdateManualTicketUseCase
+final readonly class UpdateManualTicketUseCase
 {
     public function __construct(
-        private readonly TicketRepositoryInterface $ticketRepository,
-        private readonly WorkExistenceCheckerInterface $workExistenceChecker,
-        private readonly CurrentUserProviderInterface $currentUserProvider,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private TicketRepositoryInterface $ticketRepository,
+        private WorkExistenceCheckerInterface $workExistenceChecker,
+        private CurrentUserProviderInterface $currentUserProvider,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateManualTicketInputDto $input): void

@@ -12,11 +12,11 @@ use App\Identity\Domain\Entity\Group;
 use App\Identity\Domain\Repository\GroupRepositoryInterface;
 
 /** Use Case получения списка групп с пагинацией. */
-final class ListGroupsUseCase
+final readonly class ListGroupsUseCase
 {
     public function __construct(
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly ListGroupsOutputPortInterface $presenter,
+        private GroupRepositoryInterface $groupRepository,
+        private ListGroupsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListGroupsInputDto $input): void

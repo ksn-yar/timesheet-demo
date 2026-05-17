@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\CreateChangeRequestInputDto;
 use App\ProjectManagement\Infrastructure\Dto\CreateChangeRequestRequestDto;
 
 /** Трансформирует CreateChangeRequestRequestDto в CreateChangeRequestInputDto для Use Case. */
-final class CreateChangeRequestInputTransformer
+final readonly class CreateChangeRequestInputTransformer
 {
     public function transform(CreateChangeRequestRequestDto $dto): CreateChangeRequestInputDto
     {

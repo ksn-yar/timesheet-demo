@@ -12,11 +12,11 @@ use App\WorkCatalog\Domain\Entity\Role;
 use App\WorkCatalog\Domain\Repository\RoleRepositoryInterface;
 
 /** Use Case получения списка ролей с пагинацией. */
-final class ListRolesUseCase
+final readonly class ListRolesUseCase
 {
     public function __construct(
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly ListRolesOutputPortInterface $presenter,
+        private RoleRepositoryInterface $roleRepository,
+        private ListRolesOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListRolesInputDto $input): void

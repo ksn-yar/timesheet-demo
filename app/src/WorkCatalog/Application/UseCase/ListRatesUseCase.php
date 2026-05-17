@@ -16,13 +16,13 @@ use App\WorkCatalog\Domain\ValueObject\RoleId;
 use App\WorkCatalog\Domain\ValueObject\WorkId;
 
 /** Use Case получения списка ставок с пагинацией и фильтрацией. */
-final class ListRatesUseCase
+final readonly class ListRatesUseCase
 {
     public function __construct(
-        private readonly RateRepositoryInterface $rateRepository,
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly ListRatesOutputPortInterface $presenter,
+        private RateRepositoryInterface $rateRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private WorkRepositoryInterface $workRepository,
+        private ListRatesOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListRatesInputDto $input): void

@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\TaskId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления задачи (soft delete). */
-final class DeleteTaskUseCase
+final readonly class DeleteTaskUseCase
 {
     public function __construct(
-        private readonly TaskRepositoryInterface $taskRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private TaskRepositoryInterface $taskRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteTaskInputDto $input): void

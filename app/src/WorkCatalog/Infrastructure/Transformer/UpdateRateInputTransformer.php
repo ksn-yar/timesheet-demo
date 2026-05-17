@@ -8,7 +8,7 @@ use App\WorkCatalog\Application\Dto\UpdateRateInputDto;
 use App\WorkCatalog\Infrastructure\Dto\UpdateRateRequestDto;
 
 /** Трансформирует UpdateRateRequestDto в UpdateRateInputDto для Use Case. */
-final class UpdateRateInputTransformer
+final readonly class UpdateRateInputTransformer
 {
     public function transform(string $id, UpdateRateRequestDto $dto): UpdateRateInputDto
     {

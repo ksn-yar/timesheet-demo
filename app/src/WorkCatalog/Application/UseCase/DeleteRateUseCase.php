@@ -12,11 +12,11 @@ use App\WorkCatalog\Domain\ValueObject\RateId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления ставки (soft delete). */
-final class DeleteRateUseCase
+final readonly class DeleteRateUseCase
 {
     public function __construct(
-        private readonly RateRepositoryInterface $rateRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private RateRepositoryInterface $rateRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteRateInputDto $input): void

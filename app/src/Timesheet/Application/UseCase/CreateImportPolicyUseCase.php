@@ -11,11 +11,11 @@ use App\Timesheet\Domain\ValueObject\ImportPolicyId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания новой политики импорта тикетов. */
-final class CreateImportPolicyUseCase
+final readonly class CreateImportPolicyUseCase
 {
     public function __construct(
-        private readonly ImportPolicyRepositoryInterface $importPolicyRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ImportPolicyRepositoryInterface $importPolicyRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateImportPolicyInputDto $input): void

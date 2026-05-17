@@ -14,12 +14,12 @@ use App\Identity\Domain\ValueObject\GroupId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case мягкого удаления группы. */
-final class DeleteGroupUseCase
+final readonly class DeleteGroupUseCase
 {
     public function __construct(
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private GroupRepositoryInterface $groupRepository,
+        private UserRepositoryInterface $userRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteGroupInputDto $input): void

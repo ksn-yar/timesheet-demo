@@ -14,12 +14,12 @@ use App\WorkCatalog\Domain\ValueObject\WorkId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления вида работ (soft delete). */
-final class DeleteWorkUseCase
+final readonly class DeleteWorkUseCase
 {
     public function __construct(
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly TicketExistenceByWorkCheckerInterface $ticketChecker,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private WorkRepositoryInterface $workRepository,
+        private TicketExistenceByWorkCheckerInterface $ticketChecker,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteWorkInputDto $input): void

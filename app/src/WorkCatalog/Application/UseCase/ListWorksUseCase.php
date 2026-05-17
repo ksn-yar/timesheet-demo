@@ -12,11 +12,11 @@ use App\WorkCatalog\Domain\Entity\Work;
 use App\WorkCatalog\Domain\Repository\WorkRepositoryInterface;
 
 /** Use Case получения списка видов работ с пагинацией. */
-final class ListWorksUseCase
+final readonly class ListWorksUseCase
 {
     public function __construct(
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly ListWorksOutputPortInterface $presenter,
+        private WorkRepositoryInterface $workRepository,
+        private ListWorksOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListWorksInputDto $input): void

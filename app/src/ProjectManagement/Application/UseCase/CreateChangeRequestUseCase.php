@@ -16,12 +16,12 @@ use App\ProjectManagement\Domain\ValueObject\ProjectId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания запроса на изменение. */
-final class CreateChangeRequestUseCase
+final readonly class CreateChangeRequestUseCase
 {
     public function __construct(
-        private readonly ChangeRequestRepositoryInterface $changeRequestRepository,
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ChangeRequestRepositoryInterface $changeRequestRepository,
+        private ProjectRepositoryInterface $projectRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateChangeRequestInputDto $input): void

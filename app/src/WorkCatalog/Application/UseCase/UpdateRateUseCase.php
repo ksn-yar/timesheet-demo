@@ -21,14 +21,14 @@ use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления ставки. */
-final class UpdateRateUseCase
+final readonly class UpdateRateUseCase
 {
     public function __construct(
-        private readonly RateRepositoryInterface $rateRepository,
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly RateAppliedToTicketCheckerInterface $rateAppliedChecker,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private RateRepositoryInterface $rateRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private WorkRepositoryInterface $workRepository,
+        private RateAppliedToTicketCheckerInterface $rateAppliedChecker,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateRateInputDto $input): void

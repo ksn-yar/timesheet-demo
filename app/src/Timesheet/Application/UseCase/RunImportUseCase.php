@@ -26,18 +26,18 @@ use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case запуска импорта тикетов из внешней системы по политике импорта. */
-final class RunImportUseCase
+final readonly class RunImportUseCase
 {
     public function __construct(
-        private readonly ImportPolicyRepositoryInterface $importPolicyRepository,
-        private readonly TicketRepositoryInterface $ticketRepository,
-        private readonly EmployeeResolverInterface $employeeResolver,
-        private readonly TaskResolverInterface $taskResolver,
-        private readonly WorkResolverInterface $workResolver,
-        private readonly RateProviderInterface $rateProvider,
-        private readonly ExternalDataFetcherInterface $externalDataFetcher,
-        private readonly RunImportOutputPortInterface $presenter,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ImportPolicyRepositoryInterface $importPolicyRepository,
+        private TicketRepositoryInterface $ticketRepository,
+        private EmployeeResolverInterface $employeeResolver,
+        private TaskResolverInterface $taskResolver,
+        private WorkResolverInterface $workResolver,
+        private RateProviderInterface $rateProvider,
+        private ExternalDataFetcherInterface $externalDataFetcher,
+        private RunImportOutputPortInterface $presenter,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(RunImportInputDto $input): void

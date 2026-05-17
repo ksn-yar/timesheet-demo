@@ -9,10 +9,10 @@ use App\WorkCatalog\Domain\ValueObject\RateId;
 use Doctrine\DBAL\Connection;
 
 /** Проверяет, применена ли ставка хотя бы к одному тикету, через DBAL-запрос. */
-final class RateAppliedToTicketChecker implements RateAppliedToTicketCheckerInterface
+final readonly class RateAppliedToTicketChecker implements RateAppliedToTicketCheckerInterface
 {
     public function __construct(
-        private readonly Connection $connection,
+        private Connection $connection,
     ) {}
 
     public function isRateAppliedToTicket(RateId $rateId): bool

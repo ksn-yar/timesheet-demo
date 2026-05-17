@@ -12,12 +12,12 @@ use App\Timesheet\Application\Port\ListTicketsOutputPortInterface;
 use App\Timesheet\Domain\Repository\TicketRepositoryInterface;
 
 /** Use Case получения списка тикетов с фильтрацией, пагинацией и контролем доступа. */
-final class ListTicketsUseCase
+final readonly class ListTicketsUseCase
 {
     public function __construct(
-        private readonly TicketRepositoryInterface $ticketRepository,
-        private readonly ListTicketsOutputPortInterface $presenter,
-        private readonly CurrentUserProviderInterface $currentUserProvider,
+        private TicketRepositoryInterface $ticketRepository,
+        private ListTicketsOutputPortInterface $presenter,
+        private CurrentUserProviderInterface $currentUserProvider,
     ) {}
 
     public function execute(ListTicketsInputDto $input): void

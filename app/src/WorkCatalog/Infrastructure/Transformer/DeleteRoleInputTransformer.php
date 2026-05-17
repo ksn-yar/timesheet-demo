@@ -7,7 +7,7 @@ namespace App\WorkCatalog\Infrastructure\Transformer;
 use App\WorkCatalog\Application\Dto\DeleteRoleInputDto;
 
 /** Трансформирует path-параметр id в DeleteRoleInputDto для Use Case. */
-final class DeleteRoleInputTransformer
+final readonly class DeleteRoleInputTransformer
 {
     public function transform(string $id): DeleteRoleInputDto
     {

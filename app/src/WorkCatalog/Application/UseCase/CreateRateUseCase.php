@@ -19,13 +19,13 @@ use DateTimeImmutable;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания новой ставки. */
-final class CreateRateUseCase
+final readonly class CreateRateUseCase
 {
     public function __construct(
-        private readonly RateRepositoryInterface $rateRepository,
-        private readonly RoleRepositoryInterface $roleRepository,
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private RateRepositoryInterface $rateRepository,
+        private RoleRepositoryInterface $roleRepository,
+        private WorkRepositoryInterface $workRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateRateInputDto $input): void

@@ -22,11 +22,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /** Слушатель доменных событий Project Management для ведения аудит-лога. */
-final class AuditLogEventListener
+final readonly class AuditLogEventListener
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly TokenStorageInterface $tokenStorage,
+        private LoggerInterface $logger,
+        private TokenStorageInterface $tokenStorage,
     ) {}
 
     public function onClientCreated(ClientCreated $event): void

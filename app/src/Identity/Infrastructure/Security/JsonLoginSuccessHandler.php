@@ -15,7 +15,7 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerI
  * Обработчик успешной аутентификации. Возвращает JSON с данными пользователя
  * вместо стандартного редиректа Symfony.
  */
-final class JsonLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
+final readonly class JsonLoginSuccessHandler implements AuthenticationSuccessHandlerInterface
 {
     public function onAuthenticationSuccess(Request $request, TokenInterface $token): Response
     {

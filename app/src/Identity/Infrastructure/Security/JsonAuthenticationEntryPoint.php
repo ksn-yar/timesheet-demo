@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
  * Точка входа для неаутентифицированных запросов. Возвращает 401 в формате JSON
  * вместо редиректа на форму логина.
  */
-final class JsonAuthenticationEntryPoint implements AuthenticationEntryPointInterface
+final readonly class JsonAuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {

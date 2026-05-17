@@ -9,10 +9,10 @@ use App\WorkCatalog\Domain\ValueObject\RoleId;
 use Doctrine\DBAL\Connection;
 
 /** Проверяет наличие пользователей, привязанных к роли, через DBAL-запрос. */
-final class UserExistenceByRoleChecker implements UserExistenceByRoleCheckerInterface
+final readonly class UserExistenceByRoleChecker implements UserExistenceByRoleCheckerInterface
 {
     public function __construct(
-        private readonly Connection $connection,
+        private Connection $connection,
     ) {}
 
     public function hasUsersByRole(RoleId $roleId): bool

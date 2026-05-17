@@ -10,10 +10,10 @@ use App\Timesheet\Application\Port\WorkResolverInterface;
 use InvalidArgumentException;
 
 /** Разрешает идентификатор вида работ по имени через Doctrine ORM. */
-final class DoctrineWorkResolver implements WorkResolverInterface
+final readonly class DoctrineWorkResolver implements WorkResolverInterface
 {
     public function __construct(
-        private readonly WorkRepository $workRepository,
+        private WorkRepository $workRepository,
     ) {}
 
     public function resolve(string $value, string $matchBy): ?string

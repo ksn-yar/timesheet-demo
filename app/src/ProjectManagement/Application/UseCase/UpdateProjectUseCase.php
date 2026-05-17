@@ -14,11 +14,11 @@ use App\ProjectManagement\Domain\ValueObject\ProjectId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления проекта. */
-final class UpdateProjectUseCase
+final readonly class UpdateProjectUseCase
 {
     public function __construct(
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ProjectRepositoryInterface $projectRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateProjectInputDto $input): void

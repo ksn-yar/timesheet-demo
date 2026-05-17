@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\ChangeUserGroupInputDto;
 use App\Identity\Infrastructure\Dto\ChangeUserGroupRequestDto;
 
 /** Трансформирует ChangeUserGroupRequestDto в ChangeUserGroupInputDto для Use Case. */
-final class ChangeUserGroupInputTransformer
+final readonly class ChangeUserGroupInputTransformer
 {
     public function transform(string $id, ChangeUserGroupRequestDto $dto): ChangeUserGroupInputDto
     {

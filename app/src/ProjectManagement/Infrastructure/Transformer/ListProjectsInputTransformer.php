@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\ListProjectsInputDto;
 use App\ProjectManagement\Infrastructure\Dto\ListProjectsRequestDto;
 
 /** Трансформирует ListProjectsRequestDto в ListProjectsInputDto для Use Case. */
-final class ListProjectsInputTransformer
+final readonly class ListProjectsInputTransformer
 {
     public function transform(ListProjectsRequestDto $dto): ListProjectsInputDto
     {

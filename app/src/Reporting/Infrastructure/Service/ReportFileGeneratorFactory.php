@@ -11,12 +11,12 @@ use App\Reporting\Domain\Enum\ExportFormat;
  * Фабрика генераторов файлов экспорта отчётов.
  * Делегирует генерацию конкретному генератору в зависимости от запрошенного формата.
  */
-final class ReportFileGeneratorFactory implements ReportFileGeneratorInterface
+final readonly class ReportFileGeneratorFactory implements ReportFileGeneratorInterface
 {
     public function __construct(
-        private readonly CsvReportFileGenerator $csvGenerator,
-        private readonly XlsxReportFileGenerator $xlsxGenerator,
-        private readonly PdfReportFileGenerator $pdfGenerator,
+        private CsvReportFileGenerator $csvGenerator,
+        private XlsxReportFileGenerator $xlsxGenerator,
+        private PdfReportFileGenerator $pdfGenerator,
     ) {}
 
     public function generate(array $reports, ExportFormat $format): string

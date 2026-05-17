@@ -14,7 +14,7 @@ use Symfony\Component\Uid\Uuid;
 use Throwable;
 
 /** Генератор файлов экспорта отчётов в формате XLSX. */
-final class XlsxReportFileGenerator implements ReportFileGeneratorInterface
+final readonly class XlsxReportFileGenerator implements ReportFileGeneratorInterface
 {
     /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string

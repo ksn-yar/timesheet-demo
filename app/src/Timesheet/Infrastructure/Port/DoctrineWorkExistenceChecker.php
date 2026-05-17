@@ -8,10 +8,10 @@ use App\Persistence\Repository\WorkRepository;
 use App\Timesheet\Application\Port\WorkExistenceCheckerInterface;
 
 /** Проверяет существование вида работ через Doctrine ORM. */
-final class DoctrineWorkExistenceChecker implements WorkExistenceCheckerInterface
+final readonly class DoctrineWorkExistenceChecker implements WorkExistenceCheckerInterface
 {
     public function __construct(
-        private readonly WorkRepository $workRepository,
+        private WorkRepository $workRepository,
     ) {}
 
     public function workExists(string $workId): bool

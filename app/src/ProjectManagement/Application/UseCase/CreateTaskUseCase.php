@@ -20,13 +20,13 @@ use App\ProjectManagement\Domain\ValueObject\TaskId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания задачи, привязанной к проекту или запросу на изменение. */
-final class CreateTaskUseCase
+final readonly class CreateTaskUseCase
 {
     public function __construct(
-        private readonly TaskRepositoryInterface $taskRepository,
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly ChangeRequestRepositoryInterface $changeRequestRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private TaskRepositoryInterface $taskRepository,
+        private ProjectRepositoryInterface $projectRepository,
+        private ChangeRequestRepositoryInterface $changeRequestRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateTaskInputDto $input): void

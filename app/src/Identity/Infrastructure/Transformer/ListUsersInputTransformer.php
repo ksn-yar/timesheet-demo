@@ -8,7 +8,7 @@ use App\Identity\Application\Dto\ListUsersInputDto;
 use App\Identity\Infrastructure\Dto\ListUsersRequestDto;
 
 /** Трансформирует ListUsersRequestDto в ListUsersInputDto для Use Case. */
-final class ListUsersInputTransformer
+final readonly class ListUsersInputTransformer
 {
     public function transform(ListUsersRequestDto $dto): ListUsersInputDto
     {

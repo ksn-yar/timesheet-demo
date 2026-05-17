@@ -11,7 +11,7 @@ use App\Reporting\Domain\Exception\ReportExportGenerationException;
 use Symfony\Component\Uid\Uuid;
 
 /** Генератор файлов экспорта отчётов в формате CSV. */
-final class CsvReportFileGenerator implements ReportFileGeneratorInterface
+final readonly class CsvReportFileGenerator implements ReportFileGeneratorInterface
 {
     /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string

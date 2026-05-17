@@ -13,7 +13,7 @@ use Symfony\Component\Uid\Uuid;
 use Throwable;
 
 /** Генератор файлов экспорта отчётов в формате PDF через Dompdf. */
-final class PdfReportFileGenerator implements ReportFileGeneratorInterface
+final readonly class PdfReportFileGenerator implements ReportFileGeneratorInterface
 {
     /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string

@@ -11,11 +11,11 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case деактивации пользователя. */
-final class DeactivateUserUseCase
+final readonly class DeactivateUserUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private UserRepositoryInterface $userRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeactivateUserInputDto $input): void

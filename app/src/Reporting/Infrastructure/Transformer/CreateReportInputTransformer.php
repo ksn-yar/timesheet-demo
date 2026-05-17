@@ -11,7 +11,7 @@ use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /** Трансформирует CreateReportRequestDto в CreateReportInputDto, генерируя UUID и извлекая ID текущего пользователя. */
-final class CreateReportInputTransformer
+final readonly class CreateReportInputTransformer
 {
     public function __construct(
         private readonly TokenStorageInterface $tokenStorage,

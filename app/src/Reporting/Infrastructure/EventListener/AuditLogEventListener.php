@@ -12,11 +12,11 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /** Слушатель доменных событий Reporting для ведения аудит-лога. */
-final class AuditLogEventListener
+final readonly class AuditLogEventListener
 {
     public function __construct(
-        private readonly LoggerInterface $logger,
-        private readonly TokenStorageInterface $tokenStorage,
+        private LoggerInterface $logger,
+        private TokenStorageInterface $tokenStorage,
     ) {}
 
     public function onReportAdded(ReportAdded $event): void

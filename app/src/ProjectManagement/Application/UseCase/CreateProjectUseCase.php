@@ -17,12 +17,12 @@ use App\ProjectManagement\Domain\ValueObject\ProjectId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания нового проекта. */
-final class CreateProjectUseCase
+final readonly class CreateProjectUseCase
 {
     public function __construct(
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ProjectRepositoryInterface $projectRepository,
+        private ClientRepositoryInterface $clientRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateProjectInputDto $input): void

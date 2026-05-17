@@ -9,7 +9,7 @@ use App\Reporting\Domain\ValueObject\ReportExportId;
 use App\Reporting\Infrastructure\Dto\ExportReportsRequestDto;
 
 /** Трансформирует ExportReportsRequestDto в ExportReportsInputDto, генерируя UUID выгрузки. */
-final class ExportReportsInputTransformer
+final readonly class ExportReportsInputTransformer
 {
     public function transform(ExportReportsRequestDto $dto): ExportReportsInputDto
     {

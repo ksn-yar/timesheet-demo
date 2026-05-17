@@ -8,7 +8,7 @@ use App\Timesheet\Application\Dto\CreateImportPolicyInputDto;
 use App\Timesheet\Infrastructure\Dto\CreateImportPolicyRequestDto;
 
 /** Трансформирует HTTP DTO создания политики импорта в Application DTO. */
-final class CreateImportPolicyInputTransformer
+final readonly class CreateImportPolicyInputTransformer
 {
     public function transform(CreateImportPolicyRequestDto $dto): CreateImportPolicyInputDto
     {

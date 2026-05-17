@@ -16,13 +16,13 @@ use App\ProjectManagement\Domain\ValueObject\ChangeRequestId;
 use App\ProjectManagement\Domain\ValueObject\ProjectId;
 
 /** Use Case получения списка задач с пагинацией и фильтрацией. */
-final class ListTasksUseCase
+final readonly class ListTasksUseCase
 {
     public function __construct(
-        private readonly TaskRepositoryInterface $taskRepository,
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly ChangeRequestRepositoryInterface $changeRequestRepository,
-        private readonly ListTasksOutputPortInterface $presenter,
+        private TaskRepositoryInterface $taskRepository,
+        private ProjectRepositoryInterface $projectRepository,
+        private ChangeRequestRepositoryInterface $changeRequestRepository,
+        private ListTasksOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListTasksInputDto $input): void

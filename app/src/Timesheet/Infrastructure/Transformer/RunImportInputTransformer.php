@@ -9,7 +9,7 @@ use App\Timesheet\Infrastructure\Dto\RunImportRequestDto;
 use DateTimeImmutable;
 
 /** Трансформирует HTTP DTO запуска импорта в Application DTO. */
-final class RunImportInputTransformer
+final readonly class RunImportInputTransformer
 {
     public function transform(string $importPolicyId, RunImportRequestDto $dto): RunImportInputDto
     {

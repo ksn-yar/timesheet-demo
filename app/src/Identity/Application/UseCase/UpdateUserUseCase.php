@@ -12,11 +12,11 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления атрибутов пользователя. */
-final class UpdateUserUseCase
+final readonly class UpdateUserUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private UserRepositoryInterface $userRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateUserInputDto $input): void

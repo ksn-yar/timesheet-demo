@@ -13,7 +13,7 @@ use App\Reporting\Domain\ValueObject\ReportGroupBy;
  * Агрегирует проекции тикетов в строки отчёта по заданным измерениям группировки.
  * Stateless-сервис: не имеет зависимостей и может быть вызван напрямую.
  */
-final class ReportAggregationService
+final readonly class ReportAggregationService
 {
     /**
      * Группирует тикеты по измерениям и вычисляет агрегированные показатели для каждой группы.

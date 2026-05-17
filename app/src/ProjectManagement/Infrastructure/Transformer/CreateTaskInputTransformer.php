@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\CreateTaskInputDto;
 use App\ProjectManagement\Infrastructure\Dto\CreateTaskRequestDto;
 
 /** Трансформирует CreateTaskRequestDto в CreateTaskInputDto для Use Case. */
-final class CreateTaskInputTransformer
+final readonly class CreateTaskInputTransformer
 {
     public function transform(CreateTaskRequestDto $dto): CreateTaskInputDto
     {

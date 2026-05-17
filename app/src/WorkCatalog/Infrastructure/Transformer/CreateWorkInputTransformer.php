@@ -8,7 +8,7 @@ use App\WorkCatalog\Application\Dto\CreateWorkInputDto;
 use App\WorkCatalog\Infrastructure\Dto\CreateWorkRequestDto;
 
 /** Трансформирует CreateWorkRequestDto в CreateWorkInputDto для Use Case. */
-final class CreateWorkInputTransformer
+final readonly class CreateWorkInputTransformer
 {
     public function transform(CreateWorkRequestDto $dto): CreateWorkInputDto
     {

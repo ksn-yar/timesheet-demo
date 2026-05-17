@@ -9,10 +9,10 @@ use App\WorkCatalog\Domain\ValueObject\WorkId;
 use Doctrine\DBAL\Connection;
 
 /** Проверяет наличие тикетов, привязанных к виду работ, через DBAL-запрос. */
-final class TicketExistenceByWorkChecker implements TicketExistenceByWorkCheckerInterface
+final readonly class TicketExistenceByWorkChecker implements TicketExistenceByWorkCheckerInterface
 {
     public function __construct(
-        private readonly Connection $connection,
+        private Connection $connection,
     ) {}
 
     public function hasTicketsForWork(WorkId $workId): bool

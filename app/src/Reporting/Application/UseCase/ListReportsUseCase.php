@@ -13,11 +13,11 @@ use App\Reporting\Domain\Repository\ReportRepositoryInterface;
 use DateTimeInterface;
 
 /** Use Case получения списка отчётов с пагинацией и опциональной фильтрацией по метаданным. */
-final class ListReportsUseCase
+final readonly class ListReportsUseCase
 {
     public function __construct(
-        private readonly ReportRepositoryInterface $reportRepository,
-        private readonly ListReportsOutputPortInterface $presenter,
+        private ReportRepositoryInterface $reportRepository,
+        private ListReportsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListReportsInputDto $input): void

@@ -14,12 +14,12 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case мягкого удаления пользователя. */
-final class DeleteUserUseCase
+final readonly class DeleteUserUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly TicketExistenceCheckerInterface $ticketChecker,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private UserRepositoryInterface $userRepository,
+        private TicketExistenceCheckerInterface $ticketChecker,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteUserInputDto $input): void

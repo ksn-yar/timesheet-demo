@@ -7,7 +7,7 @@ namespace App\WorkCatalog\Infrastructure\Transformer;
 use App\WorkCatalog\Application\Dto\DeleteWorkInputDto;
 
 /** Трансформирует path-параметр id в DeleteWorkInputDto для Use Case. */
-final class DeleteWorkInputTransformer
+final readonly class DeleteWorkInputTransformer
 {
     public function transform(string $id): DeleteWorkInputDto
     {

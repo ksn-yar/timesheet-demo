@@ -12,11 +12,11 @@ use App\Identity\Domain\Entity\User;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
 
 /** Use Case получения списка пользователей с пагинацией и фильтрацией. */
-final class ListUsersUseCase
+final readonly class ListUsersUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly ListUsersOutputPortInterface $presenter,
+        private UserRepositoryInterface $userRepository,
+        private ListUsersOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListUsersInputDto $input): void

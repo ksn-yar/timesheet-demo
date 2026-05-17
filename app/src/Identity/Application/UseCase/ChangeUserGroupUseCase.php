@@ -15,12 +15,12 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case изменения принадлежности пользователя к группе. Объединяет назначение и снятие. */
-final class ChangeUserGroupUseCase
+final readonly class ChangeUserGroupUseCase
 {
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository,
-        private readonly GroupRepositoryInterface $groupRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private UserRepositoryInterface $userRepository,
+        private GroupRepositoryInterface $groupRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(ChangeUserGroupInputDto $input): void

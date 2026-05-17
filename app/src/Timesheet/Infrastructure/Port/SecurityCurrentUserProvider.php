@@ -10,10 +10,10 @@ use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /** Предоставляет данные текущего пользователя из Symfony Security. */
-final class SecurityCurrentUserProvider implements CurrentUserProviderInterface
+final readonly class SecurityCurrentUserProvider implements CurrentUserProviderInterface
 {
     public function __construct(
-        private readonly TokenStorageInterface $tokenStorage,
+        private TokenStorageInterface $tokenStorage,
     ) {}
 
     public function getCurrentUserId(): string

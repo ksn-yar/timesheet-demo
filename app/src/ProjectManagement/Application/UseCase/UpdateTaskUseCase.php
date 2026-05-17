@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\TaskId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления задачи. */
-final class UpdateTaskUseCase
+final readonly class UpdateTaskUseCase
 {
     public function __construct(
-        private readonly TaskRepositoryInterface $taskRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private TaskRepositoryInterface $taskRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateTaskInputDto $input): void

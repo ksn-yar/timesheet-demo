@@ -10,10 +10,10 @@ use App\Timesheet\Application\Port\EmployeeResolverInterface;
 use InvalidArgumentException;
 
 /** Разрешает идентификатор сотрудника по email через Doctrine ORM. */
-final class DoctrineEmployeeResolver implements EmployeeResolverInterface
+final readonly class DoctrineEmployeeResolver implements EmployeeResolverInterface
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
+        private UserRepository $userRepository,
     ) {}
 
     public function resolve(string $value, string $matchBy): ?string

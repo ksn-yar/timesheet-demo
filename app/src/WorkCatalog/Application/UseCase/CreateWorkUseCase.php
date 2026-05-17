@@ -11,11 +11,11 @@ use App\WorkCatalog\Domain\Repository\WorkRepositoryInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания нового вида работ. */
-final class CreateWorkUseCase
+final readonly class CreateWorkUseCase
 {
     public function __construct(
-        private readonly WorkRepositoryInterface $workRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private WorkRepositoryInterface $workRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(CreateWorkInputDto $input): void

@@ -17,10 +17,10 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
  *
  * @implements UserProviderInterface<User>
  */
-final class UserProvider implements UserProviderInterface
+final readonly class UserProvider implements UserProviderInterface
 {
     public function __construct(
-        private readonly UserRepository $userRepository,
+        private UserRepository $userRepository,
     ) {}
 
     public function loadUserByIdentifier(string $identifier): UserInterface

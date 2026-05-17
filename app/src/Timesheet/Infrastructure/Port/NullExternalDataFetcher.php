@@ -8,7 +8,7 @@ use App\Timesheet\Application\Port\ExternalDataFetcherInterface;
 use DateTimeImmutable;
 
 /** Заглушка для получения внешних данных. Возвращает пустой массив для первой итерации. */
-final class NullExternalDataFetcher implements ExternalDataFetcherInterface
+final readonly class NullExternalDataFetcher implements ExternalDataFetcherInterface
 {
     /**
      * @param array<string, mixed> $mappingRules

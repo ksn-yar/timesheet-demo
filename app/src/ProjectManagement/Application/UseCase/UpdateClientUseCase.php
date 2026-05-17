@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\ClientId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления клиента. */
-final class UpdateClientUseCase
+final readonly class UpdateClientUseCase
 {
     public function __construct(
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ClientRepositoryInterface $clientRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateClientInputDto $input): void

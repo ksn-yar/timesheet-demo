@@ -14,12 +14,12 @@ use App\ProjectManagement\Domain\Repository\ProjectRepositoryInterface;
 use App\ProjectManagement\Domain\ValueObject\ClientId;
 
 /** Use Case получения списка проектов с пагинацией и фильтрацией. */
-final class ListProjectsUseCase
+final readonly class ListProjectsUseCase
 {
     public function __construct(
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly ListProjectsOutputPortInterface $presenter,
+        private ProjectRepositoryInterface $projectRepository,
+        private ClientRepositoryInterface $clientRepository,
+        private ListProjectsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListProjectsInputDto $input): void

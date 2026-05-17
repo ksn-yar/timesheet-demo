@@ -8,7 +8,7 @@ use App\WorkCatalog\Application\Dto\ListRatesInputDto;
 use App\WorkCatalog\Infrastructure\Dto\ListRatesRequestDto;
 
 /** Трансформирует ListRatesRequestDto в ListRatesInputDto для Use Case. */
-final class ListRatesInputTransformer
+final readonly class ListRatesInputTransformer
 {
     public function transform(ListRatesRequestDto $dto): ListRatesInputDto
     {

@@ -8,7 +8,7 @@ use App\ProjectManagement\Application\Dto\CreateClientInputDto;
 use App\ProjectManagement\Infrastructure\Dto\CreateClientRequestDto;
 
 /** Трансформирует CreateClientRequestDto в CreateClientInputDto для Use Case. */
-final class CreateClientInputTransformer
+final readonly class CreateClientInputTransformer
 {
     public function transform(CreateClientRequestDto $dto): CreateClientInputDto
     {

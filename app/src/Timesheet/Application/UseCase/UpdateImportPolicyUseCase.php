@@ -12,11 +12,11 @@ use App\Timesheet\Domain\ValueObject\ImportPolicyId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case обновления политики импорта с проверкой конфликтов активации. */
-final class UpdateImportPolicyUseCase
+final readonly class UpdateImportPolicyUseCase
 {
     public function __construct(
-        private readonly ImportPolicyRepositoryInterface $importPolicyRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ImportPolicyRepositoryInterface $importPolicyRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(UpdateImportPolicyInputDto $input): void

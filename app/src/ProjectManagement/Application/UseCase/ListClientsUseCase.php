@@ -12,11 +12,11 @@ use App\ProjectManagement\Domain\Entity\Client;
 use App\ProjectManagement\Domain\Repository\ClientRepositoryInterface;
 
 /** Use Case получения списка клиентов с пагинацией и фильтрацией. */
-final class ListClientsUseCase
+final readonly class ListClientsUseCase
 {
     public function __construct(
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly ListClientsOutputPortInterface $presenter,
+        private ClientRepositoryInterface $clientRepository,
+        private ListClientsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListClientsInputDto $input): void

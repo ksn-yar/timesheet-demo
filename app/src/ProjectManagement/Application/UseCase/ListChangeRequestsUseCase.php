@@ -14,12 +14,12 @@ use App\ProjectManagement\Domain\Repository\ProjectRepositoryInterface;
 use App\ProjectManagement\Domain\ValueObject\ProjectId;
 
 /** Use Case получения списка запросов на изменение с пагинацией и фильтрацией. */
-final class ListChangeRequestsUseCase
+final readonly class ListChangeRequestsUseCase
 {
     public function __construct(
-        private readonly ChangeRequestRepositoryInterface $changeRequestRepository,
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly ListChangeRequestsOutputPortInterface $presenter,
+        private ChangeRequestRepositoryInterface $changeRequestRepository,
+        private ProjectRepositoryInterface $projectRepository,
+        private ListChangeRequestsOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListChangeRequestsInputDto $input): void

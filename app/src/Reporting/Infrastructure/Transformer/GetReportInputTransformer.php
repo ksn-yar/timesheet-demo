@@ -7,7 +7,7 @@ namespace App\Reporting\Infrastructure\Transformer;
 use App\Reporting\Application\Dto\GetReportInputDto;
 
 /** Трансформирует строковый ID из параметра маршрута в GetReportInputDto. */
-final class GetReportInputTransformer
+final readonly class GetReportInputTransformer
 {
     public function transform(string $id): GetReportInputDto
     {

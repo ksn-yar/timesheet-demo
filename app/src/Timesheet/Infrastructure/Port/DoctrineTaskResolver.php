@@ -10,10 +10,10 @@ use App\Timesheet\Application\Port\TaskResolverInterface;
 use InvalidArgumentException;
 
 /** Разрешает идентификатор задачи по имени через Doctrine ORM. */
-final class DoctrineTaskResolver implements TaskResolverInterface
+final readonly class DoctrineTaskResolver implements TaskResolverInterface
 {
     public function __construct(
-        private readonly TaskRepository $taskRepository,
+        private TaskRepository $taskRepository,
     ) {}
 
     public function resolve(string $value, string $matchBy): ?string

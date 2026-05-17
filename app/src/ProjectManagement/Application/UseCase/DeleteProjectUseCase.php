@@ -13,11 +13,11 @@ use App\ProjectManagement\Domain\ValueObject\ProjectId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case удаления проекта (soft delete). */
-final class DeleteProjectUseCase
+final readonly class DeleteProjectUseCase
 {
     public function __construct(
-        private readonly ProjectRepositoryInterface $projectRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private ProjectRepositoryInterface $projectRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     public function execute(DeleteProjectInputDto $input): void

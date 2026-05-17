@@ -15,11 +15,11 @@ use DateTimeImmutable;
  * Определяет текущую ставку через приоритетную цепочку.
  * Приоритет: Work+Role > Work > Role > базовая (0).
  */
-final class DoctrineRateProvider implements RateProviderInterface
+final readonly class DoctrineRateProvider implements RateProviderInterface
 {
     public function __construct(
-        private readonly RateRepository $rateRepository,
-        private readonly UserRepository $userRepository,
+        private RateRepository $rateRepository,
+        private UserRepository $userRepository,
     ) {}
 
     public function getCurrentRate(string $employeeId, string $workId): string

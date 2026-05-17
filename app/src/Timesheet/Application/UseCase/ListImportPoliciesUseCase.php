@@ -12,11 +12,11 @@ use App\Timesheet\Domain\Entity\ImportPolicy;
 use App\Timesheet\Domain\Repository\ImportPolicyRepositoryInterface;
 
 /** Use Case получения списка политик импорта с пагинацией. */
-final class ListImportPoliciesUseCase
+final readonly class ListImportPoliciesUseCase
 {
     public function __construct(
-        private readonly ImportPolicyRepositoryInterface $importPolicyRepository,
-        private readonly ListImportPoliciesOutputPortInterface $presenter,
+        private ImportPolicyRepositoryInterface $importPolicyRepository,
+        private ListImportPoliciesOutputPortInterface $presenter,
     ) {}
 
     public function execute(ListImportPoliciesInputDto $input): void

@@ -10,10 +10,10 @@ use App\Persistence\Entity\User;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /** Реализация хэширования паролей через Symfony UserPasswordHasher. */
-final class SymfonyPasswordHasher implements PasswordHasherInterface
+final readonly class SymfonyPasswordHasher implements PasswordHasherInterface
 {
     public function __construct(
-        private readonly UserPasswordHasherInterface $passwordHasher,
+        private UserPasswordHasherInterface $passwordHasher,
     ) {}
 
     public function hash(string $plainPassword): HashedPassword

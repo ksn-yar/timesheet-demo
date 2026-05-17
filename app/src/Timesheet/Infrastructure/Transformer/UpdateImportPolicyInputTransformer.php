@@ -8,7 +8,7 @@ use App\Timesheet\Application\Dto\UpdateImportPolicyInputDto;
 use App\Timesheet\Infrastructure\Dto\UpdateImportPolicyRequestDto;
 
 /** Трансформирует HTTP DTO обновления политики импорта в Application DTO. */
-final class UpdateImportPolicyInputTransformer
+final readonly class UpdateImportPolicyInputTransformer
 {
     public function transform(string $importPolicyId, UpdateImportPolicyRequestDto $dto): UpdateImportPolicyInputDto
     {

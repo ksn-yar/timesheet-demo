@@ -9,7 +9,7 @@ use App\Timesheet\Infrastructure\Dto\UpdateManualTicketRequestDto;
 use DateTimeImmutable;
 
 /** Трансформирует HTTP DTO обновления тикета в Application DTO. */
-final class UpdateManualTicketInputTransformer
+final readonly class UpdateManualTicketInputTransformer
 {
     public function transform(string $ticketId, UpdateManualTicketRequestDto $dto): UpdateManualTicketInputDto
     {
