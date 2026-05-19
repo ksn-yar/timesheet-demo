@@ -6,6 +6,9 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
-        'cache' => null,
+        'cache' => [
+            'app' => 'cache.adapter.redis',
+            'default_redis_provider' => '%env(REDIS_DSN)%',
+        ],
     ]);
 };

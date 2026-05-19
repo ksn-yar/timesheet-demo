@@ -7,7 +7,9 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
         'secret' => '%env(APP_SECRET)%',
-        'session' => true,
+        'session' => [
+            'handler_id' => '%env(REDIS_DSN)%',
+        ],
     ]);
     if ('test' === $containerConfigurator->env()) {
         $containerConfigurator->extension('framework', [
