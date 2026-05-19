@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера удаления группы.
  * Проверяет фиксированный текст ошибки 404 и обработку 422-исключений.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DeleteGroupControllerTest extends TestCase
 {

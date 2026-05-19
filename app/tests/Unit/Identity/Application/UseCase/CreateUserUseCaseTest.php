@@ -8,23 +8,25 @@ use App\Identity\Application\Dto\CreateUserInputDto;
 use App\Identity\Application\Port\PasswordHasherInterface;
 use App\Identity\Application\UseCase\CreateUserUseCase;
 use App\Identity\Domain\Entity\Group;
-use App\Identity\Domain\Entity\User;
-use App\Identity\Domain\Enum\SystemRole;
 use App\Identity\Domain\Exception\DuplicateEmailException;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
 use App\Identity\Domain\Repository\GroupRepositoryInterface;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
-use App\Identity\Domain\ValueObject\Email;
 use App\Identity\Domain\ValueObject\GroupId;
 use App\Identity\Domain\ValueObject\HashedPassword;
-use App\Identity\Domain\ValueObject\UserId;
 use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case создания пользователя. */
+/**
+ * Тесты Use Case создания пользователя.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class CreateUserUseCaseTest extends TestCase
 {
     private const string USER_ID = '550e8400-e29b-41d4-a716-446655440001';
@@ -39,15 +41,18 @@ final class CreateUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('existsByEmail')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $userRepository
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher->method('hash')->willReturn(new HashedPassword('$2y$hash'));
@@ -78,12 +83,14 @@ final class CreateUserUseCaseTest extends TestCase
         $userRepository->method('existsByEmail')->willReturn(false);
         $userRepository
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildActiveGroup());
+            ->willReturn($this->buildActiveGroup())
+        ;
 
         $passwordHasher = $this->createStub(PasswordHasherInterface::class);
         $passwordHasher->method('hash')->willReturn(new HashedPassword('$2y$hash'));
@@ -113,11 +120,13 @@ final class CreateUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('existsByEmail')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new CreateUserUseCase(
             $userRepository,
@@ -147,12 +156,14 @@ final class CreateUserUseCaseTest extends TestCase
         $userRepository->method('existsByEmail')->willReturn(false);
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $useCase = new CreateUserUseCase(
             $userRepository,
@@ -182,12 +193,14 @@ final class CreateUserUseCaseTest extends TestCase
         $userRepository->method('existsByEmail')->willReturn(false);
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildDeletedGroup());
+            ->willReturn($this->buildDeletedGroup())
+        ;
 
         $useCase = new CreateUserUseCase(
             $userRepository,
@@ -220,7 +233,8 @@ final class CreateUserUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('hash')
             ->with('secret')
-            ->willReturn(new HashedPassword('$2y$hash'));
+            ->willReturn(new HashedPassword('$2y$hash'))
+        ;
 
         $useCase = new CreateUserUseCase(
             $userRepository,

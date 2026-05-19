@@ -24,9 +24,9 @@ final readonly class JsonLoginSuccessHandler implements AuthenticationSuccessHan
 
         return new JsonResponse([
             'user' => [
-                'id'         => $user->getId(),
-                'email'      => $user->getEmail(),
-                'name'       => $user->getName(),
+                'id' => $user->getId(),
+                'email' => $user->getEmail(),
+                'name' => $user->getName(),
                 'systemRole' => $user->getSystemRole(),
             ],
         ]);

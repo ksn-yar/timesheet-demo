@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера деактивации пользователя.
  * Проверяет фиксированный текст ошибки 404 и динамические сообщения 422.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DeactivateUserControllerTest extends TestCase
 {

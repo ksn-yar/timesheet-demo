@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера изменения группы пользователя.
  * Проверяет маппинг исключений на HTTP-коды и формат ответа.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class ChangeUserGroupControllerTest extends TestCase
 {

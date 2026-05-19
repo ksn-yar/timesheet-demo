@@ -18,7 +18,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case мягкого удаления группы. */
+/**
+ * Тесты Use Case мягкого удаления группы.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DeleteGroupUseCaseTest extends TestCase
 {
     private const string GROUP_ID = '550e8400-e29b-41d4-a716-446655440002';
@@ -35,21 +41,25 @@ final class DeleteGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($group);
+            ->willReturn($group)
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('countActiveUsersByGroupId')
-            ->willReturn(0);
+            ->willReturn(0)
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('save')
-            ->with($group);
+            ->with($group)
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new DeleteGroupUseCase($groupRepository, $userRepository, $eventDispatcher);
         $useCase->execute(new DeleteGroupInputDto(groupId: self::GROUP_ID));
@@ -63,11 +73,13 @@ final class DeleteGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteGroupUseCase(
             $groupRepository,
@@ -88,11 +100,13 @@ final class DeleteGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildDeletedGroup());
+            ->willReturn($this->buildDeletedGroup())
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteGroupUseCase(
             $groupRepository,
@@ -114,16 +128,19 @@ final class DeleteGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildActiveGroup());
+            ->willReturn($this->buildActiveGroup())
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('countActiveUsersByGroupId')
-            ->willReturn(3);
+            ->willReturn(3)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteGroupUseCase(
             $groupRepository,
@@ -153,9 +170,10 @@ final class DeleteGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function () use (&$saveCallOrder): void {
+            ->willReturnCallback(static function () use (&$saveCallOrder): void {
                 $saveCallOrder = 1;
-            });
+            })
+        ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -163,10 +181,11 @@ final class DeleteGroupUseCaseTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(function (object $event) use (&$saveCallOrder, &$dispatchCallOrder): object {
                 $this->assertGreaterThan(0, $saveCallOrder, 'dispatch() вызван до save()');
-                $dispatchCallOrder++;
+                ++$dispatchCallOrder;
 
                 return $event;
-            });
+            })
+        ;
 
         $useCase = new DeleteGroupUseCase($groupRepository, $userRepository, $eventDispatcher);
         $useCase->execute(new DeleteGroupInputDto(groupId: self::GROUP_ID));

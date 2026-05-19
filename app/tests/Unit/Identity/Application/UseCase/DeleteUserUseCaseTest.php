@@ -21,7 +21,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case мягкого удаления пользователя. */
+/**
+ * Тесты Use Case мягкого удаления пользователя.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class DeleteUserUseCaseTest extends TestCase
 {
     private const string USER_ID = '550e8400-e29b-41d4-a716-446655440001';
@@ -38,21 +44,25 @@ final class DeleteUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $ticketChecker
             ->expects($this->once())
             ->method('hasTicketsForUser')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->with($user);
+            ->with($user)
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new DeleteUserUseCase($userRepository, $ticketChecker, $eventDispatcher);
         $useCase->execute(new DeleteUserInputDto(userId: self::USER_ID));
@@ -66,11 +76,13 @@ final class DeleteUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteUserUseCase(
             $userRepository,
@@ -91,11 +103,13 @@ final class DeleteUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildDeletedUser());
+            ->willReturn($this->buildDeletedUser())
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteUserUseCase(
             $userRepository,
@@ -117,16 +131,19 @@ final class DeleteUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildActiveUser());
+            ->willReturn($this->buildActiveUser())
+        ;
 
         $ticketChecker
             ->expects($this->once())
             ->method('hasTicketsForUser')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteUserUseCase(
             $userRepository,
@@ -146,11 +163,13 @@ final class DeleteUserUseCaseTest extends TestCase
 
         $userRepository
             ->method('findById')
-            ->willReturn($this->buildDeletedUser());
+            ->willReturn($this->buildDeletedUser())
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new DeleteUserUseCase(
             $userRepository,

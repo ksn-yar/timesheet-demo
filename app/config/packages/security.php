@@ -21,22 +21,22 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         ],
         'firewalls' => [
             'dev' => [
-                'pattern'  => '^/(_profiler|_wdt|assets|build)/',
+                'pattern' => '^/(_profiler|_wdt|assets|build)/',
                 'security' => false,
             ],
             'api' => [
-                'pattern'   => '^/api/',
+                'pattern' => '^/api/',
                 'stateless' => false,
-                'provider'  => 'app_user_provider',
+                'provider' => 'app_user_provider',
                 'json_login' => [
-                    'check_path'                => '/api/login',
-                    'username_path'             => 'email',
-                    'password_path'             => 'password',
-                    'success_handler'           => JsonLoginSuccessHandler::class,
+                    'check_path' => '/api/login',
+                    'username_path' => 'email',
+                    'password_path' => 'password',
+                    'success_handler' => JsonLoginSuccessHandler::class,
                     // Стандартный JsonLoginFailureHandler возвращает 401 JSON — подходит без кастомизации
                 ],
                 'logout' => [
-                    'path'             => '/api/logout',
+                    'path' => '/api/logout',
                     // Очищаем куки сессии и инвалидируем сессию при выходе
                     'invalidate_session' => true,
                 ],
@@ -44,9 +44,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
         ],
         'access_control' => [
-            ['path' => '^/api/login$',  'roles' => 'PUBLIC_ACCESS'],
+            ['path' => '^/api/login$', 'roles' => 'PUBLIC_ACCESS'],
             ['path' => '^/api/logout$', 'roles' => 'ROLE_USER'],
-            ['path' => '^/api/',        'roles' => 'ROLE_USER'],
+            ['path' => '^/api/', 'roles' => 'ROLE_USER'],
         ],
     ]);
 
@@ -54,9 +54,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         $containerConfigurator->extension('security', [
             'password_hashers' => [
                 User::class => [
-                    'algorithm'   => 'auto',
-                    'cost'        => 4,
-                    'time_cost'   => 3,
+                    'algorithm' => 'auto',
+                    'cost' => 4,
+                    'time_cost' => 3,
                     'memory_cost' => 10,
                 ],
             ],

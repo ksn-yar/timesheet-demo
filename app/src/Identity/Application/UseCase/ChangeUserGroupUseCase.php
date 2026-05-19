@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Identity\Application\UseCase;
 
 use App\Identity\Application\Dto\ChangeUserGroupInputDto;
+use App\Identity\Application\Port\ChangeUserGroupUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
 use App\Identity\Domain\Exception\UserNotFoundException;
-use App\Identity\Application\Port\ChangeUserGroupUseCaseInterface;
 use App\Identity\Domain\Repository\GroupRepositoryInterface;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
 use App\Identity\Domain\ValueObject\GroupId;

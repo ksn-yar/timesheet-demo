@@ -18,21 +18,14 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера создания пользователя.
  * Проверяет маппинг трёх типов исключений на статус 422.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class CreateUserControllerTest extends TestCase
 {
     private const string GROUP_ID = '550e8400-e29b-41d4-a716-446655440002';
-
-    private function buildRequestDto(): CreateUserRequestDto
-    {
-        return new CreateUserRequestDto(
-            name: 'Иван Иванов',
-            email: 'ivan@example.com',
-            password: 'secret123',
-            systemRole: 'employee',
-            groupId: self::GROUP_ID,
-        );
-    }
 
     #[Test]
     public function returnsCreatedOnSuccess(): void
@@ -91,5 +84,16 @@ class CreateUserControllerTest extends TestCase
         self::assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $response->getStatusCode());
         $body = json_decode((string) $response->getContent(), true);
         self::assertArrayHasKey('error', $body);
+    }
+
+    private function buildRequestDto(): CreateUserRequestDto
+    {
+        return new CreateUserRequestDto(
+            name: 'Иван Иванов',
+            email: 'ivan@example.com',
+            password: 'secret123',
+            systemRole: 'employee',
+            groupId: self::GROUP_ID,
+        );
     }
 }

@@ -23,7 +23,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case изменения принадлежности пользователя к группе. */
+/**
+ * Тесты Use Case изменения принадлежности пользователя к группе.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ChangeUserGroupUseCaseTest extends TestCase
 {
     private const string USER_ID = '550e8400-e29b-41d4-a716-446655440001';
@@ -42,21 +48,25 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($group);
+            ->willReturn($group)
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->with($user);
+            ->with($user)
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new ChangeUserGroupUseCase($userRepository, $groupRepository, $eventDispatcher);
         $useCase->execute(new ChangeUserGroupInputDto(self::USER_ID, self::GROUP_ID));
@@ -72,12 +82,14 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->with($user);
+            ->with($user)
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -99,7 +111,8 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $groupRepository = $this->createMock(GroupRepositoryInterface::class);
         $groupRepository
             ->expects($this->never())
-            ->method('findById');
+            ->method('findById')
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -117,11 +130,13 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -141,11 +156,13 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildDeletedUser());
+            ->willReturn($this->buildDeletedUser())
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -165,13 +182,15 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository->method('findById')->willReturn($this->buildActiveUser());
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $groupRepository = $this->createMock(GroupRepositoryInterface::class);
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -191,13 +210,15 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository->method('findById')->willReturn($this->buildActiveUser());
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $groupRepository = $this->createMock(GroupRepositoryInterface::class);
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($this->buildDeletedGroup());
+            ->willReturn($this->buildDeletedGroup())
+        ;
 
         $useCase = new ChangeUserGroupUseCase(
             $userRepository,
@@ -228,9 +249,10 @@ final class ChangeUserGroupUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function () use (&$saveCallOrder): void {
+            ->willReturnCallback(static function () use (&$saveCallOrder): void {
                 $saveCallOrder = 1;
-            });
+            })
+        ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -239,10 +261,11 @@ final class ChangeUserGroupUseCaseTest extends TestCase
             ->willReturnCallback(function (object $event) use (&$saveCallOrder, &$dispatchCallOrder): object {
                 // dispatch должен вызываться после save
                 $this->assertGreaterThan(0, $saveCallOrder, 'dispatch() вызван до save()');
-                $dispatchCallOrder++;
+                ++$dispatchCallOrder;
 
                 return $event;
-            });
+            })
+        ;
 
         $useCase = new ChangeUserGroupUseCase($userRepository, $groupRepository, $eventDispatcher);
         $useCase->execute(new ChangeUserGroupInputDto(self::USER_ID, self::GROUP_ID));

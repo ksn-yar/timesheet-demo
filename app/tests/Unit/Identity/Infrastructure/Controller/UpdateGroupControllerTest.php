@@ -18,6 +18,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера обновления группы.
  * Проверяет фиксированный текст ошибки 404 и два вида 422-исключений.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class UpdateGroupControllerTest extends TestCase
 {

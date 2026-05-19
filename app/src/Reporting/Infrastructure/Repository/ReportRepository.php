@@ -108,9 +108,9 @@ final class ReportRepository implements ReportRepositoryInterface
      */
     private function toDomainFromArray(array $row): Report
     {
-        $id = is_string($row['id']) ? $row['id'] : '';
-        $name = is_string($row['name']) ? $row['name'] : '';
-        $createdBy = is_string($row['createdBy']) ? $row['createdBy'] : '';
+        $id = \is_string($row['id']) ? $row['id'] : '';
+        $name = \is_string($row['name']) ? $row['name'] : '';
+        $createdBy = \is_string($row['createdBy']) ? $row['createdBy'] : '';
 
         $createdAt = $row['createdAt'] instanceof DateTimeImmutable
             ? $row['createdAt']
@@ -125,10 +125,10 @@ final class ReportRepository implements ReportRepositoryInterface
             : new DateTimeImmutable();
 
         /** @var array<string, null|string[]> $filtersRaw */
-        $filtersRaw = is_array($row['filters']) ? $row['filters'] : [];
+        $filtersRaw = \is_array($row['filters']) ? $row['filters'] : [];
 
         /** @var string[] $groupByRaw */
-        $groupByRaw = is_array($row['groupBy']) ? $row['groupBy'] : [];
+        $groupByRaw = \is_array($row['groupBy']) ? $row['groupBy'] : [];
 
         return Report::restore(
             id: $id,

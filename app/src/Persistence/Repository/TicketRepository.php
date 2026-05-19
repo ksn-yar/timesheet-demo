@@ -117,7 +117,8 @@ class TicketRepository extends ServiceEntityRepository
             ->andWhere('t.rate = :rateId')
             ->setParameter('rateId', $rateId)
             ->getQuery()
-            ->getSingleScalarResult() > 0;
+            ->getSingleScalarResult() > 0
+        ;
     }
 
     /** Проверяет наличие тикетов, привязанных к виду работ, через DQL. */
@@ -128,7 +129,8 @@ class TicketRepository extends ServiceEntityRepository
             ->andWhere('t.work = :workId')
             ->setParameter('workId', $workId)
             ->getQuery()
-            ->getSingleScalarResult() > 0;
+            ->getSingleScalarResult() > 0
+        ;
     }
 
     /** Проверяет существование тикета по источнику импорта и внешнему идентификатору. */
@@ -151,12 +153,12 @@ class TicketRepository extends ServiceEntityRepository
      * Выбирает денормализованные проекции тикетов для формирования отчёта.
      * Параметры являются примитивами, чтобы не создавать зависимость на другие Bounded Contexts.
      *
-     * @param string[]|null $employeeIds
-     * @param string[]|null $groupIds
-     * @param string[]|null $projectIds
-     * @param string[]|null $crIds
-     * @param string[]|null $taskIds
-     * @param string[]|null $workIds
+     * @param null|string[] $employeeIds
+     * @param null|string[] $groupIds
+     * @param null|string[] $projectIds
+     * @param null|string[] $crIds
+     * @param null|string[] $taskIds
+     * @param null|string[] $workIds
      *
      * @return array<int, array<string, mixed>>
      */

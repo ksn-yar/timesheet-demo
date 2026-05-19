@@ -16,6 +16,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера создания группы.
  * Проверяет HTTP-статусы и обработку исключений дублирования.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class CreateGroupControllerTest extends TestCase
 {

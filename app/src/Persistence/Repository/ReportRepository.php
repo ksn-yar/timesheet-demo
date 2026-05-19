@@ -60,7 +60,6 @@ class ReportRepository extends ServiceEntityRepository
 
         $this->applyCriteria($qb, $criteria);
 
-        /** @var array<int, array<string, mixed>> */
         return $qb
             ->orderBy('r.createdAt', 'DESC')
             ->setFirstResult(($page - 1) * $perPage)

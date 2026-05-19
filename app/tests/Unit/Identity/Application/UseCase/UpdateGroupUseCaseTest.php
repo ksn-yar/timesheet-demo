@@ -16,7 +16,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case обновления атрибутов группы. */
+/**
+ * Тесты Use Case обновления атрибутов группы.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class UpdateGroupUseCaseTest extends TestCase
 {
     private const string GROUP_ID = '550e8400-e29b-41d4-a716-446655440002';
@@ -32,22 +38,26 @@ final class UpdateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($group);
+            ->willReturn($group)
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('existsByName')
             ->with('Новое имя')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('save')
-            ->with($group);
+            ->with($group)
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new UpdateGroupUseCase($groupRepository, $eventDispatcher);
         $useCase->execute(new UpdateGroupInputDto(groupId: self::GROUP_ID, name: 'Новое имя', description: null));
@@ -61,11 +71,13 @@ final class UpdateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new UpdateGroupUseCase(
             $groupRepository,
@@ -87,17 +99,20 @@ final class UpdateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($group);
+            ->willReturn($group)
+        ;
 
         $groupRepository
             ->expects($this->once())
             ->method('existsByName')
             ->with('Новое имя')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new UpdateGroupUseCase(
             $groupRepository,
@@ -119,15 +134,18 @@ final class UpdateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($group);
+            ->willReturn($group)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('existsByName');
+            ->method('existsByName')
+        ;
 
         $groupRepository
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new UpdateGroupUseCase(
             $groupRepository,
@@ -153,9 +171,10 @@ final class UpdateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function () use (&$saveCallOrder): void {
+            ->willReturnCallback(static function () use (&$saveCallOrder): void {
                 $saveCallOrder = 1;
-            });
+            })
+        ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -163,10 +182,11 @@ final class UpdateGroupUseCaseTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(function (object $event) use (&$saveCallOrder, &$dispatchCallOrder): object {
                 $this->assertGreaterThan(0, $saveCallOrder, 'dispatch() вызван до save()');
-                $dispatchCallOrder++;
+                ++$dispatchCallOrder;
 
                 return $event;
-            });
+            })
+        ;
 
         $useCase = new UpdateGroupUseCase($groupRepository, $eventDispatcher);
         $useCase->execute(new UpdateGroupInputDto(groupId: self::GROUP_ID, name: 'Новое имя', description: null));

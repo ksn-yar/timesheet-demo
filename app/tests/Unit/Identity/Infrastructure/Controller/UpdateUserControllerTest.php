@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера обновления пользователя.
  * Проверяет фиксированный текст ошибки 404 и обработку EntityDeletedException.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class UpdateUserControllerTest extends TestCase
 {

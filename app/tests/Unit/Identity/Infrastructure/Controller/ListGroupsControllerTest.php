@@ -18,24 +18,13 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера получения списка групп.
  * Требует мок-контейнера, так как контроллер вызывает $this->json() из AbstractController.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class ListGroupsControllerTest extends TestCase
 {
-    private function buildController(
-        ListGroupsUseCaseInterface $useCase,
-        ListGroupsPresenterInterface $presenter,
-    ): ListGroupsController {
-        $controller = new ListGroupsController($useCase, new ListGroupsInputTransformer(), $presenter);
-
-        // json() из AbstractController обращается к контейнеру.
-        // Мок с has()=false вынуждает метод вернуть new JsonResponse($data) напрямую.
-        $container = $this->createStub(ContainerInterface::class);
-        $container->method('has')->willReturn(false);
-        $controller->setContainer($container);
-
-        return $controller;
-    }
-
     #[Test]
     public function returnsOkWithPresenterResponse(): void
     {
@@ -59,10 +48,26 @@ class ListGroupsControllerTest extends TestCase
         $presenter = $this->createMock(ListGroupsPresenterInterface::class);
         $presenter->expects($this->once())
             ->method('getResponseDto')
-            ->willReturn(new GroupListResponseDto([], 0, 1, 20));
+            ->willReturn(new GroupListResponseDto([], 0, 1, 20))
+        ;
 
         $controller = $this->buildController($useCase, $presenter);
 
         $controller(new ListGroupsRequestDto());
+    }
+
+    private function buildController(
+        ListGroupsUseCaseInterface $useCase,
+        ListGroupsPresenterInterface $presenter,
+    ): ListGroupsController {
+        $controller = new ListGroupsController($useCase, new ListGroupsInputTransformer(), $presenter);
+
+        // json() из AbstractController обращается к контейнеру.
+        // Мок с has()=false вынуждает метод вернуть new JsonResponse($data) напрямую.
+        $container = $this->createStub(ContainerInterface::class);
+        $container->method('has')->willReturn(false);
+        $controller->setContainer($container);
+
+        return $controller;
     }
 }

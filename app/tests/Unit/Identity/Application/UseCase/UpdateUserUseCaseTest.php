@@ -17,7 +17,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case обновления атрибутов пользователя. */
+/**
+ * Тесты Use Case обновления атрибутов пользователя.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class UpdateUserUseCaseTest extends TestCase
 {
     private const string USER_ID = '550e8400-e29b-41d4-a716-446655440001';
@@ -33,16 +39,19 @@ final class UpdateUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->with($user);
+            ->with($user)
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new UpdateUserUseCase($userRepository, $eventDispatcher);
         $useCase->execute(new UpdateUserInputDto(
@@ -61,11 +70,13 @@ final class UpdateUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('findById')
-            ->willReturn(null);
+            ->willReturn(null)
+        ;
 
         $userRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new UpdateUserUseCase(
             $userRepository,
@@ -96,9 +107,10 @@ final class UpdateUserUseCaseTest extends TestCase
         $userRepository
             ->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function () use (&$saveCallOrder): void {
+            ->willReturnCallback(static function () use (&$saveCallOrder): void {
                 $saveCallOrder = 1;
-            });
+            })
+        ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -106,10 +118,11 @@ final class UpdateUserUseCaseTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(function (object $event) use (&$saveCallOrder, &$dispatchCallOrder): object {
                 $this->assertGreaterThan(0, $saveCallOrder, 'dispatch() вызван до save()');
-                $dispatchCallOrder++;
+                ++$dispatchCallOrder;
 
                 return $event;
-            });
+            })
+        ;
 
         $useCase = new UpdateUserUseCase($userRepository, $eventDispatcher);
         $useCase->execute(new UpdateUserInputDto(

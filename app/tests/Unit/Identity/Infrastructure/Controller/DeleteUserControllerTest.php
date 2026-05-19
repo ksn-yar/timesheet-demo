@@ -17,6 +17,10 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Тесты контроллера удаления пользователя.
  * Проверяет фиксированный текст ошибки 404 и обработку 422-исключений.
+ *
+ * @internal
+ *
+ * @coversNothing
  */
 class DeleteUserControllerTest extends TestCase
 {

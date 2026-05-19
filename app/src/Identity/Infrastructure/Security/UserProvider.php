@@ -28,11 +28,11 @@ final readonly class UserProvider implements UserProviderInterface
         $user = $this->userRepository->findByEmail($identifier);
 
         if (null === $user) {
-            throw new UserNotFoundException(sprintf('Пользователь с email "%s" не найден.', $identifier));
+            throw new UserNotFoundException(\sprintf('Пользователь с email "%s" не найден.', $identifier));
         }
 
         if (!$user->isActive()) {
-            throw new UserNotFoundException(sprintf('Пользователь "%s" деактивирован.', $identifier));
+            throw new UserNotFoundException(\sprintf('Пользователь "%s" деактивирован.', $identifier));
         }
 
         return $user;
@@ -41,7 +41,7 @@ final readonly class UserProvider implements UserProviderInterface
     public function refreshUser(UserInterface $user): UserInterface
     {
         if (!$user instanceof User) {
-            throw new UnsupportedUserException(sprintf('Тип "%s" не поддерживается.', $user::class));
+            throw new UnsupportedUserException(\sprintf('Тип "%s" не поддерживается.', $user::class));
         }
 
         return $this->loadUserByIdentifier($user->getUserIdentifier());

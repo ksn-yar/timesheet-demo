@@ -16,7 +16,13 @@ use DateTimeImmutable;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/** Тесты Use Case получения списка групп с пагинацией. */
+/**
+ * Тесты Use Case получения списка групп с пагинацией.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ListGroupsUseCaseTest extends TestCase
 {
     private const string GROUP_ID = '550e8400-e29b-41d4-a716-446655440002';
@@ -49,7 +55,8 @@ final class ListGroupsUseCaseTest extends TestCase
                 $this->assertSame(self::GROUP_ID_2, $dto->items[1]->id);
 
                 return true;
-            }));
+            }))
+        ;
 
         $useCase = new ListGroupsUseCase($groupRepository, $presenter);
         $useCase->execute(new ListGroupsInputDto(page: 1, perPage: 20));
@@ -73,7 +80,8 @@ final class ListGroupsUseCaseTest extends TestCase
                 $this->assertSame(0, $dto->total);
 
                 return true;
-            }));
+            }))
+        ;
 
         $useCase = new ListGroupsUseCase($groupRepository, $presenter);
         $useCase->execute(new ListGroupsInputDto(page: 1, perPage: 20));
@@ -87,7 +95,8 @@ final class ListGroupsUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('findAll')
             ->with($this->equalTo([]), 2, 5)
-            ->willReturn(['items' => [], 'total' => 0]);
+            ->willReturn(['items' => [], 'total' => 0])
+        ;
 
         $useCase = new ListGroupsUseCase(
             $groupRepository,

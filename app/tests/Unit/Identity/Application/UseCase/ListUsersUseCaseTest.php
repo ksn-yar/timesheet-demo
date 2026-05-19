@@ -18,7 +18,13 @@ use App\Identity\Domain\ValueObject\UserId;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-/** Тесты Use Case получения списка пользователей с пагинацией и фильтрацией. */
+/**
+ * Тесты Use Case получения списка пользователей с пагинацией и фильтрацией.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class ListUsersUseCaseTest extends TestCase
 {
     private const string USER_ID = '550e8400-e29b-41d4-a716-446655440001';
@@ -53,7 +59,8 @@ final class ListUsersUseCaseTest extends TestCase
                 $this->assertSame(self::USER_ID_2, $dto->items[1]->id);
 
                 return true;
-            }));
+            }))
+        ;
 
         $useCase = new ListUsersUseCase($userRepository, $presenter);
         $useCase->execute(new ListUsersInputDto(page: 1, perPage: 20));
@@ -67,7 +74,8 @@ final class ListUsersUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('findAll')
             ->with($this->equalTo(['groupId' => self::GROUP_ID]), 1, 20)
-            ->willReturn(['items' => [], 'total' => 0]);
+            ->willReturn(['items' => [], 'total' => 0])
+        ;
 
         $useCase = new ListUsersUseCase(
             $userRepository,
@@ -85,7 +93,8 @@ final class ListUsersUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('findAll')
             ->with($this->equalTo(['isActive' => true]), 1, 20)
-            ->willReturn(['items' => [], 'total' => 0]);
+            ->willReturn(['items' => [], 'total' => 0])
+        ;
 
         $useCase = new ListUsersUseCase(
             $userRepository,
@@ -103,7 +112,8 @@ final class ListUsersUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('findAll')
             ->with($this->equalTo([]), 1, 20)
-            ->willReturn(['items' => [], 'total' => 0]);
+            ->willReturn(['items' => [], 'total' => 0])
+        ;
 
         $useCase = new ListUsersUseCase(
             $userRepository,
@@ -137,7 +147,8 @@ final class ListUsersUseCaseTest extends TestCase
                 $this->assertSame(0, $dto->total);
 
                 return true;
-            }));
+            }))
+        ;
 
         $useCase = new ListUsersUseCase($userRepository, $presenter);
         $useCase->execute(new ListUsersInputDto(page: 1, perPage: 20));

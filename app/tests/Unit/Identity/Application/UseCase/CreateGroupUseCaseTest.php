@@ -15,7 +15,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-/** Тесты Use Case создания группы. */
+/**
+ * Тесты Use Case создания группы.
+ *
+ * @internal
+ *
+ * @coversNothing
+ */
 final class CreateGroupUseCaseTest extends TestCase
 {
     private const string GROUP_ID = '550e8400-e29b-41d4-a716-446655440002';
@@ -30,15 +36,18 @@ final class CreateGroupUseCaseTest extends TestCase
             ->expects($this->once())
             ->method('existsByName')
             ->with('Разработка')
-            ->willReturn(false);
+            ->willReturn(false)
+        ;
 
         $groupRepository
             ->expects($this->once())
-            ->method('save');
+            ->method('save')
+        ;
 
         $eventDispatcher
             ->expects($this->atLeastOnce())
-            ->method('dispatch');
+            ->method('dispatch')
+        ;
 
         $useCase = new CreateGroupUseCase($groupRepository, $eventDispatcher);
         $useCase->execute(new CreateGroupInputDto(name: 'Разработка', description: null));
@@ -52,11 +61,13 @@ final class CreateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('existsByName')
-            ->willReturn(true);
+            ->willReturn(true)
+        ;
 
         $groupRepository
             ->expects($this->never())
-            ->method('save');
+            ->method('save')
+        ;
 
         $useCase = new CreateGroupUseCase(
             $groupRepository,
@@ -80,9 +91,10 @@ final class CreateGroupUseCaseTest extends TestCase
         $groupRepository
             ->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function () use (&$saveCallOrder): void {
+            ->willReturnCallback(static function () use (&$saveCallOrder): void {
                 $saveCallOrder = 1;
-            });
+            })
+        ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
@@ -90,10 +102,11 @@ final class CreateGroupUseCaseTest extends TestCase
             ->method('dispatch')
             ->willReturnCallback(function (object $event) use (&$saveCallOrder, &$dispatchCallOrder): object {
                 $this->assertGreaterThan(0, $saveCallOrder, 'dispatch() вызван до save()');
-                $dispatchCallOrder++;
+                ++$dispatchCallOrder;
 
                 return $event;
-            });
+            })
+        ;
 
         $useCase = new CreateGroupUseCase($groupRepository, $eventDispatcher);
         $useCase->execute(new CreateGroupInputDto(name: 'Разработка', description: null));
