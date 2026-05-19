@@ -8,6 +8,7 @@ use App\Identity\Application\Dto\ChangeUserGroupInputDto;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
 use App\Identity\Domain\Exception\UserNotFoundException;
+use App\Identity\Application\Port\ChangeUserGroupUseCaseInterface;
 use App\Identity\Domain\Repository\GroupRepositoryInterface;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
 use App\Identity\Domain\ValueObject\GroupId;
@@ -15,7 +16,7 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case изменения принадлежности пользователя к группе. Объединяет назначение и снятие. */
-final readonly class ChangeUserGroupUseCase
+final readonly class ChangeUserGroupUseCase implements ChangeUserGroupUseCaseInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\UpdateGroupUseCase;
+use App\Identity\Application\Port\UpdateGroupUseCaseInterface;
 use App\Identity\Domain\Exception\DuplicateGroupNameException;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
@@ -50,7 +50,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UpdateGroupController extends AbstractController
 {
     public function __construct(
-        private readonly UpdateGroupUseCase $useCase,
+        private readonly UpdateGroupUseCaseInterface $useCase,
         private readonly UpdateGroupInputTransformer $transformer,
     ) {}
 

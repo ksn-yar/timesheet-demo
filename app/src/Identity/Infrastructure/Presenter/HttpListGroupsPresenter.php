@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Identity\Infrastructure\Presenter;
 
 use App\Identity\Application\Dto\ListGroupsOutputDto;
-use App\Identity\Application\Port\ListGroupsOutputPortInterface;
 use App\Identity\Infrastructure\Dto\GroupListResponseDto;
 use App\Identity\Infrastructure\Dto\GroupResponseDto;
 use LogicException;
 
 /** HTTP-презентер результата Use Case получения списка групп. Формирует Response DTO. */
-final class HttpListGroupsPresenter implements ListGroupsOutputPortInterface
+final class HttpListGroupsPresenter implements ListGroupsPresenterInterface
 {
     private ?ListGroupsOutputDto $dto = null;
 

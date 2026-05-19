@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\ListUsersUseCase;
+use App\Identity\Application\Port\ListUsersUseCaseInterface;
 use App\Identity\Infrastructure\Dto\ListUsersRequestDto;
 use App\Identity\Infrastructure\Dto\UserListResponseDto;
-use App\Identity\Infrastructure\Presenter\HttpListUsersPresenter;
+use App\Identity\Infrastructure\Presenter\ListUsersPresenterInterface;
 use App\Identity\Infrastructure\Transformer\ListUsersInputTransformer;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,9 +36,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ListUsersController extends AbstractController
 {
     public function __construct(
-        private readonly ListUsersUseCase $useCase,
+        private readonly ListUsersUseCaseInterface $useCase,
         private readonly ListUsersInputTransformer $transformer,
-        private readonly HttpListUsersPresenter $presenter,
+        private readonly ListUsersPresenterInterface $presenter,
     ) {}
 
     public function __invoke(

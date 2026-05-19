@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\CreateGroupUseCase;
+use App\Identity\Application\Port\CreateGroupUseCaseInterface;
 use App\Identity\Domain\Exception\DuplicateGroupNameException;
 use App\Identity\Infrastructure\Dto\CreateGroupRequestDto;
 use App\Identity\Infrastructure\Transformer\CreateGroupInputTransformer;
@@ -41,7 +41,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CreateGroupController extends AbstractController
 {
     public function __construct(
-        private readonly CreateGroupUseCase $useCase,
+        private readonly CreateGroupUseCaseInterface $useCase,
         private readonly CreateGroupInputTransformer $transformer,
     ) {}
 

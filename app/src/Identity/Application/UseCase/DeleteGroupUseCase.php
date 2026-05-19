@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Identity\Application\UseCase;
 
 use App\Identity\Application\Dto\DeleteGroupInputDto;
+use App\Identity\Application\Port\DeleteGroupUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupHasActiveUsersException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
@@ -14,7 +15,7 @@ use App\Identity\Domain\ValueObject\GroupId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case мягкого удаления группы. */
-final readonly class DeleteGroupUseCase
+final readonly class DeleteGroupUseCase implements DeleteGroupUseCaseInterface
 {
     public function __construct(
         private GroupRepositoryInterface $groupRepository,

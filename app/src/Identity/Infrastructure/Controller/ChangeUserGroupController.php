@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\ChangeUserGroupUseCase;
+use App\Identity\Application\Port\ChangeUserGroupUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
 use App\Identity\Domain\Exception\UserNotFoundException;
@@ -50,7 +50,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ChangeUserGroupController extends AbstractController
 {
     public function __construct(
-        private readonly ChangeUserGroupUseCase $useCase,
+        private readonly ChangeUserGroupUseCaseInterface $useCase,
         private readonly ChangeUserGroupInputTransformer $transformer,
     ) {}
 

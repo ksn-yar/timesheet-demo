@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\ListGroupsUseCase;
+use App\Identity\Application\Port\ListGroupsUseCaseInterface;
 use App\Identity\Infrastructure\Dto\GroupListResponseDto;
 use App\Identity\Infrastructure\Dto\ListGroupsRequestDto;
-use App\Identity\Infrastructure\Presenter\HttpListGroupsPresenter;
+use App\Identity\Infrastructure\Presenter\ListGroupsPresenterInterface;
 use App\Identity\Infrastructure\Transformer\ListGroupsInputTransformer;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,9 +33,9 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ListGroupsController extends AbstractController
 {
     public function __construct(
-        private readonly ListGroupsUseCase $useCase,
+        private readonly ListGroupsUseCaseInterface $useCase,
         private readonly ListGroupsInputTransformer $transformer,
-        private readonly HttpListGroupsPresenter $presenter,
+        private readonly ListGroupsPresenterInterface $presenter,
     ) {}
 
     public function __invoke(

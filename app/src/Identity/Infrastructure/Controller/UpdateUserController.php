@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\UpdateUserUseCase;
+use App\Identity\Application\Port\UpdateUserUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\UserNotFoundException;
 use App\Identity\Infrastructure\Dto\UpdateUserRequestDto;
@@ -49,7 +49,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class UpdateUserController extends AbstractController
 {
     public function __construct(
-        private readonly UpdateUserUseCase $useCase,
+        private readonly UpdateUserUseCaseInterface $useCase,
         private readonly UpdateUserInputTransformer $transformer,
     ) {}
 

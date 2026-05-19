@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Identity\Application\UseCase;
 
 use App\Identity\Application\Dto\CreateUserInputDto;
+use App\Identity\Application\Port\CreateUserUseCaseInterface;
 use App\Identity\Application\Port\PasswordHasherInterface;
 use App\Identity\Domain\Entity\User;
 use App\Identity\Domain\Enum\SystemRole;
@@ -19,7 +20,7 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case создания нового пользователя. */
-final readonly class CreateUserUseCase
+final readonly class CreateUserUseCase implements CreateUserUseCaseInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

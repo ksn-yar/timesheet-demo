@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\DeleteGroupUseCase;
+use App\Identity\Application\Port\DeleteGroupUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupHasActiveUsersException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
@@ -44,7 +44,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DeleteGroupController extends AbstractController
 {
     public function __construct(
-        private readonly DeleteGroupUseCase $useCase,
+        private readonly DeleteGroupUseCaseInterface $useCase,
         private readonly DeleteGroupInputTransformer $transformer,
     ) {}
 

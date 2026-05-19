@@ -8,11 +8,12 @@ use App\Identity\Application\Dto\ListUsersInputDto;
 use App\Identity\Application\Dto\ListUsersOutputDto;
 use App\Identity\Application\Dto\UserItemDto;
 use App\Identity\Application\Port\ListUsersOutputPortInterface;
+use App\Identity\Application\Port\ListUsersUseCaseInterface;
 use App\Identity\Domain\Entity\User;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
 
 /** Use Case получения списка пользователей с пагинацией и фильтрацией. */
-final readonly class ListUsersUseCase
+final readonly class ListUsersUseCase implements ListUsersUseCaseInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\DeactivateUserUseCase;
+use App\Identity\Application\Port\DeactivateUserUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\UserAlreadyDeactivatedException;
 use App\Identity\Domain\Exception\UserNotFoundException;
@@ -44,7 +44,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DeactivateUserController extends AbstractController
 {
     public function __construct(
-        private readonly DeactivateUserUseCase $useCase,
+        private readonly DeactivateUserUseCaseInterface $useCase,
         private readonly DeactivateUserInputTransformer $transformer,
     ) {}
 

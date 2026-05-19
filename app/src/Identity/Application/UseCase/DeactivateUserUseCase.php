@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Identity\Application\UseCase;
 
 use App\Identity\Application\Dto\DeactivateUserInputDto;
+use App\Identity\Application\Port\DeactivateUserUseCaseInterface;
 use App\Identity\Domain\Exception\UserNotFoundException;
 use App\Identity\Domain\Repository\UserRepositoryInterface;
 use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case деактивации пользователя. */
-final readonly class DeactivateUserUseCase
+final readonly class DeactivateUserUseCase implements DeactivateUserUseCaseInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

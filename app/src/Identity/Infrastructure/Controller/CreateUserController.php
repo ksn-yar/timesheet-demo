@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\CreateUserUseCase;
+use App\Identity\Application\Port\CreateUserUseCaseInterface;
 use App\Identity\Domain\Exception\DuplicateEmailException;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\GroupNotFoundException;
@@ -43,7 +43,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class CreateUserController extends AbstractController
 {
     public function __construct(
-        private readonly CreateUserUseCase $useCase,
+        private readonly CreateUserUseCaseInterface $useCase,
         private readonly CreateUserInputTransformer $transformer,
     ) {}
 

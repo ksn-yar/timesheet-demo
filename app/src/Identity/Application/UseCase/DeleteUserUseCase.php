@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Identity\Application\UseCase;
 
 use App\Identity\Application\Dto\DeleteUserInputDto;
+use App\Identity\Application\Port\DeleteUserUseCaseInterface;
 use App\Identity\Application\Port\TicketExistenceCheckerInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\UserHasLinkedTicketsException;
@@ -14,7 +15,7 @@ use App\Identity\Domain\ValueObject\UserId;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /** Use Case мягкого удаления пользователя. */
-final readonly class DeleteUserUseCase
+final readonly class DeleteUserUseCase implements DeleteUserUseCaseInterface
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,

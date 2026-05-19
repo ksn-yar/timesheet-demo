@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Identity\Infrastructure\Presenter;
 
 use App\Identity\Application\Dto\ListUsersOutputDto;
-use App\Identity\Application\Port\ListUsersOutputPortInterface;
 use App\Identity\Domain\Enum\SystemRole;
 use App\Identity\Infrastructure\Dto\UserListResponseDto;
 use App\Identity\Infrastructure\Dto\UserResponseDto;
 use LogicException;
 
 /** HTTP-презентер результата Use Case получения списка пользователей. Формирует Response DTO. */
-final class HttpListUsersPresenter implements ListUsersOutputPortInterface
+final class HttpListUsersPresenter implements ListUsersPresenterInterface
 {
     private ?ListUsersOutputDto $dto = null;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Identity\Infrastructure\Controller;
 
-use App\Identity\Application\UseCase\DeleteUserUseCase;
+use App\Identity\Application\Port\DeleteUserUseCaseInterface;
 use App\Identity\Domain\Exception\EntityDeletedException;
 use App\Identity\Domain\Exception\UserHasLinkedTicketsException;
 use App\Identity\Domain\Exception\UserNotFoundException;
@@ -44,7 +44,7 @@ use Symfony\Component\Routing\Attribute\Route;
 final class DeleteUserController extends AbstractController
 {
     public function __construct(
-        private readonly DeleteUserUseCase $useCase,
+        private readonly DeleteUserUseCaseInterface $useCase,
         private readonly DeleteUserInputTransformer $transformer,
     ) {}
 

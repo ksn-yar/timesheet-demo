@@ -8,11 +8,12 @@ use App\Identity\Application\Dto\GroupItemDto;
 use App\Identity\Application\Dto\ListGroupsInputDto;
 use App\Identity\Application\Dto\ListGroupsOutputDto;
 use App\Identity\Application\Port\ListGroupsOutputPortInterface;
+use App\Identity\Application\Port\ListGroupsUseCaseInterface;
 use App\Identity\Domain\Entity\Group;
 use App\Identity\Domain\Repository\GroupRepositoryInterface;
 
 /** Use Case получения списка групп с пагинацией. */
-final readonly class ListGroupsUseCase
+final readonly class ListGroupsUseCase implements ListGroupsUseCaseInterface
 {
     public function __construct(
         private GroupRepositoryInterface $groupRepository,
