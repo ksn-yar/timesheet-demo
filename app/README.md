@@ -44,6 +44,7 @@
 | `nelmio/api-doc-bundle`               | Автоматическая генерация OpenAPI-документации из аннотаций и атрибутов.       |
 | `phpoffice/phpspreadsheet`            | Создание и обработка файлов Excel (XLSX, CSV и др.).                          |
 | `symfony/asset`                       | Управление URL статических ресурсов с версионированием.                       |
+| `symfony/asset-mapper`                | Управление JS/CSS-ресурсами без сборщика через ImportMap (ESM).               |
 | `symfony/console`                     | Инфраструктура для создания CLI-команд.                                       |
 | `symfony/dotenv`                      | Загрузка переменных окружения из `.env`-файлов.                               |
 | `symfony/flex`                        | Менеджер рецептов Symfony для автоматической настройки пакетов.               |
@@ -56,6 +57,8 @@
 | `symfony/security-bundle`             | Аутентификация и авторизация пользователей.                                   |
 | `symfony/serializer`                  | Сериализация и десериализация объектов в JSON, XML и другие форматы.          |
 | `symfony/twig-bundle`                 | Интеграция шаблонизатора Twig с Symfony.                                      |
+| `twig/twig`                           | Шаблонизатор Twig — ядро движка шаблонов.                                     |
+| `twig/extra-bundle`                   | Дополнительные расширения Twig (intl, markdown, string и др.).                |
 | `symfony/uid`                         | Генерация и работа с UUID/ULID идентификаторами.                              |
 | `symfony/validator`                   | Валидация данных через атрибуты и ограничения.                                |
 | `symfony/yaml`                        | Разбор и генерация YAML-файлов.                                               |
