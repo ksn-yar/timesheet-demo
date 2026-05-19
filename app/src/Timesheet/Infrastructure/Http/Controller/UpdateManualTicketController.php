@@ -34,7 +34,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_FORBIDDEN, description: 'Нарушение прав доступа.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Тикет не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/api/timesheet/tickets/{id}', name: 'timesheet_update_ticket', methods: ['PUT'])]
+#[Route('/timesheet/tickets/{id}', name: 'timesheet_update_ticket', methods: ['PUT'])]
 final class UpdateManualTicketController extends AbstractController
 {
     public function __construct(

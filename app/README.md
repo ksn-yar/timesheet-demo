@@ -30,6 +30,15 @@
 | **RabbitMQ**   | Брокер сообщений для асинхронной обработки событий    |
 | **SMTP**       | Отправка email через `symfony/mailer`                 |
 
+## Frontend-зависимости (ImportMap)
+
+| Пакет                            | Версия | Тип        | Описание                                      |
+|----------------------------------|--------|------------|-----------------------------------------------|
+| `app`                            | —      | entrypoint | Точка входа JS (`assets/app.js`)              |
+| `bootstrap`                      | 5.3.8  | js         | CSS-фреймворк Bootstrap                       |
+| `@popperjs/core`                 | 2.11.8 | js         | Позиционирование всплывающих элементов (зависимость Bootstrap) |
+| `bootstrap/dist/css/bootstrap.min.css` | 5.3.8 | css   | Минифицированные стили Bootstrap              |
+
 ## Пакеты Composer
 
 ### Production

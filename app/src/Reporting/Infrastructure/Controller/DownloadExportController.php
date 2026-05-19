@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_NOT_FOUND,
     description: 'Выгрузка не найдена.',
 )]
-#[Route('/api/reporting/exports/{id}/download', name: 'reporting_download_export', methods: ['GET'])]
+#[Route('/reporting/exports/{id}/download', name: 'reporting_download_export', methods: ['GET'])]
 final class DownloadExportController extends AbstractController
 {
     public function __construct(

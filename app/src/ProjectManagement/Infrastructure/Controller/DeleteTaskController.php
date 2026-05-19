@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Задача успешно удалена.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Задача не найдена.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/api/project-management/tasks/{id}', name: 'project_management_delete_task', methods: ['DELETE'])]
+#[Route('/project-management/tasks/{id}', name: 'project_management_delete_task', methods: ['DELETE'])]
 final class DeleteTaskController extends AbstractController
 {
     public function __construct(

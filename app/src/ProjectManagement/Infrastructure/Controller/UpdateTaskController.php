@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Задача успешно обновлена.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Задача не найдена.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/api/project-management/tasks/{id}', name: 'project_management_update_task', methods: ['PUT'])]
+#[Route('/project-management/tasks/{id}', name: 'project_management_update_task', methods: ['PUT'])]
 final class UpdateTaskController extends AbstractController
 {
     public function __construct(

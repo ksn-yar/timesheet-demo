@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\Response(response: Response::HTTP_FORBIDDEN, description: 'Нарушение прав доступа.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Тикет не найден.')]
-#[Route('/api/timesheet/tickets/{id}', name: 'timesheet_get_ticket', methods: ['GET'])]
+#[Route('/timesheet/tickets/{id}', name: 'timesheet_get_ticket', methods: ['GET'])]
 final class GetTicketController extends AbstractController
 {
     public function __construct(

@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/identity/users', name: 'identity_create_user', methods: ['POST'])]
+#[Route('/identity/users', name: 'identity_create_user', methods: ['POST'])]
 final class CreateUserController extends AbstractController
 {
     public function __construct(

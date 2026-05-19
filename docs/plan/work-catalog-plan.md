@@ -481,16 +481,16 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута | Права |
 |---|---|---|---|---|
-| POST | `/api/work-catalog/works` | `CreateWorkController` | `work_catalog_create_work` | Admin |
-| GET | `/api/work-catalog/works` | `ListWorksController` | `work_catalog_list_works` | Admin, Manager, Employee |
-| DELETE | `/api/work-catalog/works/{id}` | `DeleteWorkController` | `work_catalog_delete_work` | Admin |
-| POST | `/api/work-catalog/roles` | `CreateRoleController` | `work_catalog_create_role` | Admin |
-| GET | `/api/work-catalog/roles` | `ListRolesController` | `work_catalog_list_roles` | Admin |
-| DELETE | `/api/work-catalog/roles/{id}` | `DeleteRoleController` | `work_catalog_delete_role` | Admin |
-| POST | `/api/work-catalog/rates` | `CreateRateController` | `work_catalog_create_rate` | Admin |
-| GET | `/api/work-catalog/rates` | `ListRatesController` | `work_catalog_list_rates` | Admin |
-| PUT | `/api/work-catalog/rates/{id}` | `UpdateRateController` | `work_catalog_update_rate` | Admin |
-| DELETE | `/api/work-catalog/rates/{id}` | `DeleteRateController` | `work_catalog_delete_rate` | Admin |
+| POST | `/work-catalog/works` | `CreateWorkController` | `work_catalog_create_work` | Admin |
+| GET | `/work-catalog/works` | `ListWorksController` | `work_catalog_list_works` | Admin, Manager, Employee |
+| DELETE | `/work-catalog/works/{id}` | `DeleteWorkController` | `work_catalog_delete_work` | Admin |
+| POST | `/work-catalog/roles` | `CreateRoleController` | `work_catalog_create_role` | Admin |
+| GET | `/work-catalog/roles` | `ListRolesController` | `work_catalog_list_roles` | Admin |
+| DELETE | `/work-catalog/roles/{id}` | `DeleteRoleController` | `work_catalog_delete_role` | Admin |
+| POST | `/work-catalog/rates` | `CreateRateController` | `work_catalog_create_rate` | Admin |
+| GET | `/work-catalog/rates` | `ListRatesController` | `work_catalog_list_rates` | Admin |
+| PUT | `/work-catalog/rates/{id}` | `UpdateRateController` | `work_catalog_update_rate` | Admin |
+| DELETE | `/work-catalog/rates/{id}` | `DeleteRateController` | `work_catalog_delete_rate` | Admin |
 
 ### Request DTO с валидацией
 

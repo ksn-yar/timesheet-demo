@@ -40,7 +40,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/identity/users/{id}/deactivate', name: 'identity_deactivate_user', methods: ['POST'])]
+#[Route('/identity/users/{id}/deactivate', name: 'identity_deactivate_user', methods: ['POST'])]
 final class DeactivateUserController extends AbstractController
 {
     public function __construct(

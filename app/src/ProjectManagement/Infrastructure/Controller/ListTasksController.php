@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список задач.',
     content: new OA\JsonContent(ref: TaskListResponseDto::class),
 )]
-#[Route('/api/project-management/tasks', name: 'project_management_list_tasks', methods: ['GET'])]
+#[Route('/project-management/tasks', name: 'project_management_list_tasks', methods: ['GET'])]
 final class ListTasksController extends AbstractController
 {
     public function __construct(

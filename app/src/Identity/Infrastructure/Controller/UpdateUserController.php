@@ -45,7 +45,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/identity/users/{id}', name: 'identity_update_user', methods: ['PUT'])]
+#[Route('/identity/users/{id}', name: 'identity_update_user', methods: ['PUT'])]
 final class UpdateUserController extends AbstractController
 {
     public function __construct(

@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список пользователей.',
     content: new OA\JsonContent(ref: UserListResponseDto::class),
 )]
-#[Route('/api/identity/users', name: 'identity_list_users', methods: ['GET'])]
+#[Route('/identity/users', name: 'identity_list_users', methods: ['GET'])]
 final class ListUsersController extends AbstractController
 {
     public function __construct(

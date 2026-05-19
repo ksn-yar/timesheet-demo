@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Ошибка бизнес-логики.',
 )]
-#[Route('/api/reporting/reports', name: 'reporting_create_report', methods: ['POST'])]
+#[Route('/reporting/reports', name: 'reporting_create_report', methods: ['POST'])]
 final class CreateReportController extends AbstractController
 {
     public function __construct(

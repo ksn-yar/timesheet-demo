@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список запросов на изменение.',
     content: new OA\JsonContent(ref: ChangeRequestListResponseDto::class),
 )]
-#[Route('/api/project-management/change-requests', name: 'project_management_list_change_requests', methods: ['GET'])]
+#[Route('/project-management/change-requests', name: 'project_management_list_change_requests', methods: ['GET'])]
 final class ListChangeRequestsController extends AbstractController
 {
     public function __construct(

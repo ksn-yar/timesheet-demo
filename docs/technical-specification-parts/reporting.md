@@ -188,10 +188,10 @@
 
 | Операция | Входные данные | Выходные данные | Права |
 |----------|---------------|----------------|-------|
-| Создать Report | `name`, `periodFrom`, `periodTo`, `filters` (опционально), `groupBy` | HTTP 201 с `id` сформированного Report. Полные данные (`data`) доступны через `GET /api/reporting/reports/{id}`. | Manager, Admin |
+| Создать Report | `name`, `periodFrom`, `periodTo`, `filters` (опционально), `groupBy` | HTTP 201 с `id` сформированного Report. Полные данные (`data`) доступны через `GET /reporting/reports/{id}`. | Manager, Admin |
 | Получить Report List | Фильтры: `createdBy`, `periodFrom`, `periodTo`, поиск по `name` (опционально) | Список Report с мета-информацией (без `data`) | Manager, Admin |
 | Получить Report | `id` | Полные данные Report, включая `data` | Manager, Admin |
-| Экспортировать Report | `reportIds[]` (один или несколько), `format` (CSV/XLSX/PDF) | HTTP 201 с `exportId` созданной выгрузки. Файл доступен через `GET /api/reporting/exports/{exportId}/download`. | Manager, Admin |
+| Экспортировать Report | `reportIds[]` (один или несколько), `format` (CSV/XLSX/PDF) | HTTP 201 с `exportId` созданной выгрузки. Файл доступен через `GET /reporting/exports/{exportId}/download`. | Manager, Admin |
 | Получить Exported Reports List | Без обязательных фильтров, опциональный фильтр по `format`, `generatedAt` | Список Report Export с `format`, `generatedAt`, `fileRef` | Manager, Admin |
 
 **Требования к операции Создать Report:**

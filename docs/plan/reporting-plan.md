@@ -462,16 +462,16 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута |
 |---|---|---|---|
-| POST | `/api/reporting/reports` | `CreateReportController` | `reporting_create_report` |
-| GET | `/api/reporting/reports` | `ListReportsController` | `reporting_list_reports` |
-| GET | `/api/reporting/reports/{id}` | `GetReportController` | `reporting_get_report` |
-| POST | `/api/reporting/exports` | `ExportReportsController` | `reporting_export_reports` |
-| GET | `/api/reporting/exports` | `ListExportedReportsController` | `reporting_list_exported_reports` |
-| GET | `/api/reporting/exports/{id}/download` | `DownloadExportController` | `reporting_download_export` |
+| POST | `/reporting/reports` | `CreateReportController` | `reporting_create_report` |
+| GET | `/reporting/reports` | `ListReportsController` | `reporting_list_reports` |
+| GET | `/reporting/reports/{id}` | `GetReportController` | `reporting_get_report` |
+| POST | `/reporting/exports` | `ExportReportsController` | `reporting_export_reports` |
+| GET | `/reporting/exports` | `ListExportedReportsController` | `reporting_list_exported_reports` |
+| GET | `/reporting/exports/{id}/download` | `DownloadExportController` | `reporting_download_export` |
 
 **Примечания к маршрутам:**
-- `POST /api/reporting/reports` -- создание Report, т.к. это ресурсоёмкая операция формирования snapshot
-- `POST /api/reporting/exports` -- генерация файла экспорта
+- `POST /reporting/reports` -- создание Report, т.к. это ресурсоёмкая операция формирования snapshot
+- `POST /reporting/exports` -- генерация файла экспорта
 - `GET .../exports/{id}/download` -- скачивание файла (возвращает BinaryFileResponse)
 
 ### Request DTO с валидацией

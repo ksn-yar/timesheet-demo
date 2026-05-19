@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_NOT_FOUND,
     description: 'Отчёт не найден.',
 )]
-#[Route('/api/reporting/reports/{id}', name: 'reporting_get_report', methods: ['GET'])]
+#[Route('/reporting/reports/{id}', name: 'reporting_get_report', methods: ['GET'])]
 final class GetReportController extends AbstractController
 {
     public function __construct(

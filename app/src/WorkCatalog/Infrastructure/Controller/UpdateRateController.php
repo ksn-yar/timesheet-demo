@@ -49,7 +49,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/work-catalog/rates/{id}', name: 'work_catalog_update_rate', methods: ['PUT'])]
+#[Route('/work-catalog/rates/{id}', name: 'work_catalog_update_rate', methods: ['PUT'])]
 #[IsGranted('ROLE_ADMIN')]
 final class UpdateRateController extends AbstractController
 {

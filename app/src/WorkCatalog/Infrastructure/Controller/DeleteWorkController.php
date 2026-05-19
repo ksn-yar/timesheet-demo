@@ -41,7 +41,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/work-catalog/works/{id}', name: 'work_catalog_delete_work', methods: ['DELETE'])]
+#[Route('/work-catalog/works/{id}', name: 'work_catalog_delete_work', methods: ['DELETE'])]
 #[IsGranted('ROLE_ADMIN')]
 final class DeleteWorkController extends AbstractController
 {

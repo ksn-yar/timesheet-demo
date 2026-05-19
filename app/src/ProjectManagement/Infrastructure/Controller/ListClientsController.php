@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список клиентов.',
     content: new OA\JsonContent(ref: ClientListResponseDto::class),
 )]
-#[Route('/api/project-management/clients', name: 'project_management_list_clients', methods: ['GET'])]
+#[Route('/project-management/clients', name: 'project_management_list_clients', methods: ['GET'])]
 final class ListClientsController extends AbstractController
 {
     public function __construct(

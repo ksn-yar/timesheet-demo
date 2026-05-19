@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список тикетов.',
     content: new OA\JsonContent(ref: TicketListResponseDto::class),
 )]
-#[Route('/api/timesheet/tickets', name: 'timesheet_list_tickets', methods: ['GET'])]
+#[Route('/timesheet/tickets', name: 'timesheet_list_tickets', methods: ['GET'])]
 final class ListTicketsController extends AbstractController
 {
     public function __construct(

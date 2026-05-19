@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Проект успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Проект не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/api/project-management/projects/{id}', name: 'project_management_update_project', methods: ['PUT'])]
+#[Route('/project-management/projects/{id}', name: 'project_management_update_project', methods: ['PUT'])]
 final class UpdateProjectController extends AbstractController
 {
     public function __construct(

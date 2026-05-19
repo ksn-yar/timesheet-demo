@@ -475,15 +475,15 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута |
 |---|---|---|---|
-| POST | `/api/identity/users` | `CreateUserController` | `identity_create_user` |
-| GET | `/api/identity/users` | `ListUsersController` | `identity_list_users` |
-| POST | `/api/identity/users/{id}/deactivate` | `DeactivateUserController` | `identity_deactivate_user` |
-| DELETE | `/api/identity/users/{id}` | `DeleteUserController` | `identity_delete_user` |
-| PUT | `/api/identity/users/{id}/group` | `AssignUserToGroupController` | `identity_assign_user_to_group` |
-| PATCH | `/api/identity/users/{id}/group` | `ChangeUserGroupController` | `identity_change_user_group` |
-| POST | `/api/identity/groups` | `CreateGroupController` | `identity_create_group` |
-| GET | `/api/identity/groups` | `ListGroupsController` | `identity_list_groups` |
-| DELETE | `/api/identity/groups/{id}` | `DeleteGroupController` | `identity_delete_group` |
+| POST | `/identity/users` | `CreateUserController` | `identity_create_user` |
+| GET | `/identity/users` | `ListUsersController` | `identity_list_users` |
+| POST | `/identity/users/{id}/deactivate` | `DeactivateUserController` | `identity_deactivate_user` |
+| DELETE | `/identity/users/{id}` | `DeleteUserController` | `identity_delete_user` |
+| PUT | `/identity/users/{id}/group` | `AssignUserToGroupController` | `identity_assign_user_to_group` |
+| PATCH | `/identity/users/{id}/group` | `ChangeUserGroupController` | `identity_change_user_group` |
+| POST | `/identity/groups` | `CreateGroupController` | `identity_create_group` |
+| GET | `/identity/groups` | `ListGroupsController` | `identity_list_groups` |
+| DELETE | `/identity/groups/{id}` | `DeleteGroupController` | `identity_delete_group` |
 
 **Примечание к маршрутам:**
 - `POST .../deactivate` -- выбран POST, так как деактивация является доменным действием, а не CRUD-операцией

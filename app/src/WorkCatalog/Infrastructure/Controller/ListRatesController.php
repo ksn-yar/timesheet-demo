@@ -32,7 +32,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     description: 'Список ставок.',
     content: new OA\JsonContent(ref: RateListResponseDto::class),
 )]
-#[Route('/api/work-catalog/rates', name: 'work_catalog_list_rates', methods: ['GET'])]
+#[Route('/work-catalog/rates', name: 'work_catalog_list_rates', methods: ['GET'])]
 #[IsGranted('ROLE_ADMIN')]
 final class ListRatesController extends AbstractController
 {

@@ -36,9 +36,9 @@
 - Формат токена и время жизни
 - Механизм обновления токена (refresh)
 
-**Рекомендация:** Определить механизм аутентификации (рекомендуется JWT для stateless API). Добавить Use Cases: `LoginUseCase`, `LogoutUseCase`, `RefreshTokenUseCase`. Добавить API-эндпоинты: `POST /api/auth/login`, `POST /api/auth/logout`, `POST /api/auth/refresh`.
+**Рекомендация:** Определить механизм аутентификации (рекомендуется JWT для stateless API). Добавить Use Cases: `LoginUseCase`, `LogoutUseCase`, `RefreshTokenUseCase`. Добавить API-эндпоинты: `POST /auth/login`, `POST /auth/logout`, `POST /auth/refresh`.
 
-**Решение:** Выбрана statefull система с сессиями, аутентификация по логину и паролю (продукт работает только внутри корпоративной VPN). Добавлены UC-ID-10 (Login), UC-ID-11 (Logout), эндпоинты `POST /api/auth/login` и `POST /api/auth/logout`. RefreshToken не требуется при сессионной модели.
+**Решение:** Выбрана statefull система с сессиями, аутентификация по логину и паролю (продукт работает только внутри корпоративной VPN). Добавлены UC-ID-10 (Login), UC-ID-11 (Logout), эндпоинты `POST /auth/login` и `POST /auth/logout`. RefreshToken не требуется при сессионной модели.
 
 ---
 
@@ -55,9 +55,9 @@
 - Изменить системную роль (повышение/понижение)
 - Назначить или сменить функциональную Role (roleId)
 
-**Рекомендация:** Добавить UC-ID-09 "Обновить User" и API-эндпоинт `PUT /api/identity/users/{id}`. Изменяемые поля: `name`, `systemRole`, `roleId`. Поле `email` -- неизменяемо (является логином). `groupId` изменяется через отдельные UC-ID-03 / UC-ID-07.
+**Рекомендация:** Добавить UC-ID-09 "Обновить User" и API-эндпоинт `PUT /identity/users/{id}`. Изменяемые поля: `name`, `systemRole`, `roleId`. Поле `email` -- неизменяемо (является логином). `groupId` изменяется через отдельные UC-ID-03 / UC-ID-07.
 
-**Решение:** Добавлен UC-ID-08 "Обновить User" (с учётом перенумерации), эндпоинт `PUT /api/identity/users/{id}`. Изменяемые поля: `name`, `systemRole`, `roleId`. Email неизменяем. Добавлено событие `UserUpdated`.
+**Решение:** Добавлен UC-ID-08 "Обновить User" (с учётом перенумерации), эндпоинт `PUT /identity/users/{id}`. Изменяемые поля: `name`, `systemRole`, `roleId`. Email неизменяем. Добавлено событие `UserUpdated`.
 
 ---
 
@@ -69,9 +69,9 @@
 
 **Описание:** В ТЗ определены Use Cases для создания и soft-delete Group, но нет Use Case для обновления атрибутов Group (наименование, описание).
 
-**Рекомендация:** Добавить UC-ID-10 "Обновить Group" и API-эндпоинт `PUT /api/identity/groups/{id}`. Изменяемые поля: `name` (с проверкой уникальности), `description`. PUT-семантика: переданные поля обновляются; не переданные остаются; явный `null` для `description` очищает значение.
+**Рекомендация:** Добавить UC-ID-10 "Обновить Group" и API-эндпоинт `PUT /identity/groups/{id}`. Изменяемые поля: `name` (с проверкой уникальности), `description`. PUT-семантика: переданные поля обновляются; не переданные остаются; явный `null` для `description` очищает значение.
 
-**Решение:** Добавлен UC-ID-09 "Обновить Group" (с учётом перенумерации), эндпоинт `PUT /api/identity/groups/{id}`. Проверка уникальности `name`. Явный `null` для `description` очищает значение. Добавлено событие `GroupUpdated`.
+**Решение:** Добавлен UC-ID-09 "Обновить Group" (с учётом перенумерации), эндпоинт `PUT /identity/groups/{id}`. Проверка уникальности `name`. Явный `null` для `description` очищает значение. Добавлено событие `GroupUpdated`.
 
 ---
 
@@ -89,9 +89,9 @@
 1. Нужно ли отдельное событие для UC-ID-07 (например, `UserGroupChanged`)?
 2. Можно ли объединить UC-ID-03 и UC-ID-07 в один Use Case с опциональным `groupId`?
 
-**Рекомендация:** Объединить в один Use Case `ChangeUserGroupUseCase` с опциональным `groupId`. Если `groupId` передан -- назначить; если `null` -- снять. Один API-эндпоинт `PUT /api/identity/users/{id}/group`. Событие `UserAssignedToGroup` при назначении, отдельное событие `UserRemovedFromGroup` при снятии.
+**Рекомендация:** Объединить в один Use Case `ChangeUserGroupUseCase` с опциональным `groupId`. Если `groupId` передан -- назначить; если `null` -- снять. Один API-эндпоинт `PUT /identity/users/{id}/group`. Событие `UserAssignedToGroup` при назначении, отдельное событие `UserRemovedFromGroup` при снятии.
 
-**Решение:** UC-ID-03 и UC-ID-07 объединены в один UC-ID-03 "Изменить принадлежность User к Group" с опциональным `groupId`. Эндпоинт `PUT /api/identity/users/{id}/group`. При назначении публикуется `UserAssignedToGroup`, при снятии — `UserRemovedFromGroup`.
+**Решение:** UC-ID-03 и UC-ID-07 объединены в один UC-ID-03 "Изменить принадлежность User к Group" с опциональным `groupId`. Эндпоинт `PUT /identity/users/{id}/group`. При назначении публикуется `UserAssignedToGroup`, при снятии — `UserRemovedFromGroup`.
 
 ---
 
@@ -193,13 +193,13 @@
 
 **Раздел ТЗ:** Раздел 5 "API-интерфейсы"
 
-**Описание:** В ТЗ определён только User List, но нет API-эндпоинта для получения одного User по ID (`GET /api/identity/users/{id}`). Аналогично для Group -- нет `GET /api/identity/groups/{id}`.
+**Описание:** В ТЗ определён только User List, но нет API-эндпоинта для получения одного User по ID (`GET /identity/users/{id}`). Аналогично для Group -- нет `GET /identity/groups/{id}`.
 
 Это может потребоваться для:
 - Просмотра профиля пользователя
 - Получения актуальных данных User после обновления
 - Подписчикам событий для запроса полных данных сущности
 
-**Рекомендация:** Добавить API-эндпоинты `GET /api/identity/users/{id}` и `GET /api/identity/groups/{id}`. Добавить Use Cases: `GetUserUseCase`, `GetGroupUseCase`.
+**Рекомендация:** Добавить API-эндпоинты `GET /identity/users/{id}` и `GET /identity/groups/{id}`. Добавить Use Cases: `GetUserUseCase`, `GetGroupUseCase`.
 
-**Решение:** Добавлены UC-ID-14 "Получить User по ID" и UC-ID-15 "Получить Group по ID". Эндпоинты `GET /api/identity/users/{id}` и `GET /api/identity/groups/{id}` добавлены в раздел 5 с правами Admin, Manager.
+**Решение:** Добавлены UC-ID-14 "Получить User по ID" и UC-ID-15 "Получить Group по ID". Эндпоинты `GET /identity/users/{id}` и `GET /identity/groups/{id}` добавлены в раздел 5 с правами Admin, Manager.

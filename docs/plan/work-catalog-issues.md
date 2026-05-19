@@ -36,8 +36,8 @@
 **Вопрос:** Является ли отсутствие Update для Work и Role осознанным решением (справочники не редактируются, только создаются/удаляются), или это пропуск?
 
 **Рекомендация:** Если это пропуск -- добавить Use Cases и API-эндпоинты:
-- UC-WC-09: Обновить Work (PUT `/api/work-catalog/works/{id}`)
-- UC-WC-10: Обновить Role (PUT `/api/work-catalog/roles/{id}`)
+- UC-WC-09: Обновить Work (PUT `/work-catalog/works/{id}`)
+- UC-WC-10: Обновить Role (PUT `/work-catalog/roles/{id}`)
 
 Если осознанное решение -- зафиксировать это в ТЗ явно.
 
@@ -122,7 +122,7 @@ CREATE UNIQUE INDEX uq_roles_name_active ON roles (name) WHERE deleted_at IS NUL
 
 **Описание:** ТЗ определяет List, Create, Update и Delete для Rate, но не определяет операцию получения одной Rate по ID. Аналогично, для Work и Role нет операции Get by ID.
 
-**Вопрос:** Нужны ли эндпоинты GET `/api/work-catalog/rates/{id}`, GET `/api/work-catalog/works/{id}`, GET `/api/work-catalog/roles/{id}`?
+**Вопрос:** Нужны ли эндпоинты GET `/work-catalog/rates/{id}`, GET `/work-catalog/works/{id}`, GET `/work-catalog/roles/{id}`?
 
 **Рекомендация:** Для MVP можно обойтись без Get by ID -- фронтенд получает данные через List. Однако для Update Rate контроллеру может потребоваться предзагрузка данных. Рекомендуется добавить Get by ID хотя бы для Rate, если планируется форма редактирования на фронтенде.
 

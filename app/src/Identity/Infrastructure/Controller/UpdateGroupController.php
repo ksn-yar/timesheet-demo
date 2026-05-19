@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/api/identity/groups/{id}', name: 'identity_update_group', methods: ['PUT'])]
+#[Route('/identity/groups/{id}', name: 'identity_update_group', methods: ['PUT'])]
 final class UpdateGroupController extends AbstractController
 {
     public function __construct(

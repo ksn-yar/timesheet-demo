@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список групп.',
     content: new OA\JsonContent(ref: GroupListResponseDto::class),
 )]
-#[Route('/api/identity/groups', name: 'identity_list_groups', methods: ['GET'])]
+#[Route('/identity/groups', name: 'identity_list_groups', methods: ['GET'])]
 final class ListGroupsController extends AbstractController
 {
     public function __construct(
