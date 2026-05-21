@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateClientRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateClientRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,

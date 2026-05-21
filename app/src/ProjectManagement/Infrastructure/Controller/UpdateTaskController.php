@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Обновляет данные существующей задачи.',
 )]
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор задачи.')]
-#[OA\RequestBody(required: true, content: new OA\JsonContent(ref: new OA\Schema(type: UpdateTaskRequestDto::class)))]
+#[OA\RequestBody(required: true, content: new OA\JsonContent(ref: UpdateTaskRequestDto::class))]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Задача успешно обновлена.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Задача не найдена.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]

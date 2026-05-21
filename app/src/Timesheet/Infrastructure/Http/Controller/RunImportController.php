@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор политики импорта.')]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: RunImportRequestDto::class)),
+    content: new OA\JsonContent(ref: RunImportRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_OK,

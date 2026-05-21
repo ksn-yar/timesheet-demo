@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: ChangeUserGroupRequestDto::class)),
+    content: new OA\JsonContent(ref: ChangeUserGroupRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,

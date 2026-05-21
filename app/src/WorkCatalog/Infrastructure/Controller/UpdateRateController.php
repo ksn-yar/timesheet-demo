@@ -35,7 +35,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateRateRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateRateRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_OK,

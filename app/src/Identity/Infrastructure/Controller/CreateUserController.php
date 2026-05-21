@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateUserRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateUserRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_CREATED,

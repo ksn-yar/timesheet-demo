@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateProjectRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateProjectRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Проект успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Проект не найден.')]

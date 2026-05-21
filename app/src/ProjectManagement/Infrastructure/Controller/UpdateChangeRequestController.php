@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Обновляет данные существующего запроса на изменение.',
 )]
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор запроса на изменение.')]
-#[OA\RequestBody(required: true, content: new OA\JsonContent(ref: new OA\Schema(type: UpdateChangeRequestRequestDto::class)))]
+#[OA\RequestBody(required: true, content: new OA\JsonContent(ref: UpdateChangeRequestRequestDto::class))]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Запрос на изменение успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Запрос на изменение не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]

@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateChangeRequestRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateChangeRequestRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Запрос на изменение успешно создан.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные запроса.')]

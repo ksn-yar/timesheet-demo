@@ -24,7 +24,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateRoleRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateRoleRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_CREATED,

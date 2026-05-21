@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор тикета.')]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateManualTicketRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateManualTicketRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Тикет успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные.')]

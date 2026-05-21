@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateTaskRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateTaskRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Задача успешно создана.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные запроса.')]
