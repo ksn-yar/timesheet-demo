@@ -122,6 +122,25 @@ services:
       - corpo-ts
 
   # ---------------------------------------------------------------------------
+  # Nuxt.js (фронтенд, dev-режим)
+  # ---------------------------------------------------------------------------
+  corpo-ts-frontend:
+    container_name: corpo-ts-frontend
+    build:
+      context: ./docker/frontend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    ports:
+      - "${NUXT_PORT}:3000"
+    volumes:
+      - ./appFrontend:/var/www/frontend
+    environment:
+      NUXT_HOST: 0.0.0.0
+      NUXT_PORT: 3000
+    networks:
+      - corpo-ts
+
+  # ---------------------------------------------------------------------------
   # MailHog (перехват email)
   # ---------------------------------------------------------------------------
   corpo-ts-mailhog:
