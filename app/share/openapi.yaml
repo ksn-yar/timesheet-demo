@@ -1,0 +1,1509 @@
+openapi: 3.0.0
+info:
+  title: 'Timesheet backend application'
+  description: 'Api Timesheet backend application'
+  version: 1.0.0
+paths:
+  '/api/identity/users/{id}/group':
+    patch:
+      tags:
+        - Identity
+      summary: 'Изменить группу пользователя'
+      description: 'Назначает пользователя в группу или снимает из группы.'
+      operationId: patch_identity_change_user_group
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор пользователя.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Identity\Infrastructure\Dto\ChangeUserGroupRequestDto
+      responses:
+        '204':
+          description: 'Группа пользователя успешно изменена.'
+        '404':
+          description: 'Пользователь или группа не найдены.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/identity/groups:
+    get:
+      tags:
+        - Identity
+      summary: 'Получить список групп'
+      description: 'Возвращает список групп с пагинацией.'
+      operationId: get_identity_list_groups
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список групп.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Identity\Infrastructure\Dto\GroupListResponseDto
+    post:
+      tags:
+        - Identity
+      summary: 'Создать группу'
+      description: 'Создаёт новую группу пользователей.'
+      operationId: post_identity_create_group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Identity\Infrastructure\Dto\CreateGroupRequestDto
+      responses:
+        '201':
+          description: 'Группа успешно создана.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/identity/users:
+    get:
+      tags:
+        - Identity
+      summary: 'Получить список пользователей'
+      description: 'Возвращает список пользователей с пагинацией и фильтрацией.'
+      operationId: get_identity_list_users
+      parameters:
+        -
+          name: groupId
+          in: query
+          description: 'Фильтр по группе.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: roleId
+          in: query
+          description: 'Фильтр по роли.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: isActive
+          in: query
+          description: 'Фильтр по активности.'
+          required: false
+          schema:
+            type: boolean
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список пользователей.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Identity\Infrastructure\Dto\UserListResponseDto
+    post:
+      tags:
+        - Identity
+      summary: 'Создать пользователя'
+      description: 'Создаёт нового пользователя.'
+      operationId: post_identity_create_user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Identity\Infrastructure\Dto\CreateUserRequestDto
+      responses:
+        '201':
+          description: 'Пользователь успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/identity/users/{id}/deactivate':
+    post:
+      tags:
+        - Identity
+      summary: 'Деактивировать пользователя'
+      description: 'Деактивирует учётную запись пользователя.'
+      operationId: post_identity_deactivate_user
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор пользователя.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Пользователь успешно деактивирован.'
+        '404':
+          description: 'Пользователь не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/identity/groups/{id}':
+    put:
+      tags:
+        - Identity
+      summary: 'Обновить группу'
+      description: 'Обновляет данные существующей группы.'
+      operationId: put_identity_update_group
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор группы.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Identity\Infrastructure\Dto\UpdateGroupRequestDto
+      responses:
+        '204':
+          description: 'Группа успешно обновлена.'
+        '404':
+          description: 'Группа не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - Identity
+      summary: 'Удалить группу'
+      description: 'Выполняет мягкое удаление группы.'
+      operationId: delete_identity_delete_group
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор группы.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Группа успешно удалена.'
+        '404':
+          description: 'Группа не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/identity/users/{id}':
+    put:
+      tags:
+        - Identity
+      summary: 'Обновить пользователя'
+      description: 'Обновляет данные существующего пользователя.'
+      operationId: put_identity_update_user
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор пользователя.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Identity\Infrastructure\Dto\UpdateUserRequestDto
+      responses:
+        '204':
+          description: 'Пользователь успешно обновлён.'
+        '404':
+          description: 'Пользователь не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - Identity
+      summary: 'Удалить пользователя'
+      description: 'Выполняет мягкое удаление пользователя.'
+      operationId: delete_identity_delete_user
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор пользователя.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Пользователь успешно удалён.'
+        '404':
+          description: 'Пользователь не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/project-management/change-requests:
+    get:
+      tags:
+        - ProjectManagement
+      summary: 'Получить список запросов на изменение'
+      description: 'Возвращает список запросов на изменение с пагинацией и фильтрацией.'
+      operationId: get_project_management_list_change_requests
+      parameters:
+        -
+          name: projectId
+          in: query
+          description: 'Фильтр по проекту.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: name
+          in: query
+          description: 'Фильтр по названию.'
+          required: false
+          schema:
+            type: string
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список запросов на изменение.'
+          content:
+            application/json:
+              schema:
+                $ref: App\ProjectManagement\Infrastructure\Dto\ChangeRequestListResponseDto
+    post:
+      tags:
+        - ProjectManagement
+      summary: 'Создать запрос на изменение'
+      description: 'Создаёт новый запрос на изменение для указанного проекта.'
+      operationId: post_project_management_create_change_request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\CreateChangeRequestRequestDto
+      responses:
+        '201':
+          description: 'Запрос на изменение успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '404':
+          description: 'Проект не найден.'
+  /api/project-management/clients:
+    get:
+      tags:
+        - ProjectManagement
+      summary: 'Получить список клиентов'
+      description: 'Возвращает список клиентов с пагинацией и фильтрацией.'
+      operationId: get_project_management_list_clients
+      parameters:
+        -
+          name: name
+          in: query
+          description: 'Фильтр по названию.'
+          required: false
+          schema:
+            type: string
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список клиентов.'
+          content:
+            application/json:
+              schema:
+                $ref: App\ProjectManagement\Infrastructure\Dto\ClientListResponseDto
+    post:
+      tags:
+        - ProjectManagement
+      summary: 'Создать клиента'
+      description: 'Создаёт нового клиента.'
+      operationId: post_project_management_create_client
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\CreateClientRequestDto
+      responses:
+        '201':
+          description: 'Клиент успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+  /api/project-management/projects:
+    get:
+      tags:
+        - ProjectManagement
+      summary: 'Получить список проектов'
+      description: 'Возвращает список проектов с пагинацией и фильтрацией.'
+      operationId: get_project_management_list_projects
+      parameters:
+        -
+          name: clientId
+          in: query
+          description: 'Фильтр по клиенту.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: status
+          in: query
+          description: 'Фильтр по статусу.'
+          required: false
+          schema:
+            type: string
+            enum:
+              - active
+              - closed
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список проектов.'
+          content:
+            application/json:
+              schema:
+                $ref: App\ProjectManagement\Infrastructure\Dto\ProjectListResponseDto
+    post:
+      tags:
+        - ProjectManagement
+      summary: 'Создать проект'
+      description: 'Создаёт новый проект для указанного клиента.'
+      operationId: post_project_management_create_project
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\CreateProjectRequestDto
+      responses:
+        '201':
+          description: 'Проект успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '404':
+          description: 'Клиент не найден.'
+  /api/project-management/tasks:
+    get:
+      tags:
+        - ProjectManagement
+      summary: 'Получить список задач'
+      description: 'Возвращает список задач с пагинацией и фильтрацией.'
+      operationId: get_project_management_list_tasks
+      parameters:
+        -
+          name: projectId
+          in: query
+          description: 'Фильтр по проекту.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: crId
+          in: query
+          description: 'Фильтр по запросу на изменение.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список задач.'
+          content:
+            application/json:
+              schema:
+                $ref: App\ProjectManagement\Infrastructure\Dto\TaskListResponseDto
+    post:
+      tags:
+        - ProjectManagement
+      summary: 'Создать задачу'
+      description: 'Создаёт новую задачу для проекта или запроса на изменение.'
+      operationId: post_project_management_create_task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\CreateTaskRequestDto
+      responses:
+        '201':
+          description: 'Задача успешно создана.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '404':
+          description: 'Родительская сущность не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/project-management/change-requests/{id}':
+    put:
+      tags:
+        - ProjectManagement
+      summary: 'Обновить запрос на изменение'
+      description: 'Обновляет данные существующего запроса на изменение.'
+      operationId: put_project_management_update_change_request
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор запроса на изменение.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\UpdateChangeRequestRequestDto
+      responses:
+        '204':
+          description: 'Запрос на изменение успешно обновлён.'
+        '404':
+          description: 'Запрос на изменение не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - ProjectManagement
+      summary: 'Удалить запрос на изменение'
+      description: 'Выполняет мягкое удаление запроса на изменение.'
+      operationId: delete_project_management_delete_change_request
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор запроса на изменение.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Запрос на изменение успешно удалён.'
+        '404':
+          description: 'Запрос на изменение не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/project-management/clients/{id}':
+    put:
+      tags:
+        - ProjectManagement
+      summary: 'Обновить клиента'
+      description: 'Обновляет данные существующего клиента.'
+      operationId: put_project_management_update_client
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор клиента.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\UpdateClientRequestDto
+      responses:
+        '204':
+          description: 'Клиент успешно обновлён.'
+        '404':
+          description: 'Клиент не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - ProjectManagement
+      summary: 'Удалить клиента'
+      description: 'Выполняет мягкое удаление клиента.'
+      operationId: delete_project_management_delete_client
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор клиента.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Клиент успешно удалён.'
+        '404':
+          description: 'Клиент не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/project-management/projects/{id}':
+    put:
+      tags:
+        - ProjectManagement
+      summary: 'Обновить проект'
+      description: 'Обновляет данные существующего проекта.'
+      operationId: put_project_management_update_project
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор проекта.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\UpdateProjectRequestDto
+      responses:
+        '204':
+          description: 'Проект успешно обновлён.'
+        '404':
+          description: 'Проект не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - ProjectManagement
+      summary: 'Удалить проект'
+      description: 'Выполняет мягкое удаление проекта.'
+      operationId: delete_project_management_delete_project
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор проекта.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Проект успешно удалён.'
+        '404':
+          description: 'Проект не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/project-management/tasks/{id}':
+    put:
+      tags:
+        - ProjectManagement
+      summary: 'Обновить задачу'
+      description: 'Обновляет данные существующей задачи.'
+      operationId: put_project_management_update_task
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор задачи.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\ProjectManagement\Infrastructure\Dto\UpdateTaskRequestDto
+      responses:
+        '204':
+          description: 'Задача успешно обновлена.'
+        '404':
+          description: 'Задача не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - ProjectManagement
+      summary: 'Удалить задачу'
+      description: 'Выполняет мягкое удаление задачи.'
+      operationId: delete_project_management_delete_task
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор задачи.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Задача успешно удалена.'
+        '404':
+          description: 'Задача не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/reporting/reports:
+    get:
+      tags:
+        - Reporting
+      summary: 'Получить список отчётов'
+      description: 'Возвращает список отчётов с пагинацией и опциональной фильтрацией.'
+      operationId: get_reporting_list_reports
+      parameters:
+        -
+          name: createdBy
+          in: query
+          description: 'Фильтр по автору.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: periodFrom
+          in: query
+          description: 'Фильтр по началу периода (Y-m-d).'
+          required: false
+          schema:
+            type: string
+            format: date
+        -
+          name: periodTo
+          in: query
+          description: 'Фильтр по окончанию периода (Y-m-d).'
+          required: false
+          schema:
+            type: string
+            format: date
+        -
+          name: name
+          in: query
+          description: 'Фильтр по названию (поиск подстроки).'
+          required: false
+          schema:
+            type: string
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список отчётов.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Reporting\Infrastructure\Dto\ReportListResponseDto
+    post:
+      tags:
+        - Reporting
+      summary: 'Создать отчёт'
+      description: 'Создаёт новый отчёт по заданным параметрам и фильтрам.'
+      operationId: post_reporting_create_report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Reporting\Infrastructure\Dto\CreateReportRequestDto
+      responses:
+        '201':
+          description: 'Отчёт успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '422':
+          description: 'Ошибка бизнес-логики.'
+  '/api/reporting/exports/{id}/download':
+    get:
+      tags:
+        - Reporting
+      summary: 'Скачать файл выгрузки'
+      description: 'Возвращает файл выгрузки для указанной записи экспорта.'
+      operationId: get_reporting_download_export
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор выгрузки.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 'Файл выгрузки.'
+        '404':
+          description: 'Выгрузка не найдена.'
+  /api/reporting/exports:
+    get:
+      tags:
+        - Reporting
+      summary: 'Получить список выгрузок'
+      description: 'Возвращает список выгрузок отчётов с пагинацией и опциональной фильтрацией.'
+      operationId: get_reporting_list_exported_reports
+      parameters:
+        -
+          name: format
+          in: query
+          description: 'Фильтр по формату.'
+          required: false
+          schema:
+            type: string
+            enum:
+              - csv
+              - xlsx
+              - pdf
+        -
+          name: generatedAtFrom
+          in: query
+          description: 'Фильтр по дате генерации (от).'
+          required: false
+          schema:
+            type: string
+            format: date-time
+        -
+          name: generatedAtTo
+          in: query
+          description: 'Фильтр по дате генерации (до).'
+          required: false
+          schema:
+            type: string
+            format: date-time
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список выгрузок.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Reporting\Infrastructure\Dto\ExportListResponseDto
+    post:
+      tags:
+        - Reporting
+      summary: 'Экспортировать отчёты'
+      description: 'Генерирует файл экспорта для набора отчётов в заданном формате.'
+      operationId: post_reporting_export_reports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Reporting\Infrastructure\Dto\ExportReportsRequestDto
+      responses:
+        '201':
+          description: 'Экспорт успешно создан.'
+        '404':
+          description: 'Один из отчётов не найден.'
+        '422':
+          description: 'Ошибка генерации файла.'
+  '/api/reporting/reports/{id}':
+    get:
+      tags:
+        - Reporting
+      summary: 'Получить отчёт'
+      description: 'Возвращает полные данные отчёта, включая строки агрегации.'
+      operationId: get_reporting_get_report
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор отчёта.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 'Данные отчёта.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Reporting\Infrastructure\Dto\ReportResponseDto
+        '404':
+          description: 'Отчёт не найден.'
+  /api/timesheet/import-policies:
+    get:
+      tags:
+        - Timesheet
+      summary: 'Получить список политик импорта'
+      description: 'Возвращает список политик импорта с пагинацией.'
+      operationId: get_timesheet_list_import_policies
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список политик импорта.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Timesheet\Infrastructure\Dto\ImportPolicyListResponseDto
+    post:
+      tags:
+        - Timesheet
+      summary: 'Создать политику импорта'
+      description: 'Создаёт новую политику импорта тикетов из внешней системы.'
+      operationId: post_timesheet_create_import_policy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Timesheet\Infrastructure\Dto\CreateImportPolicyRequestDto
+      responses:
+        '201':
+          description: 'Политика импорта успешно создана.'
+        '400':
+          description: 'Невалидные данные.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/timesheet/tickets:
+    get:
+      tags:
+        - Timesheet
+      summary: 'Получить список тикетов'
+      description: 'Возвращает список тикетов учёта времени с фильтрацией и пагинацией.'
+      operationId: get_timesheet_list_tickets
+      parameters:
+        -
+          name: employeeId
+          in: query
+          description: 'Фильтр по сотруднику.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: projectId
+          in: query
+          description: 'Фильтр по проекту.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: crId
+          in: query
+          description: 'Фильтр по запросу на изменение.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: taskId
+          in: query
+          description: 'Фильтр по задаче.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: workId
+          in: query
+          description: 'Фильтр по виду работ.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: dateFrom
+          in: query
+          description: 'Начальная дата фильтра.'
+          required: false
+          schema:
+            type: string
+            format: date
+        -
+          name: dateTo
+          in: query
+          description: 'Конечная дата фильтра.'
+          required: false
+          schema:
+            type: string
+            format: date
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список тикетов.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Timesheet\Infrastructure\Dto\TicketListResponseDto
+    post:
+      tags:
+        - Timesheet
+      summary: 'Создать тикет'
+      description: 'Создаёт новый тикет учёта времени.'
+      operationId: post_timesheet_create_ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Timesheet\Infrastructure\Dto\CreateManualTicketRequestDto
+      responses:
+        '201':
+          description: 'Тикет успешно создан.'
+        '400':
+          description: 'Невалидные данные.'
+        '403':
+          description: 'Нарушение прав доступа.'
+        '404':
+          description: 'Задача или вид работ не найдены.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/timesheet/tickets/{id}':
+    get:
+      tags:
+        - Timesheet
+      summary: 'Получить тикет по ID'
+      description: 'Возвращает данные тикета учёта времени по его идентификатору.'
+      operationId: get_timesheet_get_ticket
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор тикета.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: 'Данные тикета.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Timesheet\Infrastructure\Dto\TicketResponseDto
+        '403':
+          description: 'Нарушение прав доступа.'
+        '404':
+          description: 'Тикет не найден.'
+    put:
+      tags:
+        - Timesheet
+      summary: 'Обновить тикет'
+      description: 'Обновляет данные существующего тикета учёта времени.'
+      operationId: put_timesheet_update_ticket
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор тикета.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Timesheet\Infrastructure\Dto\UpdateManualTicketRequestDto
+      responses:
+        '204':
+          description: 'Тикет успешно обновлён.'
+        '400':
+          description: 'Невалидные данные.'
+        '403':
+          description: 'Нарушение прав доступа.'
+        '404':
+          description: 'Тикет не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/timesheet/import-policies/{id}/run':
+    post:
+      tags:
+        - Timesheet
+      summary: 'Запустить импорт'
+      description: 'Запускает импорт тикетов по указанной политике импорта.'
+      operationId: post_timesheet_run_import
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор политики импорта.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Timesheet\Infrastructure\Dto\RunImportRequestDto
+      responses:
+        '200':
+          description: 'Результат импорта.'
+          content:
+            application/json:
+              schema:
+                $ref: App\Timesheet\Infrastructure\Dto\ImportSummaryResponseDto
+        '404':
+          description: 'Политика импорта не найдена.'
+        '422':
+          description: 'Политика импорта неактивна.'
+  '/api/timesheet/import-policies/{id}':
+    put:
+      tags:
+        - Timesheet
+      summary: 'Обновить политику импорта'
+      description: 'Обновляет данные существующей политики импорта.'
+      operationId: put_timesheet_update_import_policy
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор политики импорта.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\Timesheet\Infrastructure\Dto\UpdateImportPolicyRequestDto
+      responses:
+        '204':
+          description: 'Политика импорта успешно обновлена.'
+        '400':
+          description: 'Невалидные данные.'
+        '404':
+          description: 'Политика импорта не найдена.'
+        '409':
+          description: 'Конфликт при обновлении политики.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/work-catalog/rates:
+    get:
+      tags:
+        - WorkCatalog
+      summary: 'Получить список ставок'
+      description: 'Возвращает список ставок с пагинацией и фильтрацией.'
+      operationId: get_work_catalog_list_rates
+      parameters:
+        -
+          name: roleId
+          in: query
+          description: 'Фильтр по роли.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: workId
+          in: query
+          description: 'Фильтр по виду работ.'
+          required: false
+          schema:
+            type: string
+            format: uuid
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список ставок.'
+          content:
+            application/json:
+              schema:
+                $ref: App\WorkCatalog\Infrastructure\Dto\RateListResponseDto
+    post:
+      tags:
+        - WorkCatalog
+      summary: 'Создать ставку'
+      description: 'Создаёт новую ставку.'
+      operationId: post_work_catalog_create_rate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\WorkCatalog\Infrastructure\Dto\CreateRateRequestDto
+      responses:
+        '201':
+          description: 'Ставка успешно создана.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '404':
+          description: 'Роль или вид работ не найдены.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/work-catalog/roles:
+    get:
+      tags:
+        - WorkCatalog
+      summary: 'Получить список ролей'
+      description: 'Возвращает список ролей с пагинацией.'
+      operationId: get_work_catalog_list_roles
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список ролей.'
+          content:
+            application/json:
+              schema:
+                $ref: App\WorkCatalog\Infrastructure\Dto\RoleListResponseDto
+    post:
+      tags:
+        - WorkCatalog
+      summary: 'Создать роль'
+      description: 'Создаёт новую роль.'
+      operationId: post_work_catalog_create_role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\WorkCatalog\Infrastructure\Dto\CreateRoleRequestDto
+      responses:
+        '201':
+          description: 'Роль успешно создана.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  /api/work-catalog/works:
+    get:
+      tags:
+        - WorkCatalog
+      summary: 'Получить список видов работ'
+      description: 'Возвращает список видов работ с пагинацией.'
+      operationId: get_work_catalog_list_works
+      parameters:
+        -
+          name: page
+          in: query
+          description: 'Номер страницы.'
+          required: false
+          schema:
+            type: integer
+            default: 1
+        -
+          name: perPage
+          in: query
+          description: 'Количество элементов на странице.'
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: 'Список видов работ.'
+          content:
+            application/json:
+              schema:
+                $ref: App\WorkCatalog\Infrastructure\Dto\WorkListResponseDto
+    post:
+      tags:
+        - WorkCatalog
+      summary: 'Создать вид работ'
+      description: 'Создаёт новый вид работ.'
+      operationId: post_work_catalog_create_work
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\WorkCatalog\Infrastructure\Dto\CreateWorkRequestDto
+      responses:
+        '201':
+          description: 'Вид работ успешно создан.'
+        '400':
+          description: 'Невалидные данные запроса.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/work-catalog/rates/{id}':
+    put:
+      tags:
+        - WorkCatalog
+      summary: 'Обновить ставку'
+      description: 'Обновляет данные существующей ставки.'
+      operationId: put_work_catalog_update_rate
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор ставки.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: App\WorkCatalog\Infrastructure\Dto\UpdateRateRequestDto
+      responses:
+        '200':
+          description: 'Ставка успешно обновлена.'
+        '404':
+          description: 'Ставка, роль или вид работ не найдены.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+    delete:
+      tags:
+        - WorkCatalog
+      summary: 'Удалить ставку'
+      description: 'Выполняет мягкое удаление ставки.'
+      operationId: delete_work_catalog_delete_rate
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор ставки.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Ставка успешно удалена.'
+        '404':
+          description: 'Ставка не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/work-catalog/roles/{id}':
+    delete:
+      tags:
+        - WorkCatalog
+      summary: 'Удалить роль'
+      description: 'Выполняет мягкое удаление роли.'
+      operationId: delete_work_catalog_delete_role
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор роли.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Роль успешно удалена.'
+        '404':
+          description: 'Роль не найдена.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+  '/api/work-catalog/works/{id}':
+    delete:
+      tags:
+        - WorkCatalog
+      summary: 'Удалить вид работ'
+      description: 'Выполняет мягкое удаление вида работ.'
+      operationId: delete_work_catalog_delete_work
+      parameters:
+        -
+          name: id
+          in: path
+          description: 'Идентификатор вида работ.'
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: 'Вид работ успешно удалён.'
+        '404':
+          description: 'Вид работ не найден.'
+        '422':
+          description: 'Нарушение бизнес-правил.'
+tags:
+  -
+    name: Identity
+  -
+    name: ProjectManagement
+  -
+    name: Reporting
+  -
+    name: Timesheet
+  -
+    name: WorkCatalog
+
