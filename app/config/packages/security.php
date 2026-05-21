@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use App\Identity\Infrastructure\Security\JsonAccessDeniedHandler;
+use App\Identity\Infrastructure\Security\JsonAuthenticationEntryPoint;
+use App\Identity\Infrastructure\Security\JsonLoginSuccessHandler;
 use App\Identity\Infrastructure\Security\UserProvider;
 use App\Persistence\Entity\User;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -22,28 +25,30 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'pattern' => '^/(_profiler|_wdt|assets|build)/',
                 'security' => false,
             ],
-            'main' => [
-                'pattern' => '^/',
+            'api' => [
+                'pattern' => '^/api/',
                 'stateless' => false,
                 'provider' => 'app_user_provider',
-                'form_login' => [
-                    'login_path' => 'app_login',
-                    'check_path' => 'app_login',
-                    'username_parameter' => 'email',
-                    'password_parameter' => 'password',
-                    'default_target_path' => '/',
-                    'enable_csrf' => true,
+                'json_login' => [
+                    'check_path' => '/api/login',
+                    'username_path' => 'email',
+                    'password_path' => 'password',
+                    'success_handler' => JsonLoginSuccessHandler::class,
+                    // Стандартный JsonLoginFailureHandler возвращает 401 JSON — подходит без кастомизации
                 ],
                 'logout' => [
-                    'path' => 'app_logout',
-                    'target' => 'app_login',
+                    'path' => '/api/logout',
+                    // Очищаем куки сессии и инвалидируем сессию при выходе
                     'invalidate_session' => true,
                 ],
+                'access_denied_handler' => JsonAccessDeniedHandler::class,
+                'entry_point' => JsonAuthenticationEntryPoint::class,
             ],
         ],
         'access_control' => [
-            ['path' => '^/login$', 'roles' => 'PUBLIC_ACCESS'],
-            ['path' => '^/', 'roles' => 'ROLE_USER'],
+            ['path' => '^/api/login$', 'roles' => 'PUBLIC_ACCESS'],
+            ['path' => '^/api/logout$', 'roles' => 'ROLE_USER'],
+            ['path' => '^/api/', 'roles' => 'ROLE_USER'],
         ],
     ]);
 

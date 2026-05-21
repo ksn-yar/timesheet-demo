@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateGroupRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateGroupRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_CREATED,
@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/identity/groups', name: 'identity_create_group', methods: ['POST'])]
+#[Route('/api/identity/groups', name: 'identity_create_group', methods: ['POST'])]
 final class CreateGroupController extends AbstractController
 {
     public function __construct(

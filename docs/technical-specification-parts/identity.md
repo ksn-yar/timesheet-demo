@@ -390,32 +390,32 @@
 
 | Метод | Эндпоинт | Описание | Права |
 |-------|----------|---------|-------|
-| POST | `/auth/login` | Войти в систему (создать сессию) | Без аутентификации |
-| POST | `/auth/logout` | Выйти из системы (инвалидировать сессию) | Аутентифицированный пользователь |
+| POST | `/api/auth/login` | Войти в систему (создать сессию) | Без аутентификации |
+| POST | `/api/auth/logout` | Выйти из системы (инвалидировать сессию) | Аутентифицированный пользователь |
 
 ### User
 
 | Метод | Эндпоинт | Описание | Права |
 |-------|----------|---------|-------|
-| POST | `/identity/users` | Создать User | Admin |
-| GET | `/identity/users` | Получить User List | Admin, Manager |
-| GET | `/identity/users/{id}` | Получить User по ID | Admin, Manager |
-| PUT | `/identity/users/{id}` | Обновить User (`name`, `systemRole`, `roleId`) | Admin |
-| POST | `/identity/users/{id}/deactivate` | Деактивировать User | Admin |
-| PUT | `/identity/users/{id}/group` | Изменить принадлежность User к Group | Admin |
-| DELETE | `/identity/users/{id}` | Удалить User (Soft-delete) | Admin |
-| POST | `/identity/users/{id}/change-password` | Сменить пароль (текущий + новый) | Аутентифицированный пользователь (только свой) |
-| POST | `/identity/users/{id}/reset-password` | Сбросить пароль пользователя | Admin |
+| POST | `/api/identity/users` | Создать User | Admin |
+| GET | `/api/identity/users` | Получить User List | Admin, Manager |
+| GET | `/api/identity/users/{id}` | Получить User по ID | Admin, Manager |
+| PUT | `/api/identity/users/{id}` | Обновить User (`name`, `systemRole`, `roleId`) | Admin |
+| POST | `/api/identity/users/{id}/deactivate` | Деактивировать User | Admin |
+| PUT | `/api/identity/users/{id}/group` | Изменить принадлежность User к Group | Admin |
+| DELETE | `/api/identity/users/{id}` | Удалить User (Soft-delete) | Admin |
+| POST | `/api/identity/users/{id}/change-password` | Сменить пароль (текущий + новый) | Аутентифицированный пользователь (только свой) |
+| POST | `/api/identity/users/{id}/reset-password` | Сбросить пароль пользователя | Admin |
 
 ### Group
 
 | Метод | Эндпоинт | Описание | Права |
 |-------|----------|---------|-------|
-| POST | `/identity/groups` | Создать Group | Admin |
-| GET | `/identity/groups` | Получить Group List | Admin, Manager |
-| GET | `/identity/groups/{id}` | Получить Group по ID | Admin, Manager |
-| PUT | `/identity/groups/{id}` | Обновить Group (`name`, `description`) | Admin |
-| DELETE | `/identity/groups/{id}` | Удалить Group (Soft-delete) | Admin |
+| POST | `/api/identity/groups` | Создать Group | Admin |
+| GET | `/api/identity/groups` | Получить Group List | Admin, Manager |
+| GET | `/api/identity/groups/{id}` | Получить Group по ID | Admin, Manager |
+| PUT | `/api/identity/groups/{id}` | Обновить Group (`name`, `description`) | Admin |
+| DELETE | `/api/identity/groups/{id}` | Удалить Group (Soft-delete) | Admin |
 
 **Требования к ошибкам:**
 - Попытка создать User с уже существующим email → ошибка с явным указанием поля.

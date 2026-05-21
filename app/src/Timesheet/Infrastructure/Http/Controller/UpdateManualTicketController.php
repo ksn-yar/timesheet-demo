@@ -27,14 +27,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор тикета.')]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateManualTicketRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateManualTicketRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Тикет успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные.')]
 #[OA\Response(response: Response::HTTP_FORBIDDEN, description: 'Нарушение прав доступа.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Тикет не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/timesheet/tickets/{id}', name: 'timesheet_update_ticket', methods: ['PUT'])]
+#[Route('/api/timesheet/tickets/{id}', name: 'timesheet_update_ticket', methods: ['PUT'])]
 final class UpdateManualTicketController extends AbstractController
 {
     public function __construct(

@@ -40,7 +40,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/identity/groups/{id}', name: 'identity_delete_group', methods: ['DELETE'])]
+#[Route('/api/identity/groups/{id}', name: 'identity_delete_group', methods: ['DELETE'])]
 final class DeleteGroupController extends AbstractController
 {
     public function __construct(

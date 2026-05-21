@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateClientRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateClientRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,
@@ -45,7 +45,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/project-management/clients/{id}', name: 'project_management_update_client', methods: ['PUT'])]
+#[Route('/api/project-management/clients/{id}', name: 'project_management_update_client', methods: ['PUT'])]
 final class UpdateClientController extends AbstractController
 {
     public function __construct(

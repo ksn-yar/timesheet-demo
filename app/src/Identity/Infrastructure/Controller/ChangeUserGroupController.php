@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: ChangeUserGroupRequestDto::class)),
+    content: new OA\JsonContent(ref: ChangeUserGroupRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,
@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/identity/users/{id}/group', name: 'identity_change_user_group', methods: ['PATCH'])]
+#[Route('/api/identity/users/{id}/group', name: 'identity_change_user_group', methods: ['PATCH'])]
 final class ChangeUserGroupController extends AbstractController
 {
     public function __construct(

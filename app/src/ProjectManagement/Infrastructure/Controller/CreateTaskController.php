@@ -25,13 +25,13 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateTaskRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateTaskRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Задача успешно создана.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные запроса.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Родительская сущность не найдена.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/project-management/tasks', name: 'project_management_create_task', methods: ['POST'])]
+#[Route('/api/project-management/tasks', name: 'project_management_create_task', methods: ['POST'])]
 final class CreateTaskController extends AbstractController
 {
     public function __construct(

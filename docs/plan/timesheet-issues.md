@@ -138,9 +138,9 @@
 
 **Раздел ТЗ:** Раздел 5 "API-интерфейсы"
 
-**Описание:** ТЗ определяет Create, Update и List для Ticket, но не определяет операцию получения одного Ticket по ID (`GET /timesheet/tickets/{id}`).
+**Описание:** ТЗ определяет Create, Update и List для Ticket, но не определяет операцию получения одного Ticket по ID (`GET /api/timesheet/tickets/{id}`).
 
-**Решение:** В плане v1.1 добавлены `GetTicketUseCase`, `GetTicketController`, `GetTicketInputDto`, `GetTicketInputTransformer` и эндпоинт `GET /timesheet/tickets/{id}` с проверкой прав (Employee -- только свой; Manager, Admin -- любой).
+**Решение:** В плане v1.1 добавлены `GetTicketUseCase`, `GetTicketController`, `GetTicketInputDto`, `GetTicketInputTransformer` и эндпоинт `GET /api/timesheet/tickets/{id}` с проверкой прав (Employee -- только свой; Manager, Admin -- любой).
 
 ---
 

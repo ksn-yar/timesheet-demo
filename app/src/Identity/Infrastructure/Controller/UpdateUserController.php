@@ -31,7 +31,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateUserRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateUserRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,
@@ -45,7 +45,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/identity/users/{id}', name: 'identity_update_user', methods: ['PUT'])]
+#[Route('/api/identity/users/{id}', name: 'identity_update_user', methods: ['PUT'])]
 final class UpdateUserController extends AbstractController
 {
     public function __construct(

@@ -25,14 +25,14 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateManualTicketRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateManualTicketRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Тикет успешно создан.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные.')]
 #[OA\Response(response: Response::HTTP_FORBIDDEN, description: 'Нарушение прав доступа.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Задача или вид работ не найдены.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/timesheet/tickets', name: 'timesheet_create_ticket', methods: ['POST'])]
+#[Route('/api/timesheet/tickets', name: 'timesheet_create_ticket', methods: ['POST'])]
 final class CreateManualTicketController extends AbstractController
 {
     public function __construct(

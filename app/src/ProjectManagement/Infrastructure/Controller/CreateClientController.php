@@ -22,7 +22,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateClientRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateClientRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_CREATED,
@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_BAD_REQUEST,
     description: 'Невалидные данные запроса.',
 )]
-#[Route('/project-management/clients', name: 'project_management_create_client', methods: ['POST'])]
+#[Route('/api/project-management/clients', name: 'project_management_create_client', methods: ['POST'])]
 final class CreateClientController extends AbstractController
 {
     public function __construct(

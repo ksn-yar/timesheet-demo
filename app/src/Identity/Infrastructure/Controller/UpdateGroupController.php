@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateGroupRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateGroupRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_NO_CONTENT,
@@ -46,7 +46,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/identity/groups/{id}', name: 'identity_update_group', methods: ['PUT'])]
+#[Route('/api/identity/groups/{id}', name: 'identity_update_group', methods: ['PUT'])]
 final class UpdateGroupController extends AbstractController
 {
     public function __construct(

@@ -23,12 +23,12 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateImportPolicyRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateImportPolicyRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Политика импорта успешно создана.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/timesheet/import-policies', name: 'timesheet_create_import_policy', methods: ['POST'])]
+#[Route('/api/timesheet/import-policies', name: 'timesheet_create_import_policy', methods: ['POST'])]
 final class CreateImportPolicyController extends AbstractController
 {
     public function __construct(

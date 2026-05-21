@@ -25,14 +25,14 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'string', format: 'uuid'), description: 'Идентификатор политики импорта.')]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateImportPolicyRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateImportPolicyRequestDto::class),
 )]
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Политика импорта успешно обновлена.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Политика импорта не найдена.')]
 #[OA\Response(response: Response::HTTP_CONFLICT, description: 'Конфликт при обновлении политики.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/timesheet/import-policies/{id}', name: 'timesheet_update_import_policy', methods: ['PUT'])]
+#[Route('/api/timesheet/import-policies/{id}', name: 'timesheet_update_import_policy', methods: ['PUT'])]
 final class UpdateImportPolicyController extends AbstractController
 {
     public function __construct(

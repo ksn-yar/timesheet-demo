@@ -35,7 +35,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: UpdateRateRequestDto::class)),
+    content: new OA\JsonContent(ref: UpdateRateRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_OK,
@@ -49,7 +49,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/work-catalog/rates/{id}', name: 'work_catalog_update_rate', methods: ['PUT'])]
+#[Route('/api/work-catalog/rates/{id}', name: 'work_catalog_update_rate', methods: ['PUT'])]
 #[IsGranted('ROLE_ADMIN')]
 final class UpdateRateController extends AbstractController
 {

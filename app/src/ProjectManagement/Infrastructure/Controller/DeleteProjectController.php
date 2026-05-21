@@ -30,7 +30,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Проект успешно удалён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Проект не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/project-management/projects/{id}', name: 'project_management_delete_project', methods: ['DELETE'])]
+#[Route('/api/project-management/projects/{id}', name: 'project_management_delete_project', methods: ['DELETE'])]
 final class DeleteProjectController extends AbstractController
 {
     public function __construct(

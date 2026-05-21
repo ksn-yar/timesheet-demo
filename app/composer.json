@@ -26,7 +26,6 @@
         "nelmio/api-doc-bundle": "^5.9",
         "phpoffice/phpspreadsheet": "^5.6",
         "symfony/asset": "8.0.*",
-        "symfony/asset-mapper": "8.0.*",
         "symfony/console": "8.0.*",
         "symfony/dotenv": "8.0.*",
         "symfony/flex": "^2",
@@ -42,8 +41,6 @@
         "symfony/uid": "8.0.*",
         "symfony/validator": "8.0.*",
         "symfony/yaml": "8.0.*",
-        "twig/extra-bundle": "^2.12|^3.0",
-        "twig/twig": "^2.12|^3.0",
         "vich/uploader-bundle": "^2.9"
     },
     "require-dev": {
@@ -96,8 +93,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "csFix": "vendor/bin/php-cs-fixer --show-progress=dots -v fix",
         "phpStan": "vendor/bin/phpstan analyse -c phpstan.neon --memory-limit=1G",

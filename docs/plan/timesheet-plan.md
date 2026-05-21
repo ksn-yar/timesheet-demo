@@ -45,7 +45,7 @@ Timesheet -- ядро системы (core domain) и downstream-контекс�
 | 4 | Операция удаления Ticket | Не реализуется в первой версии | ТЗ не определяет удаление; с точки зрения аудита запрет на удаление оправдан |
 | 5 | Фильтрация по `projectId`/`crId` | JOIN через Persistence (вариант A) | Прагматичный подход для монолита с единой БД |
 | 6 | Нумерация UC | Используем нумерацию из ТЗ как каноническую | ТЗ -- первичный источник |
-| 7 | Операция `GET /timesheet/tickets/{id}` | Добавляем `GetTicketUseCase` и эндпоинт `GET /timesheet/tickets/{id}` | Необходимо для предзагрузки данных при редактировании |
+| 7 | Операция `GET /api/timesheet/tickets/{id}` | Добавляем `GetTicketUseCase` и эндпоинт `GET /api/timesheet/tickets/{id}` | Необходимо для предзагрузки данных при редактировании |
 | 8 | Именование событий (множественное число) | Сохраняем `TicketsAdded` из ТЗ; добавляем `TicketUpdated`, `ImportPolicyCreated`, `ImportPolicyUpdated` | Следуем ТЗ для существующих событий; добавляем недостающие для аудит-логирования |
 | 9 | Изменение `taskId` при редактировании | Не разрешаем -- следуем ТЗ (UC-TS-02) | ТЗ явно не включает `taskId` в список изменяемых полей |
 | 10 | Manager и редактирование Ticket | Manager наблюдает, но не редактирует | Соответствует матрице прав в ТЗ |
@@ -254,11 +254,11 @@ app/src/
 - **Фабричный метод `restore()`:** восстановление из хранилища без валидации
 - **Метод `update(date, hours, workId, comment)`:** обновляет допустимые поля; валидирует `hours > 0`; бросает `TicketNotEditableException` если `isEditable = false`; `rateSnapshot` не изменяется; `taskId` не изменяется (осознанное ограничение ТЗ)
 - **Инварианты:**
-  - `hours` строго > 0
-  - `rateSnapshot` неизменен после создания
-  - Imported Ticket с `isEditable = false` не может быть обновлён
-  - `importSource` и `externalId` обязательны для Imported Ticket
-  - `importSource` и `externalId` всегда null для Manual Ticket
+    - `hours` строго > 0
+    - `rateSnapshot` неизменен после создания
+    - Imported Ticket с `isEditable = false` не может быть обновлён
+    - `importSource` и `externalId` обязательны для Imported Ticket
+    - `importSource` и `externalId` всегда null для Manual Ticket
 
 #### Import Policy
 
@@ -270,10 +270,10 @@ app/src/
 - **Метод `activate()`:** устанавливает `isActive = true`
 - **Метод `deactivate()`:** устанавливает `isActive = false`
 - **Инварианты:**
-  - `name` не может быть пустым
-  - `sourceSystem` не может быть пустым
-  - Для одного `sourceSystem` одновременно может быть активна только одна Import Policy (проверяется на уровне Use Case)
-  - Изменение Import Policy не пересчитывает ранее импортированные Ticket
+    - `name` не может быть пустым
+    - `sourceSystem` не может быть пустым
+    - Для одного `sourceSystem` одновременно может быть активна только одна Import Policy (проверяется на уровне Use Case)
+    - Изменение Import Policy не пересчитывает ранее импортированные Ticket
 
 ---
 
@@ -389,8 +389,8 @@ app/src/
 **UpdateImportPolicyUseCase:**
 1. Поиск Import Policy по ID; при отсутствии -- `ImportPolicyNotFoundException`
 2. Если запрашивается активация (`isActive = true`):
-   - Проверка через `ImportPolicyRepositoryInterface::findActiveBySourceSystem()`: для данного `sourceSystem` нет другой активной Import Policy (исключая текущую)
-   - При конфликте -- `ImportPolicyConflictException`
+    - Проверка через `ImportPolicyRepositoryInterface::findActiveBySourceSystem()`: для данного `sourceSystem` нет другой активной Import Policy (исключая текущую)
+    - При конфликте -- `ImportPolicyConflictException`
 3. Вызов `ImportPolicy::update(mappingRules, allowEdit, isActive)`
 4. Сохранение через `ImportPolicyRepositoryInterface::save()`
 5. Публикация события `ImportPolicyUpdated`
@@ -548,14 +548,14 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута | Права |
 |---|---|---|---|---|
-| POST | `/timesheet/tickets` | `CreateManualTicketController` | `timesheet_create_ticket` | Employee (за себя), Admin (за любого) |
-| GET | `/timesheet/tickets/{id}` | `GetTicketController` | `timesheet_get_ticket` | Employee (свой), Manager, Admin |
-| PUT | `/timesheet/tickets/{id}` | `UpdateManualTicketController` | `timesheet_update_ticket` | Employee (свой), Admin |
-| GET | `/timesheet/tickets` | `ListTicketsController` | `timesheet_list_tickets` | Employee (только свои), Manager, Admin |
-| POST | `/timesheet/import-policies` | `CreateImportPolicyController` | `timesheet_create_import_policy` | Admin |
-| PUT | `/timesheet/import-policies/{id}` | `UpdateImportPolicyController` | `timesheet_update_import_policy` | Admin |
-| GET | `/timesheet/import-policies` | `ListImportPoliciesController` | `timesheet_list_import_policies` | Admin |
-| POST | `/timesheet/import-policies/{id}/run` | `RunImportController` | `timesheet_run_import` | Admin |
+| POST | `/api/timesheet/tickets` | `CreateManualTicketController` | `timesheet_create_ticket` | Employee (за себя), Admin (за любого) |
+| GET | `/api/timesheet/tickets/{id}` | `GetTicketController` | `timesheet_get_ticket` | Employee (свой), Manager, Admin |
+| PUT | `/api/timesheet/tickets/{id}` | `UpdateManualTicketController` | `timesheet_update_ticket` | Employee (свой), Admin |
+| GET | `/api/timesheet/tickets` | `ListTicketsController` | `timesheet_list_tickets` | Employee (только свои), Manager, Admin |
+| POST | `/api/timesheet/import-policies` | `CreateImportPolicyController` | `timesheet_create_import_policy` | Admin |
+| PUT | `/api/timesheet/import-policies/{id}` | `UpdateImportPolicyController` | `timesheet_update_import_policy` | Admin |
+| GET | `/api/timesheet/import-policies` | `ListImportPoliciesController` | `timesheet_list_import_policies` | Admin |
+| POST | `/api/timesheet/import-policies/{id}/run` | `RunImportController` | `timesheet_run_import` | Admin |
 
 ### Request DTO с валидацией
 

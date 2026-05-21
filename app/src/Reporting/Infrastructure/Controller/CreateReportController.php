@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\RequestBody(
     required: true,
-    content: new OA\JsonContent(ref: new OA\Schema(type: CreateReportRequestDto::class)),
+    content: new OA\JsonContent(ref: CreateReportRequestDto::class),
 )]
 #[OA\Response(
     response: Response::HTTP_CREATED,
@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Ошибка бизнес-логики.',
 )]
-#[Route('/reporting/reports', name: 'reporting_create_report', methods: ['POST'])]
+#[Route('/api/reporting/reports', name: 'reporting_create_report', methods: ['POST'])]
 final class CreateReportController extends AbstractController
 {
     public function __construct(
