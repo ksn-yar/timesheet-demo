@@ -30,7 +30,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     description: 'Список ролей.',
     content: new OA\JsonContent(ref: RoleListResponseDto::class),
 )]
-#[Route('/work-catalog/roles', name: 'work_catalog_list_roles', methods: ['GET'])]
+#[Route('/api/work-catalog/roles', name: 'work_catalog_list_roles', methods: ['GET'])]
 #[IsGranted('ROLE_ADMIN')]
 final class ListRolesController extends AbstractController
 {

@@ -39,7 +39,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/project-management/clients/{id}', name: 'project_management_delete_client', methods: ['DELETE'])]
+#[Route('/api/project-management/clients/{id}', name: 'project_management_delete_client', methods: ['DELETE'])]
 final class DeleteClientController extends AbstractController
 {
     public function __construct(

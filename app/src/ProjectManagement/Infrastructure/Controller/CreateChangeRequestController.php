@@ -28,7 +28,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_CREATED, description: 'Запрос на изменение успешно создан.')]
 #[OA\Response(response: Response::HTTP_BAD_REQUEST, description: 'Невалидные данные запроса.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Проект не найден.')]
-#[Route('/project-management/change-requests', name: 'project_management_create_change_request', methods: ['POST'])]
+#[Route('/api/project-management/change-requests', name: 'project_management_create_change_request', methods: ['POST'])]
 final class CreateChangeRequestController extends AbstractController
 {
     public function __construct(

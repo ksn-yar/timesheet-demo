@@ -37,7 +37,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_NOT_FOUND,
     description: 'Клиент не найден.',
 )]
-#[Route('/project-management/projects', name: 'project_management_create_project', methods: ['POST'])]
+#[Route('/api/project-management/projects', name: 'project_management_create_project', methods: ['POST'])]
 final class CreateProjectController extends AbstractController
 {
     public function __construct(

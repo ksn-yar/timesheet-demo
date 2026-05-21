@@ -38,7 +38,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Нарушение бизнес-правил.',
 )]
-#[Route('/work-catalog/works', name: 'work_catalog_create_work', methods: ['POST'])]
+#[Route('/api/work-catalog/works', name: 'work_catalog_create_work', methods: ['POST'])]
 #[IsGranted('ROLE_ADMIN')]
 final class CreateWorkController extends AbstractController
 {

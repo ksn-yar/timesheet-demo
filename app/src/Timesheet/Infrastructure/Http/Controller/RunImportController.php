@@ -36,7 +36,7 @@ use Symfony\Component\Routing\Attribute\Route;
 )]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Политика импорта не найдена.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Политика импорта неактивна.')]
-#[Route('/timesheet/import-policies/{id}/run', name: 'timesheet_run_import', methods: ['POST'])]
+#[Route('/api/timesheet/import-policies/{id}/run', name: 'timesheet_run_import', methods: ['POST'])]
 final class RunImportController extends AbstractController
 {
     public function __construct(

@@ -33,7 +33,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список отчётов.',
     content: new OA\JsonContent(ref: ReportListResponseDto::class),
 )]
-#[Route('/reporting/reports', name: 'reporting_list_reports', methods: ['GET'])]
+#[Route('/api/reporting/reports', name: 'reporting_list_reports', methods: ['GET'])]
 final class ListReportsController extends AbstractController
 {
     public function __construct(

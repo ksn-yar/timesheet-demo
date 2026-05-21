@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Запрос на изменение успешно удалён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Запрос на изменение не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/project-management/change-requests/{id}', name: 'project_management_delete_change_request', methods: ['DELETE'])]
+#[Route('/api/project-management/change-requests/{id}', name: 'project_management_delete_change_request', methods: ['DELETE'])]
 final class DeleteChangeRequestController extends AbstractController
 {
     public function __construct(

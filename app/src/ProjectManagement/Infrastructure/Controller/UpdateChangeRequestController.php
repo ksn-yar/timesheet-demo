@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NO_CONTENT, description: 'Запрос на изменение успешно обновлён.')]
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Запрос на изменение не найден.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/project-management/change-requests/{id}', name: 'project_management_update_change_request', methods: ['PUT'])]
+#[Route('/api/project-management/change-requests/{id}', name: 'project_management_update_change_request', methods: ['PUT'])]
 final class UpdateChangeRequestController extends AbstractController
 {
     public function __construct(

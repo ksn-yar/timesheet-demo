@@ -29,7 +29,7 @@ use Symfony\Component\Routing\Attribute\Route;
     description: 'Список политик импорта.',
     content: new OA\JsonContent(ref: ImportPolicyListResponseDto::class),
 )]
-#[Route('/timesheet/import-policies', name: 'timesheet_list_import_policies', methods: ['GET'])]
+#[Route('/api/timesheet/import-policies', name: 'timesheet_list_import_policies', methods: ['GET'])]
 final class ListImportPoliciesController extends AbstractController
 {
     public function __construct(

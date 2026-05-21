@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_BAD_REQUEST,
     description: 'Невалидные данные запроса.',
 )]
-#[Route('/project-management/clients', name: 'project_management_create_client', methods: ['POST'])]
+#[Route('/api/project-management/clients', name: 'project_management_create_client', methods: ['POST'])]
 final class CreateClientController extends AbstractController
 {
     public function __construct(

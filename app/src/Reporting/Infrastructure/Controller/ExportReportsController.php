@@ -38,7 +38,7 @@ use Symfony\Component\Routing\Attribute\Route;
     response: Response::HTTP_UNPROCESSABLE_ENTITY,
     description: 'Ошибка генерации файла.',
 )]
-#[Route('/reporting/exports', name: 'reporting_export_reports', methods: ['POST'])]
+#[Route('/api/reporting/exports', name: 'reporting_export_reports', methods: ['POST'])]
 final class ExportReportsController extends AbstractController
 {
     public function __construct(

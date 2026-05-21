@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Identity\Infrastructure\Security\JsonAccessDeniedHandler;
 use App\Identity\Infrastructure\Security\JsonAuthenticationEntryPoint;
 use App\Identity\Infrastructure\Security\JsonLoginSuccessHandler;
 use App\Identity\Infrastructure\Security\UserProvider;
@@ -40,6 +41,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                     // Очищаем куки сессии и инвалидируем сессию при выходе
                     'invalidate_session' => true,
                 ],
+                'access_denied_handler' => JsonAccessDeniedHandler::class,
                 'entry_point' => JsonAuthenticationEntryPoint::class,
             ],
         ],

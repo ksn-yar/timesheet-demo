@@ -32,7 +32,7 @@ use Symfony\Component\Routing\Attribute\Route;
 #[OA\Response(response: Response::HTTP_NOT_FOUND, description: 'Политика импорта не найдена.')]
 #[OA\Response(response: Response::HTTP_CONFLICT, description: 'Конфликт при обновлении политики.')]
 #[OA\Response(response: Response::HTTP_UNPROCESSABLE_ENTITY, description: 'Нарушение бизнес-правил.')]
-#[Route('/timesheet/import-policies/{id}', name: 'timesheet_update_import_policy', methods: ['PUT'])]
+#[Route('/api/timesheet/import-policies/{id}', name: 'timesheet_update_import_policy', methods: ['PUT'])]
 final class UpdateImportPolicyController extends AbstractController
 {
     public function __construct(
