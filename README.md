@@ -78,3 +78,29 @@
 | `symfony/stopwatch`           | Замер времени выполнения участков кода (используется профайлером).         |
 | `symfony/web-profiler-bundle` | Веб-профайлер для отладки запросов, запросов к БД, событий.                |
 | `symplify/config-transformer` | Конвертация конфигурации Symfony из YAML/XML в PHP-формат.                 |
+
+## Docker-сервисы
+
+Инфраструктура запускается через `docker-compose.yaml` в корне проекта. Все порты на хосте следуют соглашению `11xxx`.
+
+| Контейнер           | Образ                                        | Порт (host)   | Назначение                                   |
+|---------------------|----------------------------------------------|---------------|----------------------------------------------|
+| `corpo-ts-backend`  | `php:8.4-fpm` (custom, `docker/backend`)     | —             | PHP-FPM, бэкенд-приложение                   |
+| `corpo-ts-nginx`    | `nginx:1.27-alpine` (custom, `docker/nginx`) | 11080         | Веб-сервер, проксирует запросы к PHP-FPM     |
+| `corpo-ts-frontend` | `node:22-alpine` (custom, `docker/frontend`) | 11300         | Vue.js / Nuxt.js — фронтенд в dev-режиме     |
+| `corpo-ts-db`       | `postgres:17-alpine`                         | 11432         | Основная БД PostgreSQL                       |
+| `corpo-ts-redis`    | `redis:7.4-alpine`                           | 11379         | Кэш, сессии, блокировки                      |
+| `corpo-ts-rabbitmq` | `rabbitmq:4.0-management-alpine`             | 11672 / 11673 | Брокер сообщений + Management UI             |
+| `corpo-ts-mailhog`  | `mailhog/mailhog:v1.0.1`                     | 11025 / 11826 | SMTP-ловушка + веб-интерфейс просмотра писем |
+
+Переменные окружения хранятся в `appBackend/.env` (шаблон — `appBackend/.env.example`).
+
+## Пакеты npm (Frontend)
+
+### Production
+
+| Пакет        | Версия  | Описание                                                      |
+|--------------|---------|---------------------------------------------------------------|
+| `nuxt`       | ^4.4.6  | Фреймворк для Vue.js с SSR, файловым роутингом и dev-сервером |
+| `vue`        | ^3.5.34 | Реактивный UI-фреймворк                                       |
+| `vue-router` | ^5.0.7  | Клиентская маршрутизация для Vue.js                           |
