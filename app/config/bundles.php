@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
+use Nelmio\CorsBundle\NelmioCorsBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -22,4 +23,5 @@ return [
     DoctrineMigrationsBundle::class => ['all' => true],
     SecurityBundle::class => ['all' => true],
     NelmioApiDocBundle::class => ['all' => true],
+    NelmioCorsBundle::class => ['all' => true],
 ];
