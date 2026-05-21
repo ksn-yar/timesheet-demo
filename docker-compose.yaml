@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www/app
     volumes:
-      - .:/var/www/app
+      - ./appBackend:/var/www/app
       - ./docker/backend/php.ini:/usr/local/etc/php/conf.d/99-custom.ini:ro
     environment:
       PHP_XDEBUG_MODE: ${PHP_XDEBUG_MODE}
@@ -44,9 +44,9 @@ services:
     ports:
       - "${NGINX_PORT}:80"
     volumes:
-      - .:/var/www/app:ro
+      - ./appBackend:/var/www/app:ro
       - ./docker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
-      - ./var/logNginx:/var/log/nginx/app
+      - ./appBackend/var/logNginx:/var/log/nginx/app
     depends_on:
       - corpo-ts-backend
     networks:
