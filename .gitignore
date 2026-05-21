@@ -9,3 +9,5 @@
 
 /docker/_data/*
 !/docker/_data/.gitkeep
+
+/.env
