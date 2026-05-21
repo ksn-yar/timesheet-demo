@@ -216,10 +216,10 @@ app/src/
 - **Метод `assignToGroup(GroupId $groupId)`:** назначает User в Group
 - **Метод `removeFromGroup()`:** снимает привязку к Group (`groupId = null`)
 - **Инварианты:**
-  - `name` не может быть пустым
-  - `email` должен быть уникальным в системе (проверяется на уровне репозитория)
-  - Soft-delete недоступен, если к User привязаны Ticket (проверяется на уровне Use Case)
-  - Пароль хранится только в хэшированном виде
+    - `name` не может быть пустым
+    - `email` должен быть уникальным в системе (проверяется на уровне репозитория)
+    - Soft-delete недоступен, если к User привязаны Ticket (проверяется на уровне Use Case)
+    - Пароль хранится только в хэшированном виде
 
 #### Group
 
@@ -230,8 +230,8 @@ app/src/
 - **Метод `softDelete()`:** устанавливает `deletedAt` в текущее время
 - **Метод `isDeleted(): bool`:** проверяет `deletedAt !== null`
 - **Инварианты:**
-  - `name` должен быть уникальным (проверяется на уровне репозитория)
-  - Group не может быть помечена удалённой при наличии активных User
+    - `name` должен быть уникальным (проверяется на уровне репозитория)
+    - Group не может быть помечена удалённой при наличии активных User
 
 ---
 
@@ -328,11 +328,11 @@ app/src/
 1. Поиск User по ID; при отсутствии -- `UserNotFoundException`
 2. Проверка: User не помечен удалённым; при нарушении -- `EntityDeletedException`
 3. Если указан `groupId`:
-   - Поиск Group по ID; при отсутствии -- `GroupNotFoundException`
-   - Проверка: Group не помечена удалённой; при нарушении -- `EntityDeletedException`
-   - Вызов `User::assignToGroup(groupId)`
+    - Поиск Group по ID; при отсутствии -- `GroupNotFoundException`
+    - Проверка: Group не помечена удалённой; при нарушении -- `EntityDeletedException`
+    - Вызов `User::assignToGroup(groupId)`
 4. Если `groupId` не указан (снятие привязки):
-   - Вызов `User::removeFromGroup()`
+    - Вызов `User::removeFromGroup()`
 5. Сохранение через `UserRepositoryInterface::save()`
 
 **CreateGroupUseCase:**
@@ -475,15 +475,15 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута |
 |---|---|---|---|
-| POST | `/identity/users` | `CreateUserController` | `identity_create_user` |
-| GET | `/identity/users` | `ListUsersController` | `identity_list_users` |
-| POST | `/identity/users/{id}/deactivate` | `DeactivateUserController` | `identity_deactivate_user` |
-| DELETE | `/identity/users/{id}` | `DeleteUserController` | `identity_delete_user` |
-| PUT | `/identity/users/{id}/group` | `AssignUserToGroupController` | `identity_assign_user_to_group` |
-| PATCH | `/identity/users/{id}/group` | `ChangeUserGroupController` | `identity_change_user_group` |
-| POST | `/identity/groups` | `CreateGroupController` | `identity_create_group` |
-| GET | `/identity/groups` | `ListGroupsController` | `identity_list_groups` |
-| DELETE | `/identity/groups/{id}` | `DeleteGroupController` | `identity_delete_group` |
+| POST | `/api/identity/users` | `CreateUserController` | `identity_create_user` |
+| GET | `/api/identity/users` | `ListUsersController` | `identity_list_users` |
+| POST | `/api/identity/users/{id}/deactivate` | `DeactivateUserController` | `identity_deactivate_user` |
+| DELETE | `/api/identity/users/{id}` | `DeleteUserController` | `identity_delete_user` |
+| PUT | `/api/identity/users/{id}/group` | `AssignUserToGroupController` | `identity_assign_user_to_group` |
+| PATCH | `/api/identity/users/{id}/group` | `ChangeUserGroupController` | `identity_change_user_group` |
+| POST | `/api/identity/groups` | `CreateGroupController` | `identity_create_group` |
+| GET | `/api/identity/groups` | `ListGroupsController` | `identity_list_groups` |
+| DELETE | `/api/identity/groups/{id}` | `DeleteGroupController` | `identity_delete_group` |
 
 **Примечание к маршрутам:**
 - `POST .../deactivate` -- выбран POST, так как деактивация является доменным действием, а не CRUD-операцией

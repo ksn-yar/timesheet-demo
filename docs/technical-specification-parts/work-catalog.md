@@ -352,31 +352,31 @@
 
 | Операция | Метод и путь | Входные данные | Выходные данные | Права |
 |----------|-------------|----------------|----------------|-------|
-| Создать Work | POST `/work-catalog/works` | `name` (обязательно, уникально среди активных), `description` (опционально) | Созданный Work с `id` | Admin |
-| Получить Work List | GET `/work-catalog/works` | Без обязательных фильтров | Полный список Work | Admin, Manager, Employee |
-| Получить Work по ID | GET `/work-catalog/works/{id}` | `id` | Work или ошибка 404 | Admin, Manager, Employee |
-| Обновить Work | PUT `/work-catalog/works/{id}` | `name` (уникально среди активных), `description` (опционально) | Обновлённый Work | Admin |
-| Удалить Work (Soft-delete) | DELETE `/work-catalog/works/{id}` | `id` | Подтверждение или ошибка | Admin |
+| Создать Work | POST `/api/work-catalog/works` | `name` (обязательно, уникально среди активных), `description` (опционально) | Созданный Work с `id` | Admin |
+| Получить Work List | GET `/api/work-catalog/works` | Без обязательных фильтров | Полный список Work | Admin, Manager, Employee |
+| Получить Work по ID | GET `/api/work-catalog/works/{id}` | `id` | Work или ошибка 404 | Admin, Manager, Employee |
+| Обновить Work | PUT `/api/work-catalog/works/{id}` | `name` (уникально среди активных), `description` (опционально) | Обновлённый Work | Admin |
+| Удалить Work (Soft-delete) | DELETE `/api/work-catalog/works/{id}` | `id` | Подтверждение или ошибка | Admin |
 
 ### Role
 
 | Операция | Метод и путь | Входные данные | Выходные данные | Права |
 |----------|-------------|----------------|----------------|-------|
-| Создать Role | POST `/work-catalog/roles` | `name` (обязательно, уникально среди активных), `description` (опционально) | Созданная Role с `id` | Admin |
-| Получить Role List | GET `/work-catalog/roles` | Без обязательных фильтров | Список Role | Admin, Manager, Employee |
-| Получить Role по ID | GET `/work-catalog/roles/{id}` | `id` | Role или ошибка 404 | Admin, Manager, Employee |
-| Обновить Role | PUT `/work-catalog/roles/{id}` | `name` (уникально среди активных), `description` (опционально) | Обновлённая Role | Admin |
-| Удалить Role (Soft-delete) | DELETE `/work-catalog/roles/{id}` | `id` | Подтверждение или ошибка | Admin |
+| Создать Role | POST `/api/work-catalog/roles` | `name` (обязательно, уникально среди активных), `description` (опционально) | Созданная Role с `id` | Admin |
+| Получить Role List | GET `/api/work-catalog/roles` | Без обязательных фильтров | Список Role | Admin, Manager, Employee |
+| Получить Role по ID | GET `/api/work-catalog/roles/{id}` | `id` | Role или ошибка 404 | Admin, Manager, Employee |
+| Обновить Role | PUT `/api/work-catalog/roles/{id}` | `name` (уникально среди активных), `description` (опционально) | Обновлённая Role | Admin |
+| Удалить Role (Soft-delete) | DELETE `/api/work-catalog/roles/{id}` | `id` | Подтверждение или ошибка | Admin |
 
 ### Rate
 
 | Операция | Метод и путь | Входные данные | Выходные данные | Права |
 |----------|-------------|----------------|----------------|-------|
-| Создать Rate | POST `/work-catalog/rates` | `amount` (строка, > 0), `currency` (3 символа), `effectiveFrom`, `roleId` (опционально), `workId` (опционально) | Созданная Rate с `id` | Admin |
-| Получить Rate List | GET `/work-catalog/rates` | Фильтры: `roleId`, `workId` (опционально) | Список Rate | Admin |
-| Получить Rate по ID | GET `/work-catalog/rates/{id}` | `id` | Rate или ошибка 404 | Admin |
-| Изменить Rate | PUT `/work-catalog/rates/{id}` | `amount`, `currency`, `effectiveFrom` (запрещено изменять, если Rate применена к Ticket, допустимо передать то же значение), `roleId` (опционально), `workId` (опционально) | Обновлённая Rate | Admin |
-| Удалить Rate (Soft-delete) | DELETE `/work-catalog/rates/{id}` | `id` | Подтверждение или ошибка | Admin |
+| Создать Rate | POST `/api/work-catalog/rates` | `amount` (строка, > 0), `currency` (3 символа), `effectiveFrom`, `roleId` (опционально), `workId` (опционально) | Созданная Rate с `id` | Admin |
+| Получить Rate List | GET `/api/work-catalog/rates` | Фильтры: `roleId`, `workId` (опционально) | Список Rate | Admin |
+| Получить Rate по ID | GET `/api/work-catalog/rates/{id}` | `id` | Rate или ошибка 404 | Admin |
+| Изменить Rate | PUT `/api/work-catalog/rates/{id}` | `amount`, `currency`, `effectiveFrom` (запрещено изменять, если Rate применена к Ticket, допустимо передать то же значение), `roleId` (опционально), `workId` (опционально) | Обновлённая Rate | Admin |
+| Удалить Rate (Soft-delete) | DELETE `/api/work-catalog/rates/{id}` | `id` | Подтверждение или ошибка | Admin |
 
 **Требования к ошибкам:**
 - Попытка изменить `effectiveFrom` у применённой Rate возвращает ошибку с явным указанием причины.

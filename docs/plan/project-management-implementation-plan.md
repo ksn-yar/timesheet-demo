@@ -620,22 +620,22 @@ app/src/
 
 | Метод | Путь | Контроллер | Имя маршрута |
 |---|---|---|---|
-| POST | `/project-management/clients` | `CreateClientController` | `project_management_create_client` |
-| GET | `/project-management/clients` | `ListClientsController` | `project_management_list_clients` |
-| PUT | `/project-management/clients/{id}` | `UpdateClientController` | `project_management_update_client` |
-| DELETE | `/project-management/clients/{id}` | `DeleteClientController` | `project_management_delete_client` |
-| POST | `/project-management/projects` | `CreateProjectController` | `project_management_create_project` |
-| GET | `/project-management/projects` | `ListProjectsController` | `project_management_list_projects` |
-| PUT | `/project-management/projects/{id}` | `UpdateProjectController` | `project_management_update_project` |
-| DELETE | `/project-management/projects/{id}` | `DeleteProjectController` | `project_management_delete_project` |
-| POST | `/project-management/change-requests` | `CreateChangeRequestController` | `project_management_create_change_request` |
-| GET | `/project-management/change-requests` | `ListChangeRequestsController` | `project_management_list_change_requests` |
-| PUT | `/project-management/change-requests/{id}` | `UpdateChangeRequestController` | `project_management_update_change_request` |
-| DELETE | `/project-management/change-requests/{id}` | `DeleteChangeRequestController` | `project_management_delete_change_request` |
-| POST | `/project-management/tasks` | `CreateTaskController` | `project_management_create_task` |
-| GET | `/project-management/tasks` | `ListTasksController` | `project_management_list_tasks` |
-| PUT | `/project-management/tasks/{id}` | `UpdateTaskController` | `project_management_update_task` |
-| DELETE | `/project-management/tasks/{id}` | `DeleteTaskController` | `project_management_delete_task` |
+| POST | `/api/project-management/clients` | `CreateClientController` | `project_management_create_client` |
+| GET | `/api/project-management/clients` | `ListClientsController` | `project_management_list_clients` |
+| PUT | `/api/project-management/clients/{id}` | `UpdateClientController` | `project_management_update_client` |
+| DELETE | `/api/project-management/clients/{id}` | `DeleteClientController` | `project_management_delete_client` |
+| POST | `/api/project-management/projects` | `CreateProjectController` | `project_management_create_project` |
+| GET | `/api/project-management/projects` | `ListProjectsController` | `project_management_list_projects` |
+| PUT | `/api/project-management/projects/{id}` | `UpdateProjectController` | `project_management_update_project` |
+| DELETE | `/api/project-management/projects/{id}` | `DeleteProjectController` | `project_management_delete_project` |
+| POST | `/api/project-management/change-requests` | `CreateChangeRequestController` | `project_management_create_change_request` |
+| GET | `/api/project-management/change-requests` | `ListChangeRequestsController` | `project_management_list_change_requests` |
+| PUT | `/api/project-management/change-requests/{id}` | `UpdateChangeRequestController` | `project_management_update_change_request` |
+| DELETE | `/api/project-management/change-requests/{id}` | `DeleteChangeRequestController` | `project_management_delete_change_request` |
+| POST | `/api/project-management/tasks` | `CreateTaskController` | `project_management_create_task` |
+| GET | `/api/project-management/tasks` | `ListTasksController` | `project_management_list_tasks` |
+| PUT | `/api/project-management/tasks/{id}` | `UpdateTaskController` | `project_management_update_task` |
+| DELETE | `/api/project-management/tasks/{id}` | `DeleteTaskController` | `project_management_delete_task` |
 
 ### Request DTO с валидацией
 
