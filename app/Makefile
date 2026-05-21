@@ -21,16 +21,16 @@ back-bash:
 	docker exec -it corpo-ts-backend bash
 
 back-migration-diff:
-	docker exec corpo-ts-backend bash -c "composer migrationDiff"
+	docker exec corpo-ts-backend bash -c "composer app:migrationDiff"
 
 back-migration-up:
-	docker exec corpo-ts-backend bash -c "composer migrationUp"
+	docker exec corpo-ts-backend bash -c "composer app:migrationUp"
 
 back-php-stan:
-	docker exec corpo-ts-backend bash -c "composer phpStan"
+	docker exec corpo-ts-backend bash -c "composer app:phpStan"
 
 back-cs-fix:
-	docker exec corpo-ts-backend bash -c "composer csFix"
+	docker exec corpo-ts-backend bash -c "composer app:csFix"
 
 # example: make back-exec composer i
 back-exec:
