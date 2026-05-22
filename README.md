@@ -53,6 +53,8 @@
 | `symfony/property-access`             | Чтение и запись свойств объектов и элементов массивов по пути.                |
 | `symfony/property-info`               | Извлечение метаданных о типах свойств объектов (используется сериализатором). |
 | `symfony/runtime`                     | Управление жизненным циклом приложения и точкой входа.                        |
+| `lexik/jwt-authentication-bundle`     | Stateless JWT-аутентификация: выдача и верификация access token.              |
+| `gesdinet/jwt-refresh-token-bundle`   | Управление refresh token: хранение в БД, ротация, инвалидация.                |
 | `symfony/security-bundle`             | Аутентификация и авторизация пользователей.                                   |
 | `symfony/serializer`                  | Сериализация и десериализация объектов в JSON, XML и другие форматы.          |
 | `symfony/twig-bundle`                 | Интеграция шаблонизатора Twig с Symfony.                                      |
