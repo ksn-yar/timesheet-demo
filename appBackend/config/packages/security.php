@@ -19,6 +19,9 @@ return static function (ContainerConfigurator $containerConfigurator): void {
                 'id' => UserProvider::class,
             ],
         ],
+        'role_hierarchy' => [
+            'ROLE_ADMIN' => ['ROLE_EMPLOYEE'],
+        ],
         'firewalls' => [
             'dev' => [
                 'pattern' => '^/(_profiler|_wdt|assets|build)/',

@@ -40,7 +40,7 @@ class RateRepository extends ServiceEntityRepository
      *
      * @return Rate[]
      */
-    public function findActiveAll(array $criteria, int $page, int $perPage): array
+    public function findActiveAll(array $criteria, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder('r')
             ->andWhere('r.deletedAt IS NULL')
@@ -60,8 +60,8 @@ class RateRepository extends ServiceEntityRepository
 
         return $qb
             ->orderBy('r.effectiveFrom', 'DESC')
-            ->setFirstResult(($page - 1) * $perPage)
-            ->setMaxResults($perPage)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
         ;

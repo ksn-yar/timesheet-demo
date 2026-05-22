@@ -52,7 +52,7 @@ class WorkRepository extends ServiceEntityRepository
      *
      * @return Work[]
      */
-    public function findActiveAll(array $criteria, int $page, int $perPage): array
+    public function findActiveAll(array $criteria, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder('w')
             ->andWhere('w.deletedAt IS NULL')
@@ -60,8 +60,8 @@ class WorkRepository extends ServiceEntityRepository
 
         return $qb
             ->orderBy('w.name', 'ASC')
-            ->setFirstResult(($page - 1) * $perPage)
-            ->setMaxResults($perPage)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
         ;

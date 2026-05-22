@@ -316,11 +316,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         HttpListRatesPresenter::class,
     );
 
-    // --- Work Catalog: Presenter как non-shared (новый экземпляр на каждый запрос) ---
+    // --- Work Catalog: Presenter как shared (один экземпляр на запрос — необходим для stateful паттерна presenter/output-port) ---
 
-    $services->set(HttpListWorksPresenter::class)->share(false);
-    $services->set(HttpListRolesPresenter::class)->share(false);
-    $services->set(HttpListRatesPresenter::class)->share(false);
+    $services->set(HttpListWorksPresenter::class);
+    $services->set(HttpListRolesPresenter::class);
+    $services->set(HttpListRatesPresenter::class);
 
     // --- Work Catalog: AuditLog Event Listener ---
 
@@ -405,11 +405,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         HttpRunImportPresenter::class,
     );
 
-    // --- Timesheet: Presenter как non-shared ---
+    // --- Timesheet: Presenter как shared (один экземпляр на запрос — необходим для stateful паттерна presenter/output-port) ---
 
-    $services->set(HttpListTicketsPresenter::class)->share(false);
-    $services->set(HttpListImportPoliciesPresenter::class)->share(false);
-    $services->set(HttpRunImportPresenter::class)->share(false);
+    $services->set(HttpListTicketsPresenter::class);
+    $services->set(HttpListImportPoliciesPresenter::class);
+    $services->set(HttpRunImportPresenter::class);
 
     // --- Timesheet: AuditLog Event Listener ---
 
@@ -462,11 +462,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         HttpListExportedReportsPresenter::class,
     );
 
-    // --- Reporting: Presenter как non-shared (новый экземпляр на каждый запрос) ---
+    // --- Reporting: Presenter как shared (один экземпляр на запрос — необходим для stateful паттерна presenter/output-port) ---
 
-    $services->set(HttpGetReportPresenter::class)->share(false);
-    $services->set(HttpListReportsPresenter::class)->share(false);
-    $services->set(HttpListExportedReportsPresenter::class)->share(false);
+    $services->set(HttpGetReportPresenter::class);
+    $services->set(HttpListReportsPresenter::class);
+    $services->set(HttpListExportedReportsPresenter::class);
 
     // --- Reporting: AuditLog Event Listener ---
 

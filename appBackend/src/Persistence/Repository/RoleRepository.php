@@ -53,7 +53,7 @@ class RoleRepository extends ServiceEntityRepository
      *
      * @return Role[]
      */
-    public function findActiveAll(array $criteria, int $page, int $perPage): array
+    public function findActiveAll(array $criteria, int $limit, int $offset): array
     {
         $qb = $this->createQueryBuilder('r')
             ->andWhere('r.deletedAt IS NULL')
@@ -61,8 +61,8 @@ class RoleRepository extends ServiceEntityRepository
 
         return $qb
             ->orderBy('r.name', 'ASC')
-            ->setFirstResult(($page - 1) * $perPage)
-            ->setMaxResults($perPage)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult()
         ;
@@ -90,7 +90,7 @@ class RoleRepository extends ServiceEntityRepository
             ->createQueryBuilder()
             ->select('COUNT(rate.id)')
             ->from(Rate::class, 'rate')
-            ->andWhere('rate.roleId = :roleId')
+            ->andWhere('IDENTITY(rate.role) = :roleId')
             ->setParameter('roleId', $roleId)
             ->andWhere('rate.deletedAt IS NULL')
             ->getQuery()

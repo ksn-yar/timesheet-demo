@@ -26,7 +26,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         gd \
         pcntl \
-        sockets
+        sockets \
+        bcmath
 
 # PHP расширения: PECL (redis, amqp, xdebug)
 RUN pecl install redis amqp xdebug \
