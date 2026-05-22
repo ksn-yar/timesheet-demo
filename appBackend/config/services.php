@@ -181,12 +181,12 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         HttpListTasksPresenter::class,
     );
 
-    // --- Project Management: Presenter как non-shared (новый экземпляр на каждый запрос) ---
+    // --- Project Management: Presenter как shared (один экземпляр на запрос — необходим для stateful паттерна presenter/output-port) ---
 
-    $services->set(HttpListClientsPresenter::class)->share(false);
-    $services->set(HttpListProjectsPresenter::class)->share(false);
-    $services->set(HttpListChangeRequestsPresenter::class)->share(false);
-    $services->set(HttpListTasksPresenter::class)->share(false);
+    $services->set(HttpListClientsPresenter::class);
+    $services->set(HttpListProjectsPresenter::class);
+    $services->set(HttpListChangeRequestsPresenter::class);
+    $services->set(HttpListTasksPresenter::class);
 
     // --- Project Management: AuditLog Event Listener ---
 

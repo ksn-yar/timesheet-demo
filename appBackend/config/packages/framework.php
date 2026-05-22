@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
+use Symfony\Component\Validator\Exception\ValidationFailedException;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
     $containerConfigurator->extension('framework', [
@@ -13,11 +15,11 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         // Маппинг исключений на HTTP-статусы
         'exceptions' => [
             // ValidationFailedException бросается из AbstractValueResolver при провале Symfony Validator
-            \Symfony\Component\Validator\Exception\ValidationFailedException::class => [
+            ValidationFailedException::class => [
                 'status_code' => 400,
             ],
             // MissingConstructorArgumentsException бросается сериализатором когда обязательное поле отсутствует в запросе
-            \Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException::class => [
+            MissingConstructorArgumentsException::class => [
                 'status_code' => 400,
             ],
         ],
