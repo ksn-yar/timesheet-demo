@@ -66,15 +66,15 @@ final readonly class DoctrineRateProvider implements RateProviderInterface
         ;
 
         if (null !== $workId) {
-            $qb->andWhere('r.workId = :workId')->setParameter('workId', $workId);
+            $qb->andWhere('IDENTITY(r.work) = :workId')->setParameter('workId', $workId);
         } else {
-            $qb->andWhere('r.workId IS NULL');
+            $qb->andWhere('r.work IS NULL');
         }
 
         if (null !== $roleId) {
-            $qb->andWhere('r.roleId = :roleId')->setParameter('roleId', $roleId);
+            $qb->andWhere('IDENTITY(r.role) = :roleId')->setParameter('roleId', $roleId);
         } else {
-            $qb->andWhere('r.roleId IS NULL');
+            $qb->andWhere('r.role IS NULL');
         }
 
         /** @var null|RateOrmEntity $rate */

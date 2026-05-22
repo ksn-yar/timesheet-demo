@@ -7,10 +7,12 @@ namespace App\Tests\Functional;
 use App\Persistence\Entity\ChangeRequest as ChangeRequestOrmEntity;
 use App\Persistence\Entity\Client as ClientOrmEntity;
 use App\Persistence\Entity\Group as GroupOrmEntity;
+use App\Persistence\Entity\ImportPolicy as ImportPolicyOrmEntity;
 use App\Persistence\Entity\Project as ProjectOrmEntity;
 use App\Persistence\Entity\Rate as RateOrmEntity;
 use App\Persistence\Entity\Role as RoleOrmEntity;
 use App\Persistence\Entity\Task as TaskOrmEntity;
+use App\Persistence\Entity\Ticket as TicketOrmEntity;
 use App\Persistence\Entity\User as UserOrmEntity;
 use App\Persistence\Entity\Work as WorkOrmEntity;
 use DateTimeImmutable;
@@ -66,6 +68,13 @@ abstract class FunctionalTestCase extends WebTestCase
 
     protected const string FIXTURE_RATE_ID_1 = 'f3456789-89ab-4cde-8f01-234567890001';
     protected const string FIXTURE_RATE_ID_2 = 'f3456789-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_TICKET_ID_1 = 'a4567890-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_TICKET_ID_2 = 'a4567890-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_IMPORT_POLICY_ID_1 = 'a5678901-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_IMPORT_POLICY_ID_2 = 'a5678901-89ab-4cde-8f01-234567890002';
+
     protected KernelBrowser $client;
     protected string $jwtToken;
 
@@ -352,6 +361,86 @@ abstract class FunctionalTestCase extends WebTestCase
         $em->flush();
 
         return $id;
+    }
+
+    /** Создаёт политику импорта в БД и возвращает её ID. */
+    protected function createImportPolicy(
+        string $name = 'Тестовая политика',
+        string $sourceSystem = 'jira',
+        bool $allowEdit = false,
+        bool $isActive = false,
+        string $id = self::FIXTURE_IMPORT_POLICY_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $policy = new ImportPolicyOrmEntity();
+        $policy->setId($id);
+        $policy->setName($name);
+        $policy->setSourceSystem($sourceSystem);
+        $policy->setMappingRules(['field' => 'value']);
+        $policy->setAllowEdit($allowEdit);
+        $policy->setIsActive($isActive);
+        $policy->setCreatedAt(new DateTimeImmutable());
+
+        $em->persist($policy);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Создаёт тикет в БД напрямую и возвращает его ID. */
+    protected function createTicket(
+        string $employeeId,
+        string $taskId,
+        string $workId,
+        string $date = '2026-01-15',
+        string $hours = '8.00',
+        string $rateSnapshot = '0.00',
+        string $type = 'manual',
+        bool $isEditable = true,
+        string $id = self::FIXTURE_TICKET_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $employee = $em->find(UserOrmEntity::class, $employeeId);
+        \assert(null !== $employee);
+
+        $task = $em->find(TaskOrmEntity::class, $taskId);
+        \assert(null !== $task);
+
+        $work = $em->find(WorkOrmEntity::class, $workId);
+        \assert(null !== $work);
+
+        $ticket = new TicketOrmEntity();
+        $ticket->setId($id);
+        $ticket->setEmployee($employee);
+        $ticket->setTask($task);
+        $ticket->setWork($work);
+        $ticket->setDate(new DateTimeImmutable($date));
+        $ticket->setHours($hours);
+        $ticket->setRateSnapshot($rateSnapshot);
+        $ticket->setType($type);
+        $ticket->setIsEditable($isEditable);
+        $ticket->setCreatedAt(new DateTimeImmutable());
+
+        $em->persist($ticket);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Генерирует JWT для существующего пользователя по его ID. */
+    protected function generateJwtForUser(string $userId): string
+    {
+        $em = $this->getEntityManager();
+
+        $user = $em->find(UserOrmEntity::class, $userId);
+        \assert(null !== $user);
+
+        /** @var JWTTokenManagerInterface $jwtManager */
+        $jwtManager = static::getContainer()->get(JWTTokenManagerInterface::class);
+
+        return $jwtManager->create($user);
     }
 
     /**
