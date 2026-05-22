@@ -47,6 +47,7 @@
         "vich/uploader-bundle": "^2.9"
     },
     "require-dev": {
+        "dama/doctrine-test-bundle": "^8.6",
         "deptrac/deptrac": "^4.6",
         "doctrine/doctrine-fixtures-bundle": "^4.3",
         "friendsofphp/php-cs-fixer": "^3.94",
@@ -106,6 +107,7 @@
         "app:migrationDiff": "./bin/console doctrine:migrations:diff --no-interaction",
         "app:migrationUp": "./bin/console doctrine:migrations:migrate --no-interaction",
         "app:deptrac": "vendor/bin/deptrac",
+        "app:unitTest": "vendor/bin/phpunit --testdox",
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -120,7 +122,8 @@
         "app:configTransform": "Transform configs yaml files to php",
         "app:migrationDiff": "Create migration via dovctrine diff",
         "app:migrationUp": "Apply new migrations",
-        "app:deptrac": "Run deptrac"
+        "app:deptrac": "Run deptrac",
+        "app:unitTest": "Run unit test"
     },
     "conflict": {
         "symfony/symfony": "*"

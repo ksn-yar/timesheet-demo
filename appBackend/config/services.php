@@ -246,10 +246,10 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         HttpListGroupsPresenter::class,
     );
 
-    // --- Identity: Presenter как non-shared (новый экземпляр на каждый запрос) ---
+    // --- Identity: Presenter как shared (один экземпляр на запрос — необходим для stateful паттерна presenter/output-port) ---
 
-    $services->set(HttpListUsersPresenter::class)->share(false);
-    $services->set(HttpListGroupsPresenter::class)->share(false);
+    $services->set(HttpListUsersPresenter::class);
+    $services->set(HttpListGroupsPresenter::class);
 
     // --- Identity: AuditLog Event Listener ---
 
