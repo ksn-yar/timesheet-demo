@@ -2,29 +2,60 @@ deptrac:
     paths:
         - ./src
     exclude_files:
+        - '#.*DataFixtures.*#'
         - '#.*test.*#'
     layers:
         -
-            name: Controller
+            name: Domain
             collectors:
                 -
                     type: classLike
-                    value: .*Controller.*
+                    value: 'App\\(Identity|ProjectManagement|Reporting|Timesheet|WorkCatalog)\\Domain\\'
         -
-            name: Repository
+            name: Application
             collectors:
                 -
                     type: classLike
-                    value: .*Repository.*
+                    value: 'App\\(Identity|ProjectManagement|Reporting|Timesheet|WorkCatalog)\\Application\\'
         -
-            name: Service
+            name: Infrastructure
             collectors:
                 -
                     type: classLike
-                    value: .*Service.*
+                    value: 'App\\(Identity|ProjectManagement|Reporting|Timesheet|WorkCatalog)\\Infrastructure\\'
+        -
+            name: Shared
+            collectors:
+                -
+                    type: classLike
+                    value: 'App\\Shared\\'
+        -
+            name: Persistence
+            collectors:
+                -
+                    type: classLike
+                    value: 'App\\Persistence\\'
+        -
+            name: Kernel
+            collectors:
+                -
+                    type: classLike
+                    value: '^App\\Kernel$'
     ruleset:
-        Controller:
-            - Service
-        Service:
-            - Repository
-        Repository:
+        Domain: ~
+        Application:
+            - Domain
+        Infrastructure:
+            - Application
+            - Domain
+            - Persistence
+            - Shared
+        Shared:
+            - Persistence
+        Persistence: ~
+        Kernel:
+            - Infrastructure
+            - Application
+            - Domain
+            - Persistence
+            - Shared
