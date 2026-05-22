@@ -105,6 +105,7 @@
         "app:configTransform": "vendor/bin/config-transformer config",
         "app:migrationDiff": "./bin/console doctrine:migrations:diff --no-interaction",
         "app:migrationUp": "./bin/console doctrine:migrations:migrate --no-interaction",
+        "app:deptrac": "vendor/bin/deptrac",
         "post-install-cmd": [
             "@auto-scripts"
         ],
@@ -118,7 +119,8 @@
         "app:nelmioDoc": "Create php nelmio openapi.yaml in share",
         "app:configTransform": "Transform configs yaml files to php",
         "app:migrationDiff": "Create migration via dovctrine diff",
-        "app:migrationUp": "Apply new migrations"
+        "app:migrationUp": "Apply new migrations",
+        "app:deptrac": "Run deptrac"
     },
     "conflict": {
         "symfony/symfony": "*"

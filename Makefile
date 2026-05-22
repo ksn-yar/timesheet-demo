@@ -32,6 +32,9 @@ back-php-stan:
 back-cs-fix:
 	docker exec corpo-ts-backend bash -c "composer app:csFix"
 
+back-deptrac:
+	docker exec corpo-ts-backend bash -c "composer app:deptrac"
+
 # example: make back-exec composer i
 back-exec:
 	docker exec -it corpo-ts-backend $(filter-out $@,$(MAKECMDGOALS))
