@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Identity\Infrastructure\Controller;
+namespace App\Shared\Infrastructure\Controller;
 
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /** Контроллер главной страницы. */
-#[OA\Tag(name: 'Identity')]
+#[OA\Tag(name: 'Shared')]
 #[OA\Get(
     path: '/api/',
     description: 'Проверочный эндпоинт.',
@@ -27,7 +27,7 @@ use Symfony\Component\Routing\Attribute\Route;
         type: 'object',
     ),
 )]
-#[Route('/api/', name: 'identity_home', methods: ['GET'])]
+#[Route('/api/', name: 'shared_home', methods: ['GET'])]
 final class HomeController extends AbstractController
 {
     public function __invoke(): JsonResponse

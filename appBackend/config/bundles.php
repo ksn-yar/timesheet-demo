@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
 use Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle;
 use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
@@ -28,4 +29,5 @@ return [
     NelmioApiDocBundle::class => ['all' => true],
     NelmioCorsBundle::class => ['all' => true],
     GesdinetJWTRefreshTokenBundle::class => ['all' => true],
+    DoctrineFixturesBundle::class => ['dev' => true, 'test' => true],
 ];
