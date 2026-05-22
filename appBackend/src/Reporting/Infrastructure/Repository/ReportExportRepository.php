@@ -6,6 +6,7 @@ namespace App\Reporting\Infrastructure\Repository;
 
 use App\Persistence\Entity\ReportExport as ReportExportEntity;
 use App\Persistence\Repository\ReportExportRepository as DoctrineReportExportRepository;
+use App\Reporting\Domain\Enum\ExportFormat;
 use App\Reporting\Domain\Repository\ReportExportRepositoryInterface;
 use App\Reporting\Domain\ValueObject\ReportExport;
 use App\Reporting\Domain\ValueObject\ReportExportId;
@@ -30,7 +31,7 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         }
 
         $entity->setReportIds($export->reportIds());
-        $entity->setFormat($export->format());
+        $entity->setFormat($export->format()->value);
         $entity->setGeneratedAt($export->generatedAt());
         $entity->setFileRef($export->fileRef());
 
@@ -80,7 +81,7 @@ final class ReportExportRepository implements ReportExportRepositoryInterface
         return new ReportExport(
             id: new ReportExportId($entity->getId()),
             reportIds: $entity->getReportIds(),
-            format: $entity->getFormat(),
+            format: ExportFormat::from($entity->getFormat()),
             generatedAt: $entity->getGeneratedAt(),
             fileRef: $entity->getFileRef(),
         );

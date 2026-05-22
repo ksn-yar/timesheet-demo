@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Persistence\Entity;
 
 use App\Persistence\Repository\ReportExportRepository;
-use App\Reporting\Domain\Enum\ExportFormat;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -25,8 +24,8 @@ class ReportExport
     #[ORM\Column(name: 'report_ids', type: 'json')]
     private array $reportIds;
 
-    #[ORM\Column(type: 'string', length: 10, enumType: ExportFormat::class)]
-    private ExportFormat $format;
+    #[ORM\Column(type: 'string', length: 10)]
+    private string $format;
 
     #[ORM\Column(name: 'generated_at', type: 'datetime_immutable')]
     private DateTimeImmutable $generatedAt;
@@ -56,12 +55,12 @@ class ReportExport
         $this->reportIds = $reportIds;
     }
 
-    public function getFormat(): ExportFormat
+    public function getFormat(): string
     {
         return $this->format;
     }
 
-    public function setFormat(ExportFormat $format): void
+    public function setFormat(string $format): void
     {
         $this->format = $format;
     }
