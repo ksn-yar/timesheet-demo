@@ -16,10 +16,9 @@ use Gesdinet\JWTRefreshTokenBundle\Model\AbstractRefreshToken;
  */
 #[ORM\Entity(repositoryClass: UserRefreshTokenRepository::class)]
 #[ORM\Table(name: 'user_refresh_tokens')]
-#[ORM\Index(columns: ['refresh_token'], name: 'idx_user_refresh_tokens_token')]
-#[ORM\Index(columns: ['username'], name: 'idx_user_refresh_tokens_username')]
-#[ORM\Index(columns: ['valid'], name: 'idx_user_refresh_tokens_valid')]
-#[ORM\Index(columns: ['user_id'], name: 'idx_user_refresh_tokens_user_id')]
+#[ORM\Index(name: 'idx_user_refresh_tokens_username', columns: ['username'])]
+#[ORM\Index(name: 'idx_user_refresh_tokens_valid', columns: ['valid'])]
+#[ORM\Index(name: 'idx_user_refresh_tokens_user_id', columns: ['user_id'])]
 class UserRefreshToken extends AbstractRefreshToken
 {
     #[ORM\Id]
