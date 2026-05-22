@@ -4,47 +4,70 @@ declare(strict_types=1);
 
 namespace App\Shared\Infrastructure\Controller;
 
-use App\Persistence\Entity\User;
-use App\Persistence\Entity\UserRefreshToken;
-use Exception;
-use Gesdinet\JWTRefreshTokenBundle\Generator\RefreshTokenGeneratorInterface;
-use Gesdinet\JWTRefreshTokenBundle\Model\RefreshTokenManagerInterface;
-use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
+use App\Shared\Infrastructure\Exception\AuthException;
+use App\Shared\Infrastructure\Service\AuthService;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
 
-/**
- * Контроллер аутентификации. Обрабатывает вход, обновление и отзыв JWT-токенов
- * в рамках stateless API.
- */
+/** Контроллер аутентификации. Обрабатывает вход, обновление и отзыв JWT-токенов. */
+#[OA\Tag(name: 'Auth')]
 final class AuthController extends AbstractController
 {
     public function __construct(
-        /** @var UserProviderInterface<User> */
-        private readonly UserProviderInterface $userProvider,
-        private readonly UserPasswordHasherInterface $passwordHasher,
-        private readonly JWTTokenManagerInterface $jwtTokenManager,
-        private readonly RefreshTokenGeneratorInterface $refreshTokenGenerator,
-        private readonly RefreshTokenManagerInterface $refreshTokenManager,
-        #[Autowire('%env(int:JWT_REFRESH_TOKEN_TTL)%')]
-        private readonly int $refreshTokenTtl,
+        private readonly AuthService $authService,
     ) {}
 
-    /**
-     * Аутентифицирует пользователя по email и паролю.
-     * Возвращает JWT access token, refresh token и данные пользователя.
-     */
+    #[OA\Post(
+        path: '/api/auth/login',
+        description: 'Аутентифицирует пользователя по email и паролю. Возвращает JWT access token, refresh token и данные пользователя.',
+        summary: 'Войти в систему',
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['email', 'password'],
+            properties: [
+                new OA\Property(property: 'email', type: 'string', format: 'email', example: 'user@example.com'),
+                new OA\Property(property: 'password', type: 'string', format: 'password', example: 'secret'),
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: Response::HTTP_OK,
+        description: 'Успешная аутентификация.',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'token', description: 'JWT access token.', type: 'string'),
+                new OA\Property(property: 'refresh_token', type: 'string'),
+                new OA\Property(
+                    property: 'user',
+                    properties: [
+                        new OA\Property(property: 'id', type: 'integer'),
+                        new OA\Property(property: 'email', type: 'string', format: 'email'),
+                        new OA\Property(property: 'name', type: 'string'),
+                        new OA\Property(property: 'systemRole', type: 'string'),
+                    ],
+                    type: 'object',
+                ),
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: Response::HTTP_BAD_REQUEST,
+        description: 'Не указан email или пароль.',
+    )]
+    #[OA\Response(
+        response: Response::HTTP_UNAUTHORIZED,
+        description: 'Неверный email или пароль.',
+    )]
     #[Route('/api/auth/login', name: 'api_auth_login', methods: ['POST'])]
     public function login(Request $request): JsonResponse
     {
         $data = $request->toArray();
-
         $email = trim((string) ($data['email'] ?? ''));
         $password = (string) ($data['password'] ?? '');
 
@@ -56,45 +79,49 @@ final class AuthController extends AbstractController
         }
 
         try {
-            /** @var User $user */
-            $user = $this->userProvider->loadUserByIdentifier($email);
-        } catch (Exception) {
-            // Намеренно возвращаем одинаковое сообщение — не раскрываем информацию о существовании аккаунта
+            $result = $this->authService->login($email, $password);
+        } catch (AuthException $e) {
             return new JsonResponse(
-                ['error' => 'Неверный email или пароль.'],
+                ['error' => $e->getMessage()],
                 Response::HTTP_UNAUTHORIZED,
             );
         }
 
-        if (!$this->passwordHasher->isPasswordValid($user, $password)) {
-            return new JsonResponse(
-                ['error' => 'Неверный email или пароль.'],
-                Response::HTTP_UNAUTHORIZED,
-            );
-        }
-
-        $accessToken = $this->jwtTokenManager->create($user);
-        $refreshToken = $this->refreshTokenGenerator->createForUserWithTtl($user, $this->refreshTokenTtl);
-        \assert($refreshToken instanceof UserRefreshToken);
-        $refreshToken->setUser($user);
-        $this->refreshTokenManager->save($refreshToken);
-
-        return new JsonResponse([
-            'token' => $accessToken,
-            'refresh_token' => $refreshToken->getRefreshToken(),
-            'user' => [
-                'id' => $user->getId(),
-                'email' => $user->getEmail(),
-                'name' => $user->getName(),
-                'systemRole' => $user->getSystemRole(),
-            ],
-        ]);
+        return new JsonResponse($result);
     }
 
-    /**
-     * Обновляет пару токенов по действующему refresh token.
-     * При single_use=true старый refresh token инвалидируется, выдаётся новый.
-     */
+    #[OA\Post(
+        path: '/api/auth/refresh',
+        description: 'Выдаёт новую пару access/refresh токенов по действующему refresh token. Старый refresh token инвалидируется (single use).',
+        summary: 'Обновить токены',
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['refresh_token'],
+            properties: [
+                new OA\Property(property: 'refresh_token', type: 'string'),
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: Response::HTTP_OK,
+        description: 'Токены успешно обновлены.',
+        content: new OA\JsonContent(
+            properties: [
+                new OA\Property(property: 'token', description: 'Новый JWT access token.', type: 'string'),
+                new OA\Property(property: 'refresh_token', description: 'Новый refresh token.', type: 'string'),
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: Response::HTTP_BAD_REQUEST,
+        description: 'Не передан refresh_token.',
+    )]
+    #[OA\Response(
+        response: Response::HTTP_UNAUTHORIZED,
+        description: 'Refresh token не найден, истёк или пользователь не найден.',
+    )]
     #[Route('/api/auth/refresh', name: 'api_auth_refresh', methods: ['POST'])]
     public function refresh(Request $request): JsonResponse
     {
@@ -108,57 +135,41 @@ final class AuthController extends AbstractController
             );
         }
 
-        $refreshToken = $this->refreshTokenManager->get($refreshTokenValue);
-
-        if (null === $refreshToken) {
-            return new JsonResponse(
-                ['error' => 'Refresh token не найден.'],
-                Response::HTTP_UNAUTHORIZED,
-            );
-        }
-
-        if (!$refreshToken->isValid()) {
-            // Удаляем просроченный токен из БД при попытке его использования
-            $this->refreshTokenManager->delete($refreshToken);
-
-            return new JsonResponse(
-                ['error' => 'Refresh token истёк.'],
-                Response::HTTP_UNAUTHORIZED,
-            );
-        }
-
-        $username = $refreshToken->getUsername();
-
         try {
-            /** @var User $user */
-            $user = $this->userProvider->loadUserByIdentifier((string) $username);
-        } catch (Exception) {
-            $this->refreshTokenManager->delete($refreshToken);
-
+            $result = $this->authService->refreshTokens($refreshTokenValue);
+        } catch (AuthException $e) {
             return new JsonResponse(
-                ['error' => 'Пользователь не найден.'],
+                ['error' => $e->getMessage()],
                 Response::HTTP_UNAUTHORIZED,
             );
         }
 
-        // Удаляем старый refresh token (single_use: логика инвалидации)
-        $this->refreshTokenManager->delete($refreshToken);
-
-        $newAccessToken = $this->jwtTokenManager->create($user);
-        $newRefreshToken = $this->refreshTokenGenerator->createForUserWithTtl($user, $this->refreshTokenTtl);
-        \assert($newRefreshToken instanceof UserRefreshToken);
-        $newRefreshToken->setUser($user);
-        $this->refreshTokenManager->save($newRefreshToken);
-
-        return new JsonResponse([
-            'token' => $newAccessToken,
-            'refresh_token' => $newRefreshToken->getRefreshToken(),
-        ]);
+        return new JsonResponse($result);
     }
 
-    /**
-     * Отзывает refresh token пользователя. Требует валидного access token в заголовке.
-     */
+    #[OA\Post(
+        path: '/api/auth/logout',
+        description: 'Отзывает refresh token. Идемпотентен — если токен уже удалён, возвращает 204. Требует валидного JWT access token в заголовке Authorization.',
+        summary: 'Выйти из системы',
+        security: [['Bearer' => []]],
+    )]
+    #[OA\RequestBody(
+        required: true,
+        content: new OA\JsonContent(
+            required: ['refresh_token'],
+            properties: [
+                new OA\Property(property: 'refresh_token', type: 'string'),
+            ],
+        ),
+    )]
+    #[OA\Response(
+        response: Response::HTTP_NO_CONTENT,
+        description: 'Выход выполнен успешно.',
+    )]
+    #[OA\Response(
+        response: Response::HTTP_BAD_REQUEST,
+        description: 'Не передан refresh_token.',
+    )]
     #[Route('/api/auth/logout', name: 'api_auth_logout', methods: ['POST'])]
     public function logout(Request $request): JsonResponse
     {
@@ -172,14 +183,7 @@ final class AuthController extends AbstractController
             );
         }
 
-        $refreshToken = $this->refreshTokenManager->get($refreshTokenValue);
-
-        if (null === $refreshToken) {
-            // Идемпотентное поведение — если токен уже удалён, считаем logout успешным
-            return new JsonResponse(null, Response::HTTP_NO_CONTENT);
-        }
-
-        $this->refreshTokenManager->delete($refreshToken);
+        $this->authService->revokeRefreshToken($refreshTokenValue);
 
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
