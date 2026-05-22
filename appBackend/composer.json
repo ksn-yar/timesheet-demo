@@ -23,6 +23,8 @@
         "doctrine/migrations": "^3.9",
         "doctrine/orm": "^3.6",
         "dompdf/dompdf": "^3.1",
+        "gesdinet/jwt-refresh-token-bundle": "^2.0",
+        "lexik/jwt-authentication-bundle": "^3.2",
         "nelmio/api-doc-bundle": "^5.9",
         "nelmio/cors-bundle": "^2.6",
         "phpoffice/phpspreadsheet": "^5.6",

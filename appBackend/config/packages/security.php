@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Identity\Infrastructure\Security\JsonAccessDeniedHandler;
-use App\Identity\Infrastructure\Security\JsonAuthenticationEntryPoint;
-use App\Identity\Infrastructure\Security\JsonLoginSuccessHandler;
-use App\Identity\Infrastructure\Security\UserProvider;
 use App\Persistence\Entity\User;
+use App\Shared\Infrastructure\Security\JsonAccessDeniedHandler;
+use App\Shared\Infrastructure\Security\JsonAuthenticationEntryPoint;
+use App\Shared\Infrastructure\Security\UserProvider;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 
 return static function (ContainerConfigurator $containerConfigurator): void {
@@ -27,27 +26,22 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             ],
             'api' => [
                 'pattern' => '^/api/',
-                'stateless' => false,
+                // JWT-аутентификация — каждый запрос самодостаточен, сессия не нужна
+                'stateless' => true,
                 'provider' => 'app_user_provider',
-                'json_login' => [
-                    'check_path' => '/api/login',
-                    'username_path' => 'email',
-                    'password_path' => 'password',
-                    'success_handler' => JsonLoginSuccessHandler::class,
-                    // Стандартный JsonLoginFailureHandler возвращает 401 JSON — подходит без кастомизации
-                ],
-                'logout' => [
-                    'path' => '/api/logout',
-                    // Очищаем куки сессии и инвалидируем сессию при выходе
-                    'invalidate_session' => true,
-                ],
+                'jwt' => null,
                 'access_denied_handler' => JsonAccessDeniedHandler::class,
                 'entry_point' => JsonAuthenticationEntryPoint::class,
             ],
         ],
         'access_control' => [
-            ['path' => '^/api/login$', 'roles' => 'PUBLIC_ACCESS'],
-            ['path' => '^/api/logout$', 'roles' => 'ROLE_USER'],
+            // Эндпоинт логина открыт для всех
+            ['path' => '^/api/auth/login$', 'roles' => 'PUBLIC_ACCESS'],
+            // Обновление токена не требует действующего access token
+            ['path' => '^/api/auth/refresh$', 'roles' => 'PUBLIC_ACCESS'],
+            // Логаут требует аутентификации — нужен валидный access token
+            ['path' => '^/api/auth/logout$', 'roles' => 'ROLE_USER'],
+            // Все остальные API-маршруты требуют аутентификации
             ['path' => '^/api/', 'roles' => 'ROLE_USER'],
         ],
     ]);

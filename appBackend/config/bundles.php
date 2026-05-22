@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle;
+use Gesdinet\JWTRefreshTokenBundle\GesdinetJWTRefreshTokenBundle;
+use Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -22,6 +24,8 @@ return [
     DoctrineBundle::class => ['all' => true],
     DoctrineMigrationsBundle::class => ['all' => true],
     SecurityBundle::class => ['all' => true],
+    LexikJWTAuthenticationBundle::class => ['all' => true],
     NelmioApiDocBundle::class => ['all' => true],
     NelmioCorsBundle::class => ['all' => true],
+    GesdinetJWTRefreshTokenBundle::class => ['all' => true],
 ];

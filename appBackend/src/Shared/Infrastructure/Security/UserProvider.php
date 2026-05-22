@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Identity\Infrastructure\Security;
+namespace App\Shared\Infrastructure\Security;
 
 use App\Persistence\Entity\User;
 use App\Persistence\Repository\UserRepository;

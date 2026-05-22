@@ -16,6 +16,11 @@
 /var/logNginx/*
 !/var/logNginx/.gitkeep
 
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/private.pem
+/config/jwt/public.pem
+###< lexik/jwt-authentication-bundle ###
+
 ###> phpunit/phpunit ###
 /phpunit.xml
 /.phpunit.cache/
