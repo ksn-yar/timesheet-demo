@@ -6,3 +6,8 @@
 /.claude/memory/
 /tmp/*
 !/tmp/.gitkeep
+
+/docker/_data/*
+!/docker/_data/.gitkeep
+
+/.env

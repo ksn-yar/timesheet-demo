@@ -29,13 +29,13 @@
 
 | Сервис | Образ | Порт (host) | Назначение |
 |--------|-------|-------------|------------|
-| **app** | `php:8.4-fpm` (custom Dockerfile) | 9000 | PHP-FPM, бэкенд-приложение. Расширения: pdo_pgsql, intl, opcache, amqp, redis, zip, gd |
-| **nginx** | `nginx:1.27-alpine` | 8080 | Веб-сервер, проксирует запросы к php-fpm |
-| **db** | `postgres:17-alpine` | 5432 | Основная БД. Volumes для персистентности данных |
-| **redis** | `redis:7.4-alpine` | 6379 | Кеширование read-моделей, сессии, блокировки |
-| **rabbitmq** | `rabbitmq:4.0-management-alpine` | 5672 / 15672 | Брокер очередей + management UI |
-| **mailhog** | `mailhog/mailhog:v1.0.1` | 1025 / 8025 | SMTP-ловушка + веб-интерфейс просмотра писем |
-| **worker** | тот же образ, что и app | - | Symfony Messenger consumer (команда `messenger:consume`) |
+| **corpo-ts-backend** | `php:8.4-fpm` (custom Dockerfile, `docker/backend`) | 9000 | PHP-FPM, бэкенд-приложение. Расширения: pdo_pgsql, intl, opcache, amqp, redis, zip, gd |
+| **corpo-ts-nginx** | `nginx:1.27-alpine` (custom Dockerfile, `docker/nginx`) | 11080 | Веб-сервер, проксирует запросы к php-fpm |
+| **corpo-ts-frontend** | `node:22-alpine` (custom Dockerfile, `docker/frontend`) | 11300 | Vue.js / Nuxt.js — фронтенд в dev-режиме (`npm run dev`) |
+| **corpo-ts-db** | `postgres:17-alpine` | 11432 | Основная БД. Volumes для персистентности данных |
+| **corpo-ts-redis** | `redis:7.4-alpine` | 11379 | Кеширование read-моделей, сессии, блокировки |
+| **corpo-ts-rabbitmq** | `rabbitmq:4.0-management-alpine` | 11672 / 11673 | Брокер очередей + management UI |
+| **corpo-ts-mailhog** | `mailhog/mailhog:v1.0.1` | 11025 / 11826 | SMTP-ловушка + веб-интерфейс просмотра писем |
 
 ### Достоинства
 

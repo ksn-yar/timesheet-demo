@@ -1064,4 +1064,4 @@ Value Object — артефакт операции экспорта, не сам
 
 *Документ разработан на основании: бизнес-требования v1.0, Event Storming Transcript, Ubiquitous Language, Bounded Context-документация (ProjectContext, WorkCatalogContext, IdentityContext, TimesheetContext, ReportingContext).*
 *Глоссарий: `<project-dir>/docs/UbiquitousLanguage.md`*
-*Бизнес-требования: `<project-dir>/docs/bt.md`*
+*Бизнес-требования: `<project-dir>/docs/business-requirements/bt.md`*
