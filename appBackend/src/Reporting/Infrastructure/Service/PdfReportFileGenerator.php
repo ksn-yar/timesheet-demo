@@ -18,8 +18,9 @@ final readonly class PdfReportFileGenerator implements ReportFileGeneratorInterf
     /** @param Report[] $reports */
     public function generate(array $reports, ExportFormat $format): string
     {
+        // todo resolve me
         $fileRef = 'var/exports/export_' . Uuid::v4()->toRfc4122() . '.pdf';
-        $projectRoot = \dirname(__DIR__, 5);
+        $projectRoot = \dirname(__DIR__, 4);
         $absolutePath = $projectRoot . '/' . $fileRef;
 
         $this->ensureDirectoryExists(\dirname($absolutePath));

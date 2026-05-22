@@ -10,6 +10,8 @@ use App\Persistence\Entity\Group as GroupOrmEntity;
 use App\Persistence\Entity\ImportPolicy as ImportPolicyOrmEntity;
 use App\Persistence\Entity\Project as ProjectOrmEntity;
 use App\Persistence\Entity\Rate as RateOrmEntity;
+use App\Persistence\Entity\Report as ReportOrmEntity;
+use App\Persistence\Entity\ReportExport as ReportExportOrmEntity;
 use App\Persistence\Entity\Role as RoleOrmEntity;
 use App\Persistence\Entity\Task as TaskOrmEntity;
 use App\Persistence\Entity\Ticket as TicketOrmEntity;
@@ -74,6 +76,11 @@ abstract class FunctionalTestCase extends WebTestCase
 
     protected const string FIXTURE_IMPORT_POLICY_ID_1 = 'a5678901-89ab-4cde-8f01-234567890001';
     protected const string FIXTURE_IMPORT_POLICY_ID_2 = 'a5678901-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_REPORT_ID_1 = 'b6789012-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_REPORT_ID_2 = 'b6789012-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_REPORT_EXPORT_ID_1 = 'b7890123-89ab-4cde-8f01-234567890001';
 
     protected KernelBrowser $client;
     protected string $jwtToken;
@@ -424,6 +431,65 @@ abstract class FunctionalTestCase extends WebTestCase
         $ticket->setCreatedAt(new DateTimeImmutable());
 
         $em->persist($ticket);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Создаёт отчёт в БД напрямую и возвращает его ID. */
+    protected function createReport(
+        string $name = 'Тестовый отчёт',
+        string $periodFrom = '2026-01-01',
+        string $periodTo = '2026-01-31',
+        array $groupBy = ['employee'],
+        string $id = self::FIXTURE_REPORT_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $report = new ReportOrmEntity();
+        $report->setId($id);
+        $report->setName($name);
+        $report->setCreatedBy(self::AUTH_USER_ID);
+        $report->setCreatedAt(new DateTimeImmutable());
+        $report->setPeriodFrom(new DateTimeImmutable($periodFrom));
+        $report->setPeriodTo(new DateTimeImmutable($periodTo));
+        $report->setFilters([]);
+        $report->setGroupBy($groupBy);
+        $report->setData([]);
+
+        $em->persist($report);
+        $em->flush();
+
+        return $id;
+    }
+
+    /**
+     * Создаёт запись выгрузки в БД и создаёт реальный файл на диске.
+     * Используется для тестирования DownloadExportController.
+     */
+    protected function createReportExportWithFile(
+        array $reportIds = [],
+        string $format = 'csv',
+        string $id = self::FIXTURE_REPORT_EXPORT_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        /** @var string $projectDir */
+        $projectDir = (string) static::getContainer()->getParameter('kernel.project_dir');
+        $fileRef = 'var/exports/test-export-' . $id . '.' . $format;
+        $absolutePath = $projectDir . '/' . $fileRef;
+
+        @mkdir(\dirname($absolutePath), 0o755, true);
+        file_put_contents($absolutePath, "col1,col2\nval1,val2\n");
+
+        $export = new ReportExportOrmEntity();
+        $export->setId($id);
+        $export->setReportIds($reportIds);
+        $export->setFormat($format);
+        $export->setGeneratedAt(new DateTimeImmutable());
+        $export->setFileRef($fileRef);
+
+        $em->persist($export);
         $em->flush();
 
         return $id;

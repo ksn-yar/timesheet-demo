@@ -58,9 +58,10 @@ final readonly class CsvReportFileGenerator implements ReportFileGeneratorInterf
         }
     }
 
+    // todo resolve me
     private function resolveProjectRoot(): string
     {
-        // Поднимаемся из vendor/../.. или app/src/... до корня проекта
-        return \dirname(__DIR__, 5);
+        // src/Reporting/Infrastructure/Service → 4 уровня вверх = app root
+        return \dirname(__DIR__, 4);
     }
 }

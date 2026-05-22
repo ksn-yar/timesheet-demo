@@ -27,8 +27,9 @@ final readonly class XlsxReportFileGenerator implements ReportFileGeneratorInter
             }
         }
 
+        // todo resolve me
         $fileRef = 'var/exports/export_' . Uuid::v4()->toRfc4122() . '.xlsx';
-        $projectRoot = \dirname(__DIR__, 5);
+        $projectRoot = \dirname(__DIR__, 4);
         $absolutePath = $projectRoot . '/' . $fileRef;
 
         $this->ensureDirectoryExists(\dirname($absolutePath));
