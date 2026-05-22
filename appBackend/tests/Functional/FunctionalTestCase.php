@@ -8,8 +8,11 @@ use App\Persistence\Entity\ChangeRequest as ChangeRequestOrmEntity;
 use App\Persistence\Entity\Client as ClientOrmEntity;
 use App\Persistence\Entity\Group as GroupOrmEntity;
 use App\Persistence\Entity\Project as ProjectOrmEntity;
+use App\Persistence\Entity\Rate as RateOrmEntity;
+use App\Persistence\Entity\Role as RoleOrmEntity;
 use App\Persistence\Entity\Task as TaskOrmEntity;
 use App\Persistence\Entity\User as UserOrmEntity;
+use App\Persistence\Entity\Work as WorkOrmEntity;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
@@ -54,6 +57,15 @@ abstract class FunctionalTestCase extends WebTestCase
 
     protected const string FIXTURE_TASK_ID_1 = 'a3456789-89ab-4cde-8f01-234567890001';
     protected const string FIXTURE_TASK_ID_2 = 'a3456789-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_WORK_ID_1 = 'f1234567-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_WORK_ID_2 = 'f1234567-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_ROLE_ID_1 = 'f2345678-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_ROLE_ID_2 = 'f2345678-89ab-4cde-8f01-234567890002';
+
+    protected const string FIXTURE_RATE_ID_1 = 'f3456789-89ab-4cde-8f01-234567890001';
+    protected const string FIXTURE_RATE_ID_2 = 'f3456789-89ab-4cde-8f01-234567890002';
     protected KernelBrowser $client;
     protected string $jwtToken;
 
@@ -265,6 +277,78 @@ abstract class FunctionalTestCase extends WebTestCase
         }
 
         $em->persist($task);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Создаёт вид работ в БД и возвращает его ID. */
+    protected function createWork(
+        string $name = 'Тестовый вид работ',
+        string $id = self::FIXTURE_WORK_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $work = new WorkOrmEntity();
+        $work->setId($id);
+        $work->setName($name);
+        $work->setCreatedAt(new DateTimeImmutable());
+
+        $em->persist($work);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Создаёт роль в БД и возвращает её ID. */
+    protected function createRole(
+        string $name = 'Тестовая роль',
+        string $id = self::FIXTURE_ROLE_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $role = new RoleOrmEntity();
+        $role->setId($id);
+        $role->setName($name);
+        $role->setCreatedAt(new DateTimeImmutable());
+
+        $em->persist($role);
+        $em->flush();
+
+        return $id;
+    }
+
+    /** Создаёт ставку в БД и возвращает её ID. */
+    protected function createRate(
+        string $amount = '1500.00',
+        string $currency = 'RUB',
+        string $effectiveFrom = '2026-01-01',
+        ?string $roleId = null,
+        ?string $workId = null,
+        string $id = self::FIXTURE_RATE_ID_1,
+    ): string {
+        $em = $this->getEntityManager();
+
+        $rate = new RateOrmEntity();
+        $rate->setId($id);
+        $rate->setAmount($amount);
+        $rate->setCurrency($currency);
+        $rate->setEffectiveFrom(new DateTimeImmutable($effectiveFrom));
+        $rate->setCreatedAt(new DateTimeImmutable());
+
+        if (null !== $roleId) {
+            $role = $em->find(RoleOrmEntity::class, $roleId);
+            \assert(null !== $role);
+            $rate->setRole($role);
+        }
+
+        if (null !== $workId) {
+            $work = $em->find(WorkOrmEntity::class, $workId);
+            \assert(null !== $work);
+            $rate->setWork($work);
+        }
+
+        $em->persist($rate);
         $em->flush();
 
         return $id;
