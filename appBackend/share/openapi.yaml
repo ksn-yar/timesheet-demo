@@ -945,6 +945,120 @@ paths:
                 $ref: App\Reporting\Infrastructure\Dto\ReportResponseDto
         '404':
           description: 'Отчёт не найден.'
+  /api/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: 'Войти в систему'
+      description: 'Аутентифицирует пользователя по email и паролю. Возвращает JWT access token, refresh token и данные пользователя.'
+      operationId: post_api_auth_login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: secret
+              type: object
+      responses:
+        '200':
+          description: 'Успешная аутентификация.'
+          content:
+            application/json:
+              schema:
+                properties:
+                  token: { description: 'JWT access token.', type: string }
+                  refresh_token: { type: string }
+                  user: { properties: { id: { type: integer }, email: { type: string, format: email }, name: { type: string }, systemRole: { type: string } }, type: object }
+                type: object
+        '400':
+          description: 'Не указан email или пароль.'
+        '401':
+          description: 'Неверный email или пароль.'
+  /api/auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: 'Обновить токены'
+      description: 'Выдаёт новую пару access/refresh токенов по действующему refresh token. Старый refresh token инвалидируется (single use).'
+      operationId: post_api_auth_refresh
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+              type: object
+      responses:
+        '200':
+          description: 'Токены успешно обновлены.'
+          content:
+            application/json:
+              schema:
+                properties:
+                  token: { description: 'Новый JWT access token.', type: string }
+                  refresh_token: { description: 'Новый refresh token.', type: string }
+                type: object
+        '400':
+          description: 'Не передан refresh_token.'
+        '401':
+          description: 'Refresh token не найден, истёк или пользователь не найден.'
+  /api/auth/logout:
+    post:
+      tags:
+        - Auth
+      summary: 'Выйти из системы'
+      description: 'Отзывает refresh token. Идемпотентен — если токен уже удалён, возвращает 204. Требует валидного JWT access token в заголовке Authorization.'
+      operationId: post_api_auth_logout
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+              type: object
+      responses:
+        '204':
+          description: 'Выход выполнен успешно.'
+        '400':
+          description: 'Не передан refresh_token.'
+      security:
+        -
+          Bearer: []
+  /api/:
+    get:
+      tags:
+        - Shared
+      summary: 'Главная страница'
+      description: 'Проверочный эндпоинт.'
+      operationId: get_shared_home
+      responses:
+        '200':
+          description: 'Приветственное сообщение.'
+          content:
+            application/json:
+              schema:
+                properties:
+                  message: { type: string, example: 'Hello world!' }
+                type: object
   /api/timesheet/import-policies:
     get:
       tags:
@@ -1502,6 +1616,10 @@ tags:
     name: ProjectManagement
   -
     name: Reporting
+  -
+    name: Auth
+  -
+    name: Shared
   -
     name: Timesheet
   -
