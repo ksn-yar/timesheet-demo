@@ -35,6 +35,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ middleware: 'auth' })
+
 const { authFetch } = useAuth()
 
 const loading = ref(true)

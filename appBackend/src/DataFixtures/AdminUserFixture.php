@@ -26,7 +26,7 @@ class AdminUserFixture extends Fixture
         }
 
         $user = new User();
-        $user->setId('00000000-0000-0000-0000-000000000001');
+        $user->setId('00000000-0000-4000-8000-000000000001');
         $user->setName('Admin');
         $user->setEmail('admin@example.com');
         $user->setPasswordHash($this->passwordHasher->hashPassword($user, 'admin'));

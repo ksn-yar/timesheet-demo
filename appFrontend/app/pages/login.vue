@@ -59,6 +59,8 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({ layout: false })
+
 const { setTokens } = useAuth()
 const router = useRouter()
 
