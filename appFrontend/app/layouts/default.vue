@@ -92,6 +92,22 @@
             <i class="bi bi-cloud-download me-2"></i>Политики импорта
           </NuxtLink>
         </li>
+
+        <li class="nav-item mt-3">
+          <span class="px-2 text-white-50 small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.08em;">
+            Отчётность
+          </span>
+        </li>
+        <li class="nav-item">
+          <NuxtLink to="/rp/reports" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-bar-chart-line me-2"></i>Отчёты
+          </NuxtLink>
+        </li>
+        <li class="nav-item">
+          <NuxtLink to="/rp/exports" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-file-earmark-arrow-down me-2"></i>Выгрузки
+          </NuxtLink>
+        </li>
       </ul>
 
       <div class="border-top border-white border-opacity-10 pt-3 mt-2">
