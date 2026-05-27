@@ -1,15 +1,20 @@
 export const useAuth = () => {
   const accessToken = useCookie<string | null>('access_token', { default: () => null })
   const refreshToken = useCookie<string | null>('refresh_token', { default: () => null })
+  const userIdCookie = useCookie<string | null>('user_id', { default: () => null })
 
   const setTokens = (token: string, refresh: string) => {
     accessToken.value = token
     refreshToken.value = refresh
   }
 
+  const setUserId = (id: string) => { userIdCookie.value = id }
+  const getUserId = (): string | null => userIdCookie.value
+
   const clearTokens = () => {
     accessToken.value = null
     refreshToken.value = null
+    userIdCookie.value = null
   }
 
   const tryRefresh = async (): Promise<boolean> => {
@@ -76,5 +81,5 @@ export const useAuth = () => {
     }
   }
 
-  return { accessToken, refreshToken, setTokens, clearTokens, authFetch, isAdmin }
+  return { accessToken, refreshToken, setTokens, clearTokens, authFetch, isAdmin, setUserId, getUserId }
 }

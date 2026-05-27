@@ -61,7 +61,7 @@
 <script setup lang="ts">
 definePageMeta({ layout: false })
 
-const { setTokens } = useAuth()
+const { setTokens, setUserId } = useAuth()
 const router = useRouter()
 
 const form = reactive({ email: '', password: '' })
@@ -87,6 +87,7 @@ async function handleLogin() {
     }
 
     setTokens(result.token, result.refresh_token)
+    if (result.user?.id) setUserId(result.user.id)
     router.push('/')
   } catch {
     errorMessage.value = 'Не удалось подключиться к серверу'

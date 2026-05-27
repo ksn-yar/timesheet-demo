@@ -76,6 +76,22 @@
             <i class="bi bi-currency-exchange me-2"></i>Тарифные ставки
           </NuxtLink>
         </li>
+
+        <li class="nav-item mt-3">
+          <span class="px-2 text-white-50 small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.08em;">
+            Тайм-шиты
+          </span>
+        </li>
+        <li class="nav-item">
+          <NuxtLink to="/ts/tickets" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-clock-history me-2"></i>Тикеты
+          </NuxtLink>
+        </li>
+        <li v-if="admin" class="nav-item">
+          <NuxtLink to="/ts/import-policies" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-cloud-download me-2"></i>Политики импорта
+          </NuxtLink>
+        </li>
       </ul>
 
       <div class="border-top border-white border-opacity-10 pt-3 mt-2">
