@@ -74,7 +74,9 @@ export const useAuth = () => {
   const isAdmin = (): boolean => {
     if (!accessToken.value) return false
     try {
-      const payload = JSON.parse(atob(accessToken.value.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')))
+      const part = accessToken.value.split('.')[1]
+      if (!part) return false
+      const payload = JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')))
       return Array.isArray(payload.roles) && payload.roles.includes('ROLE_ADMIN')
     } catch {
       return false
