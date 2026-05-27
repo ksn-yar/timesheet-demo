@@ -55,6 +55,27 @@
             <i class="bi bi-list-task me-2"></i>Задачи
           </NuxtLink>
         </li>
+
+        <li class="nav-item mt-3">
+          <span class="px-2 text-white-50 small text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.08em;">
+            Справочники
+          </span>
+        </li>
+        <li class="nav-item">
+          <NuxtLink to="/wc/works" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-tools me-2"></i>Виды работ
+          </NuxtLink>
+        </li>
+        <li class="nav-item">
+          <NuxtLink to="/wc/roles" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-person-badge me-2"></i>Роли исполнителей
+          </NuxtLink>
+        </li>
+        <li v-if="admin" class="nav-item">
+          <NuxtLink to="/wc/rates" class="nav-link text-white-50 rounded px-2 py-1" active-class="bg-white bg-opacity-10 text-white">
+            <i class="bi bi-currency-exchange me-2"></i>Тарифные ставки
+          </NuxtLink>
+        </li>
       </ul>
 
       <div class="border-top border-white border-opacity-10 pt-3 mt-2">
@@ -69,3 +90,8 @@
     </main>
   </div>
 </template>
+
+<script setup lang="ts">
+const { isAdmin } = useAuth()
+const admin = isAdmin()
+</script>
